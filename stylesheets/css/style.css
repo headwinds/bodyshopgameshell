@@ -1,0 +1,170 @@
+@import url("http://fonts.googleapis.com/css?family=Quicksand");
+body {
+  width: 100%;
+  *zoom: 1;
+}
+body:before,
+body:after {
+  content: "";
+  display: table;
+}
+body:after {
+  clear: both;
+}
+.common {
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+}
+body {
+  font-family: 'Georgia';
+  background-color: #faf9f0;
+  color: #444;
+  text-align: center;
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+}
+header {
+  font-family: 'Quicksand';
+  padding: 50px 10px;
+  color: #fff;
+  font-size: 25px;
+  text-align: center;
+  background-color: #fa5b4d;
+  border-bottom: 1px solid #df1806;
+  text-shadow: 0px -1px 0px #df1806;
+}
+.common {
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+}
+ul {
+  list-style-type: none;
+}
+a {
+  color: #333;
+  font-size: 16px;
+  display: block;
+  position: relative;
+  padding: 0px;
+  padding-top: 10px;
+  margin: 0px;
+  text-align: center;
+  background: url("../../imgs/ui-sprite.png") no-repeat -13px -23px;
+  width: 163px;
+  height: 30px;
+}
+a:hover {
+  background: url("../../imgs/ui-sprite.png") no-repeat -13px -64px;
+  color: #adadad;
+}
+a:visited {
+  background: url("../../imgs/ui-sprite.png") no-repeat -13px -23px;
+}
+#container {
+  margin: 0 auto;
+  width: 900px;
+  overflow: hidden;
+  text-align: left;
+}
+#container #nav {
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+  width: 900px;
+  height: 50px;
+}
+#container #nav h2 {
+  font-family: 'Quicksand';
+  font-size: 18px;
+}
+#container #nav p {
+  font-family: 'Quicksand';
+  margin-bottom: 20px;
+  line-height: 16px;
+}
+#container #nav li {
+  display: block;
+  position: relative;
+  float: left;
+  width: 163;
+  height: 37;
+}
+#container #page {
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+}
+#container #page .game-controls {
+  display: block;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  top: 0px;
+  left: 700px;
+}
+#container #page #challenge {
+  display: block;
+  position: absolute;
+  margin: 0;
+  padding: 20px;
+  top: 0px;
+  left: 700px;
+  width: 450px;
+  height: 400px;
+  z-index: 3;
+  opacity: 0;
+  background: #FFF;
+  pointer-events: none;
+  z-index: 99;
+}
+#container #page #challenge a {
+  text-decoration: underline;
+  color: #000;
+  display: block;
+  position: relative;
+  padding: 0px;
+  margin: 0px;
+  text-align: left;
+  background: #FFF;
+  height: 20px;
+  width: 250px;
+  pointer-events: auto;
+}
+#container #page #challenge a:hover {
+  background: #FFF;
+  text-align: left;
+  height: 20px;
+  width: 250px;
+}
+#container #page #challenge a:visited {
+  background: #FFF;
+  height: 20px;
+  width: 250px;
+  text-align: left;
+}
+#container #footer {
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+}
