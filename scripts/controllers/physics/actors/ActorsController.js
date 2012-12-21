@@ -18,7 +18,7 @@ define(["easel",
 		var b2RevoluteJoint = Box2D.Dynamics.Joints.b2RevoluteJoint;
 
 		var createSkin = function(imgPath, imgWidth, imgHeight, point, name, bSpriteSheet, animationObj) {
-			//console.log(arguments, "ActorController createSkin");
+			//console.log(arguments, "ActorController createSkin / name: " + name);
 			var skin;
 
 			if (bSpriteSheet) {
@@ -31,7 +31,6 @@ define(["easel",
 
 				var spriteSheet = new createjs.SpriteSheet(data);
 				if (!spriteSheet.complete) {
-				  // not preloaded, listen for onComplete:
 				  spriteSheet.onComplete = onSpriteSheetLoadedHandler;
 				} 
 
@@ -42,11 +41,9 @@ define(["easel",
 				 
 				var animationLabel = animationObj.labels[0]; 
 
-				//skinBMPAnimation.gotoAndPlay(animationLabel);
+				//skinBMPAnimation.gotoAndPlay(animationLabel); // animating is beyond the scope of my goal to show Debug drawing
 				skinBMPAnimation.stop();
-				   
-				// I want a shadow to follow on the ground - maybe..   
-				 
+				
 				skinBMPAnimation.name = name;
 				skinBMPAnimation.speed = 1;
 				skinBMPAnimation.direction = 90;
@@ -85,67 +82,181 @@ define(["easel",
 			console.log("ActorsController / onSpriteSheetLoadedHandler"); 
 		}; 
 
-		var actorObject = function(body, skin) {
+		var actorObject = function(body, skin, skinOffset) {
 			this.body = body;
 			this.skin = skin;
 			this.update = function() {  // translate box2d positions to pixels
-				this.skin.rotation = this.body.GetAngle() * (180 / Math.PI);
-				this.skin.x = this.body.GetWorldCenter().x * SCALE;
-				this.skin.y = this.body.GetWorldCenter().y * SCALE;
+	
+				if ( skinOffset === undefined ) {
+					this.skin.x = this.body.GetWorldCenter().x * SCALE;
+					this.skin.y = this.body.GetWorldCenter().y * SCALE;
+					this.skin.rotation = this.body.GetAngle() * (180 / Math.PI);
+				} else {
+					this.skin.x = (this.body.GetWorldCenter().x + skinOffset.x) * SCALE;
+					this.skin.y = (this.body.GetWorldCenter().y + skinOffset.y) * SCALE;
+					this.skin.rotation = this.body.GetAngle() * (180 / Math.PI); // the skin isn't following the body properly! the offset is messing it up... 
+				}
 			}
 			actors.push(this);
 		};
 
-		var createActor = function(name, skin, density, friction, restitution, bodyType, width, height, physicsWidth, physicsHeight) {
+		var getCollisionObj = function( collisionTeam ) {
+
+			// http://www.aurelienribon.com/blog/2011/07/box2d-tutorial-collision-filtering/
+
+			var teamEnvironmentCategoryBits = 0x0004;
+			var teamEnvironmentMaskBits = -1;
+			var teamEnvironmentGroupIndex = 1;
+
+			var teamACategoryBits = 0x0002;
+			var teamAMaskBits = 0x0001;
+			var teamAGroupIndex = -1;
+
+			var teamBCategoryBits = 0x0001;
+			var teamBMaskBits = 0x0002;
+			var teamBGroupIndex = -2;
+
+			var collisionHash = { 	teamA : { categoryBits: teamACategoryBits, maskBits: teamAMaskBits, groupIndex: teamAGroupIndex},
+									teamB : { categoryBits: teamBCategoryBits, maskBits: teamBMaskBits, groupIndex: teamBGroupIndex},
+									teamEnvironment : { categoryBits: teamEnvironmentCategoryBits, maskBits: teamEnvironmentMaskBits, groupIndex: teamEnvironmentGroupIndex}
+			};
+
+			return collisionHash[collisionTeam];
+		};
+
+		var getBodyType = function(typeStr) {
+			
+			switch(typeStr) {
+				case "static" :
+					return b2Body.b2_staticBody;
+					break;
+				case "dynamic" :
+					return b2Body.b2_dynamicBody;
+					break;
+				default : 
+					return b2Body.b2_dynamicBody;
+			};
+		}
+
+
+		var createActor = function(name, skin, density, friction, restitution, bodyType, width, height, physicsWidth, physicsHeight, collisionTeam, allowSleep) {
 
 			// console.log("ActorController density: %s, friction: %s, restitution: %s", density, friction, restitution);
-			//console.log(arguments, "ActorController createActor");
+			//console.log("ActorController createActor / name: " + name);
 
-			var actorFixture = new b2FixtureDef;
-			actorFixture.density = density;
-			actorFixture.friction = friction;
-			actorFixture.restitution = restitution; // 0.6
-
-			switch(bodyType) {
-				case "circle" :
-					actorFixture.shape = new b2CircleShape( (physicsWidth/2) / SCALE);
-				break;
-				case "box" :
-					actorFixture.shape = new b2PolygonShape;
-					var actorWidthScale = ( physicsWidth / 2)  / SCALE;
-					var actorHeightScale = ( physicsHeight / 2 ) / SCALE;
-					actorFixture.shape.SetAsBox(actorWidthScale, actorHeightScale);
-				break;
-			}
+			var shape = bodyType.shape;
+			var type = getBodyType(bodyType.type);
 
 			var actorBodyDef = new b2BodyDef;
-			actorBodyDef.type = b2Body.b2_dynamicBody;
+			actorBodyDef.type = type;
 			actorBodyDef.position.x = skin.x / SCALE + 5;
 			actorBodyDef.position.y = skin.y / SCALE;
-			
-			var actorBody = world.CreateBody(actorBodyDef);
-			actorBody.CreateFixture(actorFixture);
+			actorBodyDef.allowSleep = allowSleep;
 
-			// assign actor
-			var actor = new actorObject(actorBody, skin);
+			if ( name == "catapult body") console.log( actorBodyDef.position.x );
+
+			var actorBody = world.CreateBody(actorBodyDef);
+			
+			if ( bodyType.fixtures === undefined ) {
+
+				var actorFixture = new b2FixtureDef;
+				actorFixture.density = density;
+				actorFixture.friction = friction;
+				actorFixture.restitution = restitution; // 0.6
+
+				var collisionObj = getCollisionObj(collisionTeam);
+
+				actorFixture.filter.groupIndex = collisionObj.groupIndex;
+
+				switch(shape) {
+					case "circle" :
+						actorFixture.shape = new b2CircleShape( (physicsWidth/2) / SCALE);
+						actorFixture.type = type; 
+					break;
+					case "box" :
+						actorFixture.shape = new b2PolygonShape;
+						actorFixture.type = type; 
+						var actorWidthScale = ( physicsWidth / 2)  / SCALE;
+						var actorHeightScale = ( physicsHeight / 2 ) / SCALE;
+						actorFixture.shape.SetAsBox(actorWidthScale, actorHeightScale);
+					break;
+					case "box-orientated" :
+						actorFixture.shape = new b2PolygonShape;
+						actorFixture.type = type; 
+						var actorWidthScale = ( physicsWidth / 2)  / SCALE;
+						var actorHeightScale = ( physicsHeight / 2 ) / SCALE;
+						actorFixture.shape.SetAsOrientedBox(actorWidthScale, actorHeightScale, bodyType.vector, 0);
+					break;
+				}
+
+				actorBody.CreateFixture(actorFixture);
+
+			} else {
+
+				var totalFixtures = bodyType.fixtures.length;
+
+				for ( var fixtureCounter = 0; fixtureCounter < totalFixtures; fixtureCounter++) {
+					actorBody.CreateFixture( bodyType.fixtures[fixtureCounter] );
+				}
+
+			}
+
+			
+
+			// assign actor with or without skin offset -- I know this isn't bad but assumed all skins would be positioned around the center 
+			// which they all are except the catapult arm 
+			var actor;
+			if ( bodyType.skinOffset === undefined )  actor = new actorObject(actorBody, skin);
+			else actor = new actorObject(actorBody, skin, bodyType.skinOffset);
+
 			actorBody.SetUserData(actor);  // set the actor as user data of the body so we can use it later: body.GetUserData()
 			bodies.push(actorBody);
 
 			return actorBody; 
 		};
 
-		var createJoint = function( connects ) {
-			var jointDef = new b2RevoluteJointDef();  
+		var createJoint = function( typeStr, connects ) {
+			switch(typeStr) {
+				case "revolute" :
+					createRevoluteJoint(connects);
+				break;
+				case "distance" :
+					createDistanceJoint(connects);
+				break;
+				default:
+					createDistanceJoint(connects);
+				break;
+			}
+		}
+
+		var createRevoluteJoint = function( connects ) {
+			var revoluteJointDef = new b2RevoluteJointDef();  
+
+			//jointDef.anchor = new b2Vec2(399.65/drawScale, 464.8/drawScale);
+			revoluteJointDef.collideConnected = false;
 
 			var bodyA = getBodyBySkinName( connects[0] );
 			var bodyB = getBodyBySkinName( connects[1] ); 
 
-			jointDef.Initialize(bodyA, bodyB, bodyB.GetPosition());
-			jointDef.maxMotorTorque = 10.0;
-			jointDef.enableMotor = false;
+			revoluteJointDef.Initialize(bodyA, bodyB, bodyB.GetPosition());
+			revoluteJointDef.maxMotorTorque = 10.0;
+			revoluteJointDef.enableMotor = false;
 
-			joint = world.CreateJoint(jointDef);
-			
+			world.CreateJoint(revoluteJointDef);
+		};
+
+		var createDistanceJoint = function( connects ) {
+			var distanceJointDef = new b2DistanceJointDef();  
+
+			distanceJointDef.bodyA = bodyA;
+			distanceJointDef.bodyB = bodyB;
+			distanceJointDef.dampingRatio = 0.7;
+			distanceJointDef.frequencyHz = 0.2;
+			distanceJointDef.collideConnected = true;
+			distanceJointDef.localAnchorA = new b2Vec2(bodyA.GetPosition().x,bodyA.GetPosition().y);
+			distanceJointDef.localAnchorB = new b2Vec2(bodyB.GetPosition().x,bodyB.GetPosition().y);
+
+			world.CreateJoint(distanceJointDef);
 		};
 
 		var getBodyBySkinName = function(nameStr) {

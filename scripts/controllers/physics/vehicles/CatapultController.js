@@ -1,6 +1,6 @@
 /*
+forked and ported from:
 http://www.emanueleferonato.com/2010/05/04/following-a-body-with-the-camera-in-box2d-the-smart-way/
-http://sk8r.googlecode.com/hg-history/24d42df9e0bd324f13457ab1fa0ea5483e89467a/experiments/box2d/experiment6/index.html
 */
 
 define(["controllers/physics/actors/ActorsController",
@@ -8,7 +8,20 @@ define(["controllers/physics/actors/ActorsController",
 		"box2d",
 		"config/config"], function(ActorsController) {
 
-	var CatapultController = function( name, canvas, context, cameraWorldContainer, world, SCALE, actors, bodies, catapultScaleX, catapultScaleY, bFaceRight ) {
+	var CatapultController = function( 	name, 
+										canvas, 
+										context, 
+										cameraWorldSkinsContainer, 
+										world, 
+										SCALE, 
+										actors, 
+										bodies, 
+										vehicleScaleX, 
+										vehicleScaleY, 
+										vehicleStartPosX, 
+										vehicleStartPosY,
+										bFaceRight,
+										domainPath) {
 
 		// Box2d vars
 		var b2Vec2 = Box2D.Common.Math.b2Vec2;
@@ -25,11 +38,16 @@ define(["controllers/physics/actors/ActorsController",
 		var b2RevoluteJoint = Box2D.Dynamics.Joints.b2RevoluteJoint;
 
 		// catapult parts
+		var bodyPartsScope = {};	
+
 		var the_cannonball_itself; //b2Body;
 		var catapult_chassis_body; //b2Body;
 		var catapult_arm_body; //b2Body;
-		var rear_wheel_body; //b2Body;
-		var front_wheel_body; //b2Body;
+		var catapult_arm_launcher; //b2Body;
+		
+		bodyPartsScope.rear_wheel_body; //b2Body;
+		bodyPartsScope.front_wheel_body; //b2Body;
+		
 		var arm_revolute_joint; //b2RevoluteJoint;
 		var front_wheel_revolute_joint; //b2RevoluteJoint;
 		var rear_wheel_revolute_joint; //b2RevoluteJoint;
@@ -42,15 +60,11 @@ define(["controllers/physics/actors/ActorsController",
 
 		var buildCannonball = function() {
 
-			var cannonball = new b2BodyDef();
-			cannonball.position.Set(90/SCALE, 90/SCALE);
-			cannonball.type = b2Body.b2_dynamicBody;
-
-			var ballSkinImgPath = "../imgs/vehicles/catapults/common/cannonball.png";
+			var ballSkinImgPath = domainPath + "imgs/vehicles/catapults/common/cannonball.png";
 			var ballSkinWidth = 53;
 			var ballSkinHeight = 44;
-			var ballPoint = { x: 90/SCALE, y: 90/SCALE };
-			var ballStr = "ball"
+			var ballPoint = { x: vehicleStartPosX/SCALE, y: vehicleStartPosY/SCALE };
+			var ballStr = "cannonball"
 			var bSpriteSheet = false;
 			var animationObj = null; 
 
@@ -63,7 +77,7 @@ define(["controllers/physics/actors/ActorsController",
 																bSpriteSheet,
 																animationObj);
 
-			cameraWorldContainer.addChild(cannonballSkin);
+			cameraWorldSkinsContainer.addChild(cannonballSkin);
 
 			var density = 20; 
 			var friction = 0.9; // 0 no friction to 1
@@ -71,24 +85,72 @@ define(["controllers/physics/actors/ActorsController",
 
 			var physicsWidth = 20;
 			var physicsHeight = 20;
+			var collisionCategory = "teamA";
+			var bodyType = {shape: "circle", type: "dynamic"};
 
 			the_cannonball_itself = actorsController.createActor("cannonball",
 																cannonballSkin, 
 																density, 
 																friction, 
 																restitution, 
-																"circle", 
+																bodyType,
 																ballSkinWidth, 
 																ballSkinHeight,
 																physicsWidth,
-																physicsHeight);
-		}
+																physicsHeight,
+																collisionCategory);
+		};
 
-		var buildWheelMotors = function() {
+		var buildWheel = function( wheelName, wheelX, wheelY, imgPath, bodyProp ) {
+		
+			var skinImgPath = domainPath + "imgs/vehicles/catapults/common/wheel.png";
+			var skinWidth = 84;
+			var skinHeight = 84;
+			var x = wheelX;
+			var y = wheelY; 
+			var point = { x: wheelX/SCALE, y: wheelY/SCALE };
+			var name = wheelName; 
+			var bSpriteSheet = false;
+			var animationObj = null; 
+
+
+			var wheelSkin = actorsController.createSkin( skinImgPath,
+														skinWidth,
+														skinHeight,
+														point,
+														name,
+														bSpriteSheet,
+														animationObj);
+
+			cameraWorldSkinsContainer.addChild(wheelSkin);
+
+			var density = 30; 
+			var friction = 0.9; 
+			var restitution = 0.1; 
+
+			var physicsWidth = 40;
+			var physicsHeight = 40;
+			var collisionCategory = "teamA";
+			var bodyType = {shape: "circle", type: "dynamic"};
+
+			bodyPartsScope[bodyProp] = actorsController.createActor(wheelName,
+														wheelSkin, 
+														density, 
+														friction, 
+														restitution, 
+														bodyType,
+														skinWidth, 
+														skinHeight,
+														physicsWidth,
+														physicsHeight,
+														collisionCategory);
+		};
+
+		var buildWheelMotors = function(frontWheelJointX, rearWheelJointX) {
 			var front_wheel_joint = new b2RevoluteJointDef();
 			front_wheel_joint.enableMotor=true;
-			front_wheel_joint.Initialize(catapult_chassis_body, front_wheel_body,new b2Vec2(0,0));
-			front_wheel_joint.localAnchorA=new b2Vec2(80/SCALE,0);
+			front_wheel_joint.Initialize(catapult_chassis_body, bodyPartsScope.front_wheel_body, new b2Vec2(0,0));
+			front_wheel_joint.localAnchorA=new b2Vec2(frontWheelJointX/SCALE,0);
 			front_wheel_joint.localAnchorB=new b2Vec2(0,0);
 
 			front_wheel_revolute_joint = world.CreateJoint(front_wheel_joint);
@@ -96,45 +158,223 @@ define(["controllers/physics/actors/ActorsController",
 			//
 			var rear_wheel_joint = new b2RevoluteJointDef();
 			rear_wheel_joint.enableMotor = true;
-			rear_wheel_joint.Initialize(catapult_chassis_body, rear_wheel_body, new b2Vec2(0,0));
-			rear_wheel_joint.localAnchorA = new b2Vec2(-80/SCALE,0);
+			rear_wheel_joint.Initialize(catapult_chassis_body, bodyPartsScope.rear_wheel_body, new b2Vec2(0,0));
+			rear_wheel_joint.localAnchorA = new b2Vec2(rearWheelJointX/SCALE,0);
 			rear_wheel_joint.localAnchorB = new b2Vec2(0,0);
 
 			rear_wheel_revolute_joint = new b2RevoluteJointDef();
 			rear_wheel_revolute_joint = world.CreateJoint(rear_wheel_joint);
 			rear_wheel_revolute_joint.SetMaxMotorTorque(1000000);
+		};
+
+		var buildCatapultArm = function() {
+
+			var imgPath = domainPath + "imgs/vehicles/catapults/common/armlauncher.png";
+			var skinWidth = 297;
+			var skinHeight = 75;
+			var x = 210;
+			var y = 110; 
+			var point = { x: x/vehicleScaleX, y: y/vehicleScaleY };
+			var name = "catapult arm"; 
+			var bSpriteSheet = false;
+			var animationObj = null; 
+
+			var skin = actorsController.createSkin( imgPath,
+													skinWidth,
+													skinHeight,
+													point,
+													name,
+													bSpriteSheet,
+													animationObj);
+
+			cameraWorldSkinsContainer.addChild(skin);
+
+			var density = 5; 
+			var friction = 0.9; 
+			var restitution = 0.1; 
+
+			var physicsWidth = 150;
+			var physicsHeight = 10;
+			var collisionCategory = "teamA";
+
+			var arm_part = new b2PolygonShape();
+			arm_part.SetAsOrientedBox(150/vehicleScaleX, 10/vehicleScaleY, new b2Vec2(0,0),0);
+			
+			var arm_fixture = new b2FixtureDef();
+			arm_fixture.shape=arm_part;
+			arm_fixture.friction=0.9;
+			arm_fixture.density=5;
+			arm_fixture.restitution=0.1;
+			
+			var stopper_part = new b2PolygonShape();
+			stopper_part.SetAsOrientedBox(10/vehicleScaleX, 20/vehicleScaleY, new b2Vec2(-140/SCALE,-30/SCALE),0);
+			
+			var stopper_fixture = new b2FixtureDef();
+			stopper_fixture.shape = stopper_part;
+			stopper_fixture.friction = 0.9;
+			stopper_fixture.density = 10;
+			stopper_fixture.restitution = 0.1; 
+
+			var fixtures = [arm_fixture, stopper_fixture];
+
+			//var skinOffset = {x: -2.5, y: 0.8};
+			var skinOffset = {x: 0, y: -0.7};
+
+			var bodyType = {shape: "box-orientated", 
+							type: "dynamic", 
+							vector: new b2Vec2(0,0),
+							fixtures: fixtures,
+							skinOffset: skinOffset};
+			var allowSleep = false;
+
+			catapult_arm_body = actorsController.createActor(name,
+														skin, 
+														density, 
+														friction, 
+														restitution, 
+														bodyType,
+														skinWidth, 
+														skinHeight,
+														physicsWidth,
+														physicsHeight,
+														collisionCategory, 
+														allowSleep);
+
+
+		};
+
+		/*
+		to do: I possibly want to create a separate body for the end of the arm 
+
+		var buildCatapultLauncher = function() {
+
+			var imgPath = domainPath + "imgs/vehicles/catapults/common/launcher.png";
+			var skinWidth = 84;
+			var skinHeight = 84;
+			var x = 10;
+			var y = 20; 
+			var point = { x: x/SCALE, y: y/SCALE };
+			var name = "launcher"; 
+			var bSpriteSheet = false;
+			var animationObj = null; 
+
+			var skin = actorsController.createSkin( imgPath,
+													skinWidth,
+													skinHeight,
+													point,
+													name,
+													bSpriteSheet,
+													animationObj);
+
+			cameraWorldSkinsContainer.addChild(skin);
+
+			
+			var density = 10; 
+			var friction = 0.9; 
+			var restitution = 0.1; 
+
+			var physicsWidth = 150;
+			var physicsHeight = 10;
+			var collisionCategory = "teamA";
+			var bodyType = {shape: "box-orientated", 
+							type: "dynamic",
+							vector: new b2Vec2(-140/SCALE,-30/SCALE) };
+			var allowSleep = true;
+
+			catapult_arm_launcher = actorsController.createActor(imgPath,
+																skin, 
+																density, 
+																friction, 
+																restitution, 
+																bodyType,
+																skinWidth, 
+																skinHeight,
+																physicsWidth,
+																physicsHeight,
+																collisionCategory, 
+																allowSleep);
 		}
+		*/
 
-		var buildWheels = function() {
-			var rear_wheel = new b2BodyDef();
-			rear_wheel.position.Set(250/SCALE, 200/SCALE);
-			rear_wheel.type = b2Body.b2_dynamicBody;
-			
-			var rear_wheel_shape = new b2CircleShape(40/SCALE);
-			var rear_wheel_fixture = new b2FixtureDef();
-			
-			rear_wheel_fixture.shape = rear_wheel_shape;
-			rear_wheel_fixture.friction = 0.9;
-			rear_wheel_fixture.density = 30;
-			rear_wheel_fixture.restitution = 0.1;
-			
-			rear_wheel_body = world.CreateBody(rear_wheel);
-			rear_wheel_body.CreateFixture(rear_wheel_fixture);
-			
-			var front_wheel= new b2BodyDef();
-			front_wheel.position.Set(450/SCALE, 200/SCALE);
-			front_wheel.type = b2Body.b2_dynamicBody;
-			
-			var front_wheel_shape = new b2CircleShape(40/SCALE);
-			var front_wheel_fixture = new b2FixtureDef();
-			
-			front_wheel_fixture.shape=front_wheel_shape;
-			front_wheel_fixture.friction=0.9;
-			front_wheel_fixture.density=30;
-			front_wheel_fixture.restitution=0.1;
+		var buildCatapultBody = function() {
 
-			front_wheel_body = world.CreateBody(front_wheel);
-			front_wheel_body.CreateFixture(front_wheel_fixture);
+			var imgPath = domainPath + "imgs/vehicles/catapults/common/mastbase.png";
+			var skinWidth = 250;
+			var skinHeight = 121;
+			var x = vehicleStartPosX;
+			var y = vehicleStartPosY; 
+			var point = { x: vehicleStartPosX, y: vehicleStartPosY };
+			
+			console.log(x/vehicleScaleX);
+
+			var name = "catapult body"; 
+			var bSpriteSheet = false;
+			var animationObj = null; 
+
+			var skin = actorsController.createSkin( imgPath,
+													skinWidth,
+													skinHeight,
+													point,
+													name,
+													bSpriteSheet,
+													animationObj);
+
+			cameraWorldSkinsContainer.addChild(skin);
+
+			var density = 5; 
+			var friction = 0.9; 
+			var restitution = 0.1; 
+
+			var physicsWidth = 150;
+			var physicsHeight = 10;
+			var collisionCategory = "teamA";
+
+			// FIXTURES 
+			
+			var main_part = new b2PolygonShape();
+			main_part.SetAsOrientedBox(125/vehicleScaleX, 20/vehicleScaleY, new b2Vec2(0,0),0);
+		
+			var chassis_fixture = new b2FixtureDef();
+			chassis_fixture.shape = main_part;
+			chassis_fixture.friction = 0.9;
+			chassis_fixture.density = 50;
+			chassis_fixture.restitution = 0.1;
+			
+			var fixed_arm = new b2PolygonShape();
+			fixed_arm.SetAsOrientedBox(20/vehicleScaleX, 60/vehicleScaleY, new b2Vec2(-80/SCALE,-40/SCALE),0);
+			
+			var fixed_arm_fixture = new b2FixtureDef();
+			fixed_arm_fixture.shape = fixed_arm;
+			fixed_arm_fixture.friction = 0.9;
+			fixed_arm_fixture.density = 1;
+			fixed_arm_fixture.restitution = 0.1;
+
+			var fixtures = [chassis_fixture, fixed_arm_fixture];
+
+			//var skinOffset = {x: -2.5, y: -2.5};
+			var skinOffset = {x: 0, y: -1.5};
+
+			var bodyType = {shape: "box-orientated", 
+							type: "dynamic", 
+							vector: new b2Vec2(0,0),
+							fixtures: fixtures,
+							skinOffset: skinOffset};
+			var allowSleep = false;				
+
+			catapult_chassis_body = actorsController.createActor(name,
+															skin, 
+															density, 
+															friction, 
+															restitution, 
+															bodyType,
+															skinWidth, 
+															skinHeight,
+															physicsWidth,
+															physicsHeight,
+															collisionCategory, 
+															allowSleep);
+
+			
 		};
 
 		var buildCatapultMotor = function() {
@@ -153,65 +393,6 @@ define(["controllers/physics/actors/ActorsController",
 			arm_revolute_joint.SetLimits(-Math.PI,Math.PI/3);
 			arm_revolute_joint.SetMaxMotorTorque(1);
 		};
-
-		var buildCatapultArm = function() {
-			var catapult_arm = new b2BodyDef();
-			catapult_arm.allowSleep = false;
-			catapult_arm.position.Set(210/SCALE,110/SCALE);
-			catapult_arm.type = b2Body.b2_dynamicBody;
-			
-			var arm_part = new b2PolygonShape();
-			arm_part.SetAsOrientedBox(150/SCALE, 10/SCALE, new b2Vec2(0,0),0);
-			
-			var arm_part_fixture = new b2FixtureDef();
-			arm_part_fixture.shape=arm_part;
-			arm_part_fixture.friction=0.9;
-			arm_part_fixture.density=5;
-			arm_part_fixture.restitution=0.1;
-			
-			var stopper = new b2PolygonShape();
-			stopper.SetAsOrientedBox(10/SCALE, 20/SCALE, new b2Vec2(-140/SCALE,-30/SCALE),0);
-			
-			var stopper_fixture = new b2FixtureDef();
-			stopper_fixture.shape = stopper;
-			stopper_fixture.friction = 0.9;
-			stopper_fixture.density = 10;
-			stopper_fixture.restitution = 0.1;
-
-			catapult_arm_body = world.CreateBody(catapult_arm);
-			catapult_arm_body.CreateFixture(arm_part_fixture);
-			catapult_arm_body.CreateFixture(stopper_fixture);
-		}
-
-		var buildCatapultBody = function() {
-			
-			var catapult_body = new b2BodyDef();
-			catapult_body.position.Set(350/catapultScaleX,200/catapultScaleY);
-			catapult_body.type = b2Body.b2_dynamicBody;
-			
-			var main_part = new b2PolygonShape();
-			main_part.SetAsOrientedBox(125/SCALE, 20/SCALE, new b2Vec2(0,0),0);
-		
-			var chassis_fixture = new b2FixtureDef();
-			chassis_fixture.shape = main_part;
-			chassis_fixture.friction = 0.9;
-			chassis_fixture.density = 50;
-			chassis_fixture.restitution = 0.1;
-			
-			var fixed_arm = new b2PolygonShape();
-			fixed_arm.SetAsOrientedBox(20/SCALE, 60/SCALE, new b2Vec2(-80/SCALE,-40/SCALE),0);
-			
-			var fixed_arm_fixture = new b2FixtureDef();
-			fixed_arm_fixture.shape = fixed_arm;
-			fixed_arm_fixture.friction = 0.9;
-			fixed_arm_fixture.density = 1;
-			fixed_arm_fixture.restitution = 0.1;
-
-			catapult_chassis_body = world.CreateBody(catapult_body);
-			catapult_chassis_body.CreateFixture(chassis_fixture);
-			catapult_chassis_body.CreateFixture(fixed_arm_fixture);
-			
-		}
 
 		var setMaxMotorTorque = function( maxTorque ) {
 			arm_revolute_joint.SetMaxMotorTorque(maxTorque);
@@ -311,9 +492,19 @@ define(["controllers/physics/actors/ActorsController",
 			
 			buildCatapultBody();
 			buildCatapultArm();
+			//buildCatapultLauncher();
 			buildCatapultMotor();
-			buildWheels();
-			buildWheelMotors();
+
+			var frontWheelX = 470;
+			var rearWheelX = 220;
+			var wheelImgPath = domainPath + "imgs/vehicles/catapults/common/wheel.png";
+			buildWheel("front wheel", frontWheelX, 200, wheelImgPath, "front_wheel_body" );
+			buildWheel("rear wheel", rearWheelX, 200, wheelImgPath, "rear_wheel_body" );
+			
+			var frontWheelJointX = 100;
+			var rearWheelJointX = -100;
+			buildWheelMotors(frontWheelJointX, rearWheelJointX);
+
 			buildCannonball();
 
 		};

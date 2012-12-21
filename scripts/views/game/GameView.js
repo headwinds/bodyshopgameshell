@@ -23,10 +23,6 @@ define([
 		render: function(){
 			var that = this;
 
-			//var canvas = $("#gameCanvas");
-			//var stage = createjs.Stage(canvas);
-			//controller
-
 			that.controller = new GameViewController( that.model );
 
 			that.setupListeners(); 
@@ -98,6 +94,25 @@ define([
 				
 			});
 
+			$("#pan-left").bind("click", function(e) {
+				e.preventDefault();
+				e.stopPropagation(); 
+
+				that.controller.pan("left");
+				
+			});
+
+			$("#pan-right").bind("click", function(e) {
+				e.preventDefault();
+				e.stopPropagation(); 
+
+				that.controller.pan("right");
+				
+			});
+
+			// need to hook up to tweenjs later
+			$("#pan-left").hide();
+			$("#pan-right").hide();
 		}, 
 
 		loadTemplate: function( templateStr ) {

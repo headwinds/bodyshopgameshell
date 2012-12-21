@@ -11,7 +11,7 @@ require.config({
       }
   },
   paths: {
-    jquery: 'libs/jquery/jquery-min',
+    jquery: 'libs/jquery/require-jquery',
     underscore: 'libs/underscore/underscore-min',
     backbone: 'libs/backbone/backbone-min',
     box2d: 'libs/box2d/Box2dWeb-easeljs',
@@ -24,8 +24,8 @@ require.config({
 });
 
 require([
-  'BodyShopGameShellApp'
-], function(BodyShopGameShellApp){
+  'BodyShopGameShell'
+], function(BodyShopGameShell){
   
-  BodyShopGameShellApp.initialize();
+  BodyShopGameShell.initialize();
 });

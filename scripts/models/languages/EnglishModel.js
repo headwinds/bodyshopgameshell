@@ -19,17 +19,17 @@ define([
 				option_a: "Home",
 				option_b: "Game",
 				option_c: "About",
-				option_d: "Leaderboard"
+				option_d: "Sketches"
 			},
 			goblin : {
 				name: "Zoltan",
 				title: "goblin",
-				description: "they dark foul creatures of low repute"
+				description: "these dark, foul creatures of low repute and a hankering for fish pie"
 			},
 			orc : {
 				name: "Clarg",
 				title: "orc",
-				description: "born in the bowels of mount doom"
+				description: "born with full armor on in the bowels of mount doom; faces even their mothers couldn't love"
 			},
 			cavetroll : {
 				name: "Uggg",
@@ -40,13 +40,6 @@ define([
 				option_b: "artists",
 				option_c: "half-elf archer/magic-users",
 				option_d: "contact"
-			},
-			episode0 : {
-				title: "And they have a cavetroll!",
-				description: "about the experiment here?",
-				option_a: "war",
-				option_b: "peace",
-				edit: "edit"
 			}
 		}
 	});

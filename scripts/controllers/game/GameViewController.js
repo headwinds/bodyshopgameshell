@@ -3,11 +3,10 @@ define([
 	"underscore",
 	"backbone",
 	"controllers/physics/PhysicsController",
-	"controllers/game/pixies/PixiesViewController",
 	"controllers/keyboard/KeyboardController",
 	"config/config",
 	"easel"
-	], function($, _, Backbone, PhysicsController, PixiesViewController, KeyboardController) {
+	], function($, _, Backbone, PhysicsController, KeyboardController) {
 
 		var GameViewController = function(model) { 
 
@@ -20,6 +19,19 @@ define([
 			var gameRunning = true;
 			var actorDelayCounter = 0;
 
+			// imgPath based on domain
+			var getDomainPath = function(){
+				var domain = document.domain;
+				var path; 
+
+				if ( domain === "localhost" ) path = config.img_path_dev
+			 	else path = config.img_path_prod; 
+
+			 	return path; 
+			};
+
+			var domainPath = getDomainPath(); 
+
 			var landscapeWidth = 2800;
 			var landscapeHeight = 800;
 
@@ -27,18 +39,26 @@ define([
 			cameraWorldContainer.width = landscapeWidth; // width of the background 
 			cameraWorldContainer.height = screenHeight;
 
-			var imgPath = config.actorSettings["episode0"].landscape;
+			var imgPath = config.actorSettings["landscape"].imgPath;
 			console.log("GameViewController / load imgPath: " + imgPath) 
 
 			var cameraWorldContainerLandscapeBG = new createjs.Bitmap(imgPath);
 			cameraWorldContainerLandscapeBG.x = 0; 
 			cameraWorldContainerLandscapeBG.y = -(landscapeHeight - screenHeight); // the landscape is taller than the camera so we need to offset it 
-			cameraWorldContainerLandscapeBG.alpha = 0.25;
+			cameraWorldContainerLandscapeBG.alpha = 1;
 			cameraWorldContainerLandscapeBG.width = landscapeWidth;
-			cameraWorldContainerLandscapeBG.height = screenHeight;
-			cameraWorldContainerLandscapeBG.snapToPixel = true; //only Bitmap 
+			cameraWorldContainerLandscapeBG.height = landscapeHeight;
+			cameraWorldContainerLandscapeBG.snapToPixel = true; 
 			cameraWorldContainerLandscapeBG.mouseEnabled = false;
 			cameraWorldContainerLandscapeBG.name = "cameraWorldContainerLandscapeBG";
+
+			var cameraWorldSkinsContainer = new createjs.Container();
+			cameraWorldSkinsContainer.x = 0; 
+			cameraWorldSkinsContainer.y = 0; 
+			cameraWorldSkinsContainer.alpha = 1;
+			cameraWorldSkinsContainer.width = landscapeWidth;
+			cameraWorldSkinsContainer.height = landscapeHeight;
+			cameraWorldSkinsContainer.name = "cameraWorldSkinsContainer";
 
 			var cameraWorldContainerDebugBG = new createjs.Container();
 			cameraWorldContainerDebugBG.name = "cameraWorldContainerDebugBG";
@@ -48,6 +68,8 @@ define([
 			cameraWorldContainerDebugBG.width = landscapeWidth;
 			cameraWorldContainerDebugBG.height = screenHeight;
 
+			cameraWorldContainerDebugBG.visible = false;
+
 			var graphics = new createjs.Graphics();
 
 			graphics.width = landscapeWidth;
@@ -56,10 +78,9 @@ define([
 			cameraWorldContainerDebugBG.graphics = graphics; 
 			cameraWorldContainerDebugBG.mouseEnabled = false;
 
+			cameraWorldContainer.addChild(cameraWorldContainerLandscapeBG, cameraWorldContainerDebugBG, cameraWorldSkinsContainer);
 
-			cameraWorldContainer.addChild(cameraWorldContainerLandscapeBG, cameraWorldContainerDebugBG);
-
-			var physicsController = new PhysicsController(canvas, context, cameraWorldContainer, cameraWorldContainerDebugBG);
+			var physicsController = new PhysicsController(canvas, context, cameraWorldContainer, cameraWorldSkinsContainer, cameraWorldContainerDebugBG, domainPath);
 			physicsController.setup();
 
 			var keyboardController = new KeyboardController();
@@ -85,8 +106,6 @@ define([
 			fpsFld.alpha = 1;
 			fpsFld.x = 20;
 			fpsFld.y = 26;
-						
-			//var pixiesView = new PixiesViewController(canvas, fpsFld, cameraWorldContainer);
 				
 			stage.addChild(cameraWorldContainer, fpsFld );
 
@@ -114,11 +133,16 @@ define([
 			createjs.Ticker.useRAF = true; // use Request Animation Frame 
 			createjs.Ticker.addListener( tick );
 
-			physicsController.spawn("creature-simple", "goblin");
-			physicsController.spawn("creature-simple", "orc");
-			physicsController.spawn("creature-complex", "cavetroll");
-			
+			// team evil
+			physicsController.spawn("body-simple", "goblin");
+			physicsController.spawn("body-simple", "orc");
+			physicsController.spawn("body-complex", "cavetroll");
 			physicsController.spawn("blueprint", "catapult");
+			
+			// team good 
+			physicsController.spawn("body-simple", "knight");
+			physicsController.spawn("body-simple", "legolas");
+			//physicsController.spawn("blueprint", "trebuchet");
 
 			var play = function(){
 				gameRunning = true; 
@@ -148,31 +172,15 @@ define([
 			var bSkinsVisible = true;
 			var toggleSkins = function(){
 
-				var totalChildren = cameraWorldContainer.getNumChildren();
-
-				if ( bSkinsVisible ) {
-					console.log("GameViewController bSkinsVisible: " + bSkinsVisible);
-					console.log("GameViewController cameraWorldContainer.getNumChildren(): " + cameraWorldContainer.getNumChildren() );
-
-					for (var skinCounter = 0; skinCounter < totalChildren; skinCounter++) {
-						
-						var skin = cameraWorldContainer.getChildAt(skinCounter);
-						if ( skin.name != "cameraWorldContainerDebugBG") skin.visible = false; 
-						console.log("GameViewController skin.name: " + skin.name);
-					}
-
-				} else {
-
-					for (var skinCounter = 0; skinCounter < totalChildren; skinCounter++) {
-						
-						var skin = cameraWorldContainer.getChildAt(skinCounter);
-						if ( skin.name != "cameraWorldContainerDebugBG") skin.visible = true; 
-					}
-
-				} 
+				if ( bSkinsVisible ) cameraWorldSkinsContainer.visible = false;
+				else cameraWorldSkinsContainer.visible = true;
 
 				bSkinsVisible = !bSkinsVisible; 
 			};
+
+			var pan = function( dirStr ){
+
+			}
 
 			return {
 				stop : stop,
@@ -180,7 +188,8 @@ define([
 				stepForward : stepForward,
 				stepBackward : stepBackward, 
 				toggleDebug : toggleDebug,
-				toggleSkins: toggleSkins
+				toggleSkins: toggleSkins,
+				pan:pan
 			}
 	};
 

@@ -2,9 +2,10 @@ define(["easel",
 		"box2d",
 		"controllers/physics/actors/ActorsController",
 		"controllers/physics/vehicles/CatapultController",
-		"config/config"], function(easel, box2d, ActorsController, CatapultController) {
+		"controllers/physics/vehicles/TrebuchetController",
+		"config/config"], function(easel, box2d, ActorsController, CatapultController, TrebuchetController) {
 
-	var PhysicsController = function(canvas, context, cameraWorldContainer, cameraWorldContainerDebugBG) {
+	var PhysicsController = function(canvas, context, cameraWorldContainer, cameraWorldSkinsContainer, cameraWorldContainerDebugBG, domainPath) {
 
 		var translationFocusPoint = {x: 0, y: 0};
 	
@@ -21,11 +22,8 @@ define(["easel",
 		var b2MassData = Box2D.Collision.Shapes.b2MassData;
 		var b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef;
 
-		var screenWidth = cameraWorldContainer.width;
-		var screenHeight = cameraWorldContainer.height; 
-
 		var floor;
-		var floorWidth = canvas.width * 4; 
+		var floorWidth = 2800; 
 		var floorHeight = 10;
 
 		var left;
@@ -51,36 +49,37 @@ define(["easel",
 
 		var spawnSimple = function( createStr ) {
 
-			var	creaturePath = config.actorSettings[createStr].path; 
-			var	creatureWidth = config.actorSettings[createStr].width; 
-			var	creatureHeight = config.actorSettings[createStr].height; 
-			var	creaturePhysicsWidth = config.actorSettings[createStr].physicsWidth; 
-			var	creaturePhysicsHeight = config.actorSettings[createStr].physicsHeight; 
-			var creatureDensity = config.actorSettings[createStr].density;
-			var creatureFriction = config.actorSettings[createStr].friction;
-			var creatureRestituion = config.actorSettings[createStr].restitution;
+			var	simpleBodyImgPath = domainPath + config.actorSettings[createStr].imgPath; 
+			var	simpleBodyWidth = config.actorSettings[createStr].width; 
+			var	simpleBodyHeight = config.actorSettings[createStr].height; 
+			var	simpleBodyPhysicsWidth = config.actorSettings[createStr].physicsWidth; 
+			var	simpleBodyPhysicsHeight = config.actorSettings[createStr].physicsHeight; 
+			var simpleBodyDensity = config.actorSettings[createStr].density;
+			var simpleBodyFriction = config.actorSettings[createStr].friction;
+			var simpleBodyRestituion = config.actorSettings[createStr].restitution;
+			var simpleBodyCollisionTeam = config.actorSettings[createStr].collisionCategory;
 			var bodyType = config.actorSettings[createStr].bodyType; 
 			var bSpriteSheet = config.actorSettings[createStr].bSpriteSheet; 
 			var animationObj = config.actorSettings[createStr].animationObj; 
 
-			creatureX = Math.round(Math.random()*500);
-			creatureY = onFloorY;
+			simpleBodyX = Math.round(Math.random()*500);
+			simpleBodyY = onFloorY;
 
-			var creatureStartX = config.actorSettings[createStr].x; 
-			var creatureStartY = config.actorSettings[createStr].y; 
+			var simpleBodyStartX = config.actorSettings[createStr].x; 
+			var simpleBodyStartY = config.actorSettings[createStr].y; 
 
-			var creaturePoint = {x: creatureStartX, y: creatureStartY};
+			var simpleBodyPoint = {x: simpleBodyStartX, y: simpleBodyStartY};
 
 
-			var creatureSkin  = actorsController.createSkin(creaturePath,
-															creatureWidth,
-															creatureHeight,
-															creaturePoint,
+			var simpleBodySkin  = actorsController.createSkin(simpleBodyImgPath,
+															simpleBodyWidth,
+															simpleBodyHeight,
+															simpleBodyPoint,
 															createStr,
 															bSpriteSheet,
 															animationObj);
 
-			cameraWorldContainer.addChild(creatureSkin);
+			cameraWorldSkinsContainer.addChild(simpleBodySkin);
 
 			var density = 1; 
 			var friction = 0; // 0 no friction to 1
@@ -88,15 +87,16 @@ define(["easel",
 
 		
 			actorsController.createActor(createStr,
-										creatureSkin, 
-										creatureDensity, 
-										creatureFriction, 
-										creatureRestituion, 
+										simpleBodySkin, 
+										simpleBodyDensity, 
+										simpleBodyFriction, 
+										simpleBodyRestituion, 
 										bodyType, 
-										creatureWidth,
-										creatureHeight, 
-										creaturePhysicsWidth, 
-										creaturePhysicsHeight );
+										simpleBodyWidth,
+										simpleBodyHeight, 
+										simpleBodyPhysicsWidth, 
+										simpleBodyPhysicsHeight,
+										simpleBodyCollisionTeam );
 			
 		};
 
@@ -116,7 +116,7 @@ define(["easel",
 
 				if (partName != "joint") {
 
-					var	partPath = partObj.path; 
+					var	partImgPath = domainPath + partObj.imgPath; 
 					var	partWidth = partObj.width; 
 					var	partHeight = partObj.height; 
 					var	partSpriteSheetX = partObj.spriteSheetX; 
@@ -129,12 +129,13 @@ define(["easel",
 					var partDensity = partObj.density;
 					var partFriction = partObj.friction;
 					var partRestituion = partObj.restitution;
+					var partCollisionTeam = partObj.collisionCategory;
 					var bSpriteSheet = partObj.bSpriteSheet; 
 					var animationObj = partObj.animationObj; 
 
 					var partPoint = {x: partX, y: partY};
 
-					var partSkin = actorsController.createSkin(	partPath, 
+					var partSkin = actorsController.createSkin(	partImgPath, 
 																partWidth, 
 																partHeight, 
 																partPoint, 
@@ -153,24 +154,22 @@ define(["easel",
 												partWidth,
 												partHeight,
 												partPhysicsWidth, 
-												partPhysicsHeight);
+												partPhysicsHeight,
+												partCollisionTeam);
 				} else {
 					switch(createStr) {
 						case "cavetroll" :
-							//connectJoint(partObj.connects[0], partObj.connects[1]);
-
-							actorsController.createJoint(partObj.connects); 
-
+							actorsController.createJoint("revolute", partObj.connects); 
 						break;
 						default :
-							connectJoint(partObj.connects[0], partObj.connects[1]);
+							actorsController.createJoint("distance", partObj.connects); ; 
 						break;
 					};
 				};
 
 			};
 
-			cameraWorldContainer.addChild(complexSpawnContainer);
+			cameraWorldSkinsContainer.addChild(complexSpawnContainer);
 		};
 
 		var spawnBlueprint = function( name ) {
@@ -182,18 +181,50 @@ define(["easel",
 					var catapultScale = 30;
 					var catapultScaleX = 37; // higher the number, the whole thing moves to the left
 					var catapultScaleY = 37;
+					var catapultStartPosX = 190;
+					var catapultStartPosY = 400; 
+
+					var bFaceRight = true;
 					var thing = new CatapultController(	name, 
 														canvas, 
 														context, 
-														cameraWorldContainer, 
+														cameraWorldSkinsContainer, 
 														world, 
 														catapultScale, 
 														actors,
 														bodies,
 														catapultScaleX,
-														catapultScaleY ); 
+														catapultScaleY,
+														catapultStartPosX, 
+														catapultStartPosY,
+														bFaceRight,
+														domainPath ); 
 					thing.spawn(); 
 					break;
+				case "trebuchet" :
+					var trebuchetScale = 30;
+					var trebuchetScaleX = 37; // higher the number, the whole thing moves to the left
+					var trebuchetScaleY = 37;
+					var trebuchetStartPosX = 3800;
+					var trebuchetStartPosY = 300; 
+
+					var bFaceRight = true;
+					var thing = new TrebuchetController(name, 
+														canvas, 
+														context, 
+														cameraWorldSkinsContainer, 
+														world, 
+														trebuchetScale, 
+														actors,
+														bodies,
+														trebuchetScaleX,
+														trebuchetScaleY,
+														trebuchetStartPosX, 
+														trebuchetStartPosY,
+														bFaceRight,
+														domainPath ); 
+					thing.spawn(); 
+					break;	
 				default :
 					//var thing = new BlueprintController(world); 
 					break;
@@ -205,10 +236,10 @@ define(["easel",
 
 		var spawn = function(type, name) {
 			switch(type) {
-				case "creature-simple" :
+				case "body-simple" :
 					spawnSimple(name);
 					break;	
-				case "creature-complex" :
+				case "body-complex" :
 				case "vehicle" :
 					spawnComplex(name);
 					break;	
@@ -224,26 +255,12 @@ define(["easel",
 			actorsController = new ActorsController(actors, bodies, world, SCALE);
 			
 			addDebug();
-			
-			// boundaries - floor
-			var floorFixture = new b2FixtureDef;
-			floorFixture.density = 1;
-			floorFixture.restitution = 0.1; // 0 - 1 bounciness 
-			floorFixture.friction = 0.9;
-			floorFixture.shape = new b2PolygonShape;
 
-			var floorWidthScale = floorWidth / SCALE;
-			var floorHeightScale = floorHeight / SCALE;
+			spawnSimple("floor"); 
 
-			floorFixture.shape.SetAsBox(floorWidthScale, floorHeightScale);
-			
-			var floorBodyDef = new b2BodyDef;
-			floorBodyDef.type = b2Body.b2_staticBody;
-			floorBodyDef.position.x = 0 / SCALE;
-			floorBodyDef.position.y = canvas.height / SCALE;
-			
-			floor = world.CreateBody(floorBodyDef);
-			floor.CreateFixture(floorFixture);
+			// to do
+			// config and spawn left and right walls instead of setting them up below... 
+
 			// boundaries - left
 			
 			var leftFixture = new b2FixtureDef;
@@ -295,7 +312,7 @@ define(["easel",
 		};
  
 		var removeActor = function(actor) {
-			cameraWorldContainer.removeChild(actor.skin);
+			cameraWorldSkinsContainer.removeChild(actor.skin);
 			actors.splice(actors.indexOf(actor),1);
 		};
 
@@ -322,11 +339,12 @@ define(["easel",
 					actors[i].update();
 				}
 				
+				
 				var cameraFocusPoint = things[0].getCameraFocus();
 
-				cameraWorldContainer.x = cameraFocusPoint.x; //screenWidth / 2.0 - focus.x;
-  				cameraWorldContainer.y = cameraFocusPoint.y; //screenHeight / 2.0 - focus.y;
-
+				cameraWorldContainer.x = cameraFocusPoint.x; 
+  				cameraWorldContainer.y = cameraFocusPoint.y; 
+				
 				world.Step(TIMESTEP, 10, 10);
 
 				fixedTimestepAccumulator -= STEP;
@@ -362,9 +380,7 @@ define(["easel",
 
 			var bodyA = getBodyBySkinName(bodyASkinName);
 			var bodyB = getBodyBySkinName(bodyBSkinName);
-
-
-		}
+		};
 
 		var pauseResume = function(p) {
 			if(p) { TIMESTEP = 0;
@@ -386,10 +402,8 @@ define(["easel",
 					things[0].setKeyPressed(keyName);
 					things[0].setMotorSpeed();
 					break;		
-
 			}
-
-		}
+		};
 
 		return {
 			update: update,
