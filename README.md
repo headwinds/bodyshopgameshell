@@ -11,6 +11,11 @@ What am trying to do?
 
 My main goal is to create a marketing game shell built on Backbone that holds both the game itself running on a HTML5 canvas as well as various pages that support it. I'm also exploring how Box2DWeb works with CreateJS and would like to share a minor alteration to Box2DWeb's Debug drawing rountines which enable them to better support CreateJS's containers and the concept of a camera. After working with RequireJS, you could see how this alteration could have been much easier and less intimidating had Box2DWeb been architected as various modules so that one could their own custom debug drawing module without having to edit code beyond lines 10800.  
 
+## Demo
+
+currently only works in Chrome - just haven't tested in other browsers yet
+[http://www.headwinds.net/lab/bodyshopgameshell/index-dev.html](http://www.headwinds.net/lab/bodyshopgameshell/index-dev.html)
+
 ## Major Libraries
 
 CreateJS - [http://www.createjs.com](http://www.createjs.com)
