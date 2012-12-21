@@ -142,7 +142,7 @@ define([], function(){
                         imgPath: "imgs/environments/floors/grass/grassSpriteSheet.png",
                         bSpriteSheet: false,
                         animationObj: null,
-                        width: 2800, 
+                        width: 4800, 
                         height: 10,
                         physicsWidth: 4800,
                         physicsHeight: 10,
