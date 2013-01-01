@@ -10839,6 +10839,8 @@ Box2D.postDefs = [];
       if (!vertexCount) return;
       var s = this.m_ctx;
       var drawScale = this.m_drawScale;
+
+      //console.log(s, "Box2dweb-easeljs DrawPolygon");
       
       //if ( s.beginPath == "defined" ) s.beginStroke();
       //else s.beginPath(); 
@@ -10858,6 +10860,8 @@ Box2D.postDefs = [];
       if (!vertexCount) return;
 
       var s = this.m_ctx; 
+
+      //console.log(s, "Box2dweb-easeljs DrawSolidPolygon");
 
       var drawScale = this.m_drawScale;
       s.setStrokeStyle(this.m_stroke_thickness);

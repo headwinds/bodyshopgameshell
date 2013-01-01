@@ -53,9 +53,9 @@ define([
 				  return keyname;
 				},
 
-				onKeydown: function(e) {
+				onKeydown: function(event) {
 
-					var code = (e.keyCode ? e.keyCode : e.which);
+					var code = (event.keyCode ? event.keyCode : event.which);
 
 			    	this._pressed[code] = true;
 			    	console.log("is down: " + code);
@@ -65,16 +65,16 @@ define([
 			    	$(window).trigger("customKeydown", keyName );
 				},
 
-				onKeyup: function(e) {
-					delete this._pressed[e.keyCode];
+				onKeyup: function(event) {
+					delete this._pressed[event.keyCode];
 				}
 			};
 			
-			$(window).keydown( function(e) {
+			$(window).keydown( function(event) {
 				Key.onKeydown(event);
 			});
 
-			$(window).keyup( function(e) {
+			$(window).keyup( function(event) {
 				Key.onKeyup(event);
 			});
 

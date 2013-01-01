@@ -1,4 +1,4 @@
-// Author: Brandon Flowers / www.headwinds.net / @headwinds
+// hacked together by: Brandon Flowers / www.headwinds.net / @headwinds
 
 require.config({
   shim: {
@@ -15,6 +15,7 @@ require.config({
     underscore: 'libs/underscore/underscore-min',
     backbone: 'libs/backbone/backbone-min',
     box2d: 'libs/box2d/Box2dWeb-easeljs',
+    rube: 'libs/box2d/loadrube',
     easel: 'libs/createjs/easeljs-NEXT.min',
     tween: 'libs/createjs/tweenjs-0.3.0.min',
     text: 'libs/require/text',

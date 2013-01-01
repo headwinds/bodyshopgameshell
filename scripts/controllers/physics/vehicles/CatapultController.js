@@ -305,8 +305,6 @@ define(["controllers/physics/actors/ActorsController",
 			var y = vehicleStartPosY; 
 			var point = { x: vehicleStartPosX, y: vehicleStartPosY };
 			
-			console.log(x/vehicleScaleX);
-
 			var name = "catapult body"; 
 			var bSpriteSheet = false;
 			var animationObj = null; 

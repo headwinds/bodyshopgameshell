@@ -2,8 +2,10 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
-	'controllers/game/GameViewController'
-	], function($,_,Backbone, GameViewController) {
+	'controllers/game/GameViewController',
+	'demos/manual/controllers/ManualDemoViewController',
+	'demos/rube/controllers/RubeDemoViewController',
+	], function($,_,Backbone, GameViewController, ManualDemoViewController, RubeDemoViewController) {
 
 	var GameView = Backbone.View.extend({
 
@@ -20,12 +22,51 @@ define([
 			this.loadTemplate( this.model.get('template') ); 
 		},
 
-		render: function(){
+		render: function() {
 			var that = this;
 
-			that.controller = new GameViewController( that.model );
+			var gameID = that.model.get('gameID');
+
+			console.log("GameView render %s %c", gameID, "{color:#99000}" );
+
+			switch(gameID) {
+				case "manual" :
+				that.controller = new ManualDemoViewController( that.model );
+				break;
+				case "rube" :
+				that.controller = new RubeDemoViewController( that.model );
+				break;
+			};
 
 			that.setupListeners(); 
+
+		},
+
+		loadTemplate: function( templateStr ) {
+			console.log("GameView / loadTemplate / templateStr: " + templateStr)
+
+			var that = this;
+			
+			switch(templateStr) {
+				case "mobile":
+					require(['text!templates/game/mobileTemplate.html'], function(mobileTemplate) {
+						var mobileData = {};
+						var mobileCompiledTemplate = _.template( mobileTemplate, mobileData );
+						$("#page").html( mobileCompiledTemplate );
+
+						that.render(); 
+					});
+				break;
+				default: 
+					require(['text!templates/game/desktopTemplate.html'], function(desktopTemplate) {
+						var desktopData = {};
+						var desktopCompiledTemplate = _.template( desktopTemplate, desktopData );
+						$("#page").html( desktopCompiledTemplate );
+
+						that.render(); 
+					});
+				break;
+			}
 
 		},
 
@@ -113,36 +154,7 @@ define([
 			// need to hook up to tweenjs later
 			$("#pan-left").hide();
 			$("#pan-right").hide();
-		}, 
-
-		loadTemplate: function( templateStr ) {
-			console.log("GameView / loadTemplate / templateStr: " + templateStr)
-
-			var that = this;
-			
-			switch(templateStr) {
-				case "mobile":
-					require(['text!templates/game/mobileTemplate.html'], function(mobileTemplate) {
-						var mobileData = {};
-						var mobileCompiledTemplate = _.template( mobileTemplate, mobileData );
-						$("#page").html( mobileCompiledTemplate );
-
-						that.render(); 
-					});
-				break;
-				default: 
-					require(['text!templates/game/desktopTemplate.html'], function(desktopTemplate) {
-						var desktopData = {};
-						var desktopCompiledTemplate = _.template( desktopTemplate, desktopData );
-						$("#page").html( desktopCompiledTemplate );
-
-						that.render(); 
-					});
-				break;
-			}
-
-		},
-
+		}
 	
 	});
 

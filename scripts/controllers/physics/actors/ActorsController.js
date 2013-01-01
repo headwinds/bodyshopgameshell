@@ -133,6 +133,9 @@ define(["easel",
 				case "dynamic" :
 					return b2Body.b2_dynamicBody;
 					break;
+				case "kinematic" :
+					return b2Body.b2_kinematicBody;
+					break;	
 				default : 
 					return b2Body.b2_dynamicBody;
 			};
@@ -152,8 +155,6 @@ define(["easel",
 			actorBodyDef.position.x = skin.x / SCALE + 5;
 			actorBodyDef.position.y = skin.y / SCALE;
 			actorBodyDef.allowSleep = allowSleep;
-
-			if ( name == "catapult body") console.log( actorBodyDef.position.x );
 
 			var actorBody = world.CreateBody(actorBodyDef);
 			
@@ -203,8 +204,7 @@ define(["easel",
 
 			
 
-			// assign actor with or without skin offset -- I know this isn't bad but assumed all skins would be positioned around the center 
-			// which they all are except the catapult arm 
+			// you may wish to offset the skin for visual effect
 			var actor;
 			if ( bodyType.skinOffset === undefined )  actor = new actorObject(actorBody, skin);
 			else actor = new actorObject(actorBody, skin, bodyType.skinOffset);

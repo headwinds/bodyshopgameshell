@@ -2,12 +2,9 @@ define(["easel",
 		"box2d",
 		"controllers/physics/actors/ActorsController",
 		"controllers/physics/vehicles/CatapultController",
-		"controllers/physics/vehicles/TrebuchetController",
-		"config/config"], function(easel, box2d, ActorsController, CatapultController, TrebuchetController) {
+		"config/config"], function(easel, box2d, ActorsController, CatapultController) {
 
 	var PhysicsController = function(canvas, context, cameraWorldContainer, cameraWorldSkinsContainer, cameraWorldContainerDebugBG, domainPath) {
-
-		var translationFocusPoint = {x: 0, y: 0};
 	
 		// Box2d vars
 		var b2Vec2 = Box2D.Common.Math.b2Vec2;
@@ -201,30 +198,6 @@ define(["easel",
 														domainPath ); 
 					thing.spawn(); 
 					break;
-				case "trebuchet" :
-					var trebuchetScale = 30;
-					var trebuchetScaleX = 37; // higher the number, the whole thing moves to the left
-					var trebuchetScaleY = 37;
-					var trebuchetStartPosX = 3800;
-					var trebuchetStartPosY = 300; 
-
-					var bFaceRight = true;
-					var thing = new TrebuchetController(name, 
-														canvas, 
-														context, 
-														cameraWorldSkinsContainer, 
-														world, 
-														trebuchetScale, 
-														actors,
-														bodies,
-														trebuchetScaleX,
-														trebuchetScaleY,
-														trebuchetStartPosX, 
-														trebuchetStartPosY,
-														bFaceRight,
-														domainPath ); 
-					thing.spawn(); 
-					break;	
 				default :
 					//var thing = new BlueprintController(world); 
 					break;
@@ -257,6 +230,26 @@ define(["easel",
 			addDebug();
 
 			spawnSimple("floor"); 
+
+			// listen for collisons
+			var contactListener = new Box2D.Dynamics.b2ContactListener; 
+			contactListener.BeginContact = function( contact_details ) { 
+				
+			}
+
+			contactListener.EndContact = function( contact_details ) { 
+			
+			}
+
+			contactListener.PreSolve = function( contact_details ) { 
+			
+			}
+
+			contactListener.PostSolve = function( contact_details ) { 
+			
+			}
+
+			 world.SetContactListener(contactListener)
 
 			// to do
 			// config and spawn left and right walls instead of setting them up below... 
@@ -318,7 +311,7 @@ define(["easel",
 
 		var update = function() {
 
-			console.log("PhsyicsController / update");
+			//console.log("PhsyicsController / update");
 
 			var now = Date.now();
 			var dt = now - lastTimestamp;

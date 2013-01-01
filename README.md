@@ -1,9 +1,10 @@
 ## About
 
-Project: createjs-box2DWeb-requirejs-backbone-bodyshopgameshell
-Hacker: brandon flowers | [http://www.headwinds.net](http://www.headwinds.net) | [@headwinds](http://twitter.com/headwinds)
+createjs-box2DWeb-requirejs-backbone-bodyshopgameshell
 
-Right, so why the clunky project title? 
+hacked together by: brandon flowers | [http://www.headwinds.net](http://www.headwinds.net) | [@headwinds](http://twitter.com/headwinds)
+
+So why the clunky project title? 
 
 I'm interested in collaborating with other programmers and thought I'd just list the major libraries [a nod to JQuery which is also involved but doesn't need more promoting] first and followed by a few concatenated keywords that attempt to describe my intentions. 
 
@@ -13,7 +14,7 @@ My main goal is to create a marketing game shell built on Backbone that holds bo
 
 ## Demo
 
-currently only works in Chrome - just haven't tested in other browsers yet
+Tested in Chrome/Firefox/Safari:
 [http://www.headwinds.net/lab/bodyshopgameshell/index-dev.html](http://www.headwinds.net/lab/bodyshopgameshell/index-dev.html)
 
 ## Major Libraries
@@ -27,6 +28,10 @@ RequireJS - [http://requirejs.org/](http://requirejs.org/)
 Backbone - [http://backbonejs.org/](http://backbonejs.org/)
 
 I highly recommend Thomas Davis' Backbone.js Tutorials to learn more about Node, Backbone, RequireJS, and MongoDB - [http://backbonetutorials.com](http://backbonetutorials.com). I also made a little contribution to his modular backbone example which was actually the base of this demo. 
+
+## Physics Editor 
+
+R.U.B.E -  [https://www.iforce2d.net/rube/](https://www.iforce2d.net/rube/)
 
 ## Body Shop Game Shell
 

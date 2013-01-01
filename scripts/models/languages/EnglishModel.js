@@ -8,37 +8,20 @@ define([
 		defaults:  {
 			langCode : 'en',
 			game : {
-				title: "Your Game Name Here",
-				description: "a game about whatever your game is about",
-				option_a: "start new game",
-				option_b: "continue game",
-				option_c: "options",
-				option_d: "credits"
+				title: "Featured Game Demo: Manual Box2D Physics",
+				description: "demonstrates new debug drawing methods that allows Easeljs to draw Box2DWeb physics",
+				option_a: "play demo"
 			},
 			nav : {
-				option_a: "Home",
-				option_b: "Game",
-				option_c: "About",
-				option_d: "Sketches"
-			},
-			goblin : {
-				name: "Zoltan",
-				title: "goblin",
-				description: "these dark, foul creatures of low repute and a hankering for fish pie"
-			},
-			orc : {
-				name: "Clarg",
-				title: "orc",
-				description: "born with full armor on in the bowels of mount doom; faces even their mothers couldn't love"
-			},
-			cavetroll : {
-				name: "Uggg",
-				description: "extremely bad beasts of little words in fact none"
+				option_a: "home",
+				option_b: "game",
+				option_c: "about",
+				option_d: "demos"
 			},
 			footer : {
 				option_a: "developers",
 				option_b: "artists",
-				option_c: "half-elf archer/magic-users",
+				option_c: "half elf archer magic users",
 				option_d: "contact"
 			}
 		}

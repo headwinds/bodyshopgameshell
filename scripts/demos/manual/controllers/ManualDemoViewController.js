@@ -8,7 +8,7 @@ define([
 	"easel"
 	], function($, _, Backbone, PhysicsController, KeyboardController) {
 
-		var GameViewController = function(model) { 
+		var ManualDemoViewController = function(model) { 
 
 			var canvas = document.getElementById('gameCanvas');
 			var context = canvas.getContext('2d');
@@ -40,7 +40,7 @@ define([
 			cameraWorldContainer.height = screenHeight;
 
 			var imgPath = config.actorSettings["manualBG"].imgPath;
-			console.log("GameViewController / load imgPath: " + imgPath) 
+			console.log("ManualPhysicsDemoController / load imgPath: " + imgPath) 
 
 			var cameraWorldContainerLandscapeBG = new createjs.Bitmap(imgPath);
 			cameraWorldContainerLandscapeBG.x = 0; 
@@ -86,7 +86,7 @@ define([
 			var keyboardController = new KeyboardController();
 
 			var onKeyboardHandler = function(event, keyName) {
-				console.log("GameViewController / onKeyboardHandler /keyName: " + keyName);
+				console.log("ManualPhysicsDemoController / onKeyboardHandler /keyName: " + keyName);
 				physicsController.trigger(event, keyName);
 
 				if ( keyName == "LEFT") {
@@ -157,7 +157,7 @@ define([
 			};
 
 			var stepBackward = function(){
-				console.log("GameViewController / send challenge");
+				console.log("ManualPhysicsDemoController / send challenge");
 			};
 
 			var bDebugVisible = true;
@@ -192,6 +192,6 @@ define([
 			}
 	};
 
-  return GameViewController;
+  return ManualDemoViewController;
 
 });

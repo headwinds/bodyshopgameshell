@@ -136,7 +136,7 @@ define([], function(){
                         bFaceRight: false
             },
             trebuchet : [
-                { note : "see TrebuchetController.js for settings - to do: configure this here" }
+                { note : "see the rube physics demo to see how I escaped the manual madness of this config file and created the trebuchet with an editor!" }
             ],
             floor : {   name: "grass", 
                         imgPath: "imgs/environments/floors/grass/grassSpriteSheet.png",
@@ -155,8 +155,11 @@ define([], function(){
                         collisionCategory: "teamEnvironment", 
                         bFaceRight: false,
             },
-            landscape: { name: "landscape",   
-                         imgPath: "imgs/environments/backgrounds/demoBG.jpg" 
+            manualBG: { name: "landscape",   
+                         imgPath: "imgs/environments/backgrounds/manualBG.jpg" 
+            },
+            rubeBG: { name: "landscape",   
+                         imgPath: "imgs/environments/backgrounds/rubeBG.jpg" 
             }
         }
     }
