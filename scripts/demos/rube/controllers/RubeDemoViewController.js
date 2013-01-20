@@ -12,6 +12,7 @@ define([
 
         var canvas = document.getElementById('gameCanvas');
         var context = canvas.getContext('2d');
+        
         var stage = new createjs.Stage(canvas);
         var gameModel = model;
         var screenWidth = canvas.width;
@@ -19,7 +20,7 @@ define([
         var gameRunning = true;
         var actorDelayCounter = 0;
         var wheelBodies = [];
-        var moveFlags = true; 
+       
 
         // imgPath based on domain
         var getDomainPath = function(){
@@ -65,12 +66,13 @@ define([
 
         var cameraWorldContainerDebugBG = new createjs.Container();
         cameraWorldContainerDebugBG.name = "cameraWorldContainerDebugBG";
-        cameraWorldContainerDebugBG.x = 390;
-        cameraWorldContainerDebugBG.y = 250;
+        //cameraWorldContainerDebugBG.x = 390;
+        //cameraWorldContainerDebugBG.y = 250;
         //cameraWorldContainerDebugBG.scaleX = 0.80;
         //cameraWorldContainerDebugBG.scaleY = 0.80;
 
-        cameraWorldContainerDebugBG.scaleY = -1;
+        //cameraWorldContainerDebugBG.scaleY = -1; // flip both skins and debug containers because the R.U.B.E. has the reverse coordinates
+        //cameraWorldSkinsContainer.scaleY = -1;
 
         cameraWorldContainerDebugBG.width = landscapeWidth;
         cameraWorldContainerDebugBG.height = screenHeight;
@@ -95,20 +97,7 @@ define([
             console.log("RubeDemoViewController / onKeyboardHandler /keyName: " + keyName);
             physicsController.trigger(event, keyName);
 
-            switch(keyName) {
-
-                case "LEFT" :
-                    moveFlags |= MOVE_LEFT;
-                    updateMotorSpeed();
-                    break;
-                case "RIGHT" :
-                    moveFlags |= MOVE_RIGHT;
-                    updateMotorSpeed();
-                    break;
-                default :
-                
-                    break;
-            };
+            //physicsController.startDriving(keyName);
 
             /*
             var onKeyDown = function(canvas, evt) {
@@ -140,20 +129,7 @@ define([
             console.log("GameViewController / onKeyboardHandler /keyName: " + keyName);
             physicsController.trigger(event, keyName);
 
-            switch(keyName) {
-
-                case "LEFT" :
-                   moveFlags &= ~MOVE_LEFT;
-                    updateMotorSpeed();
-                    break;
-                case "RIGHT" :
-                    moveFlags &= ~MOVE_RIGHT;
-                    updateMotorSpeed();
-                    break;
-                default :
-                
-                    break;
-            };
+            //physicsController.stopDriving(keyName);
         };
 
         keyboardController.bind("customKeydown", onKeyboardDownHandler);
@@ -174,7 +150,7 @@ define([
 
         gameRunning = false; // don't start the simulation until the json has loaded
         var gameTickCount = 0;  
-        var gameTickMax = 3;   
+        var gameTickMax = 2;   
 
         var update = function() {
 
@@ -191,8 +167,8 @@ define([
             //console.log("RubeDemoViewController tick");
             if(gameRunning) {
                 update();
-                //gameTickCount++;
-                //if ( gameTickCount > gameTickMax ) gameRunning = false; 
+                gameTickCount++;
+                if ( gameTickCount > gameTickMax ) gameRunning = false; 
             }
         };
 
@@ -260,6 +236,15 @@ define([
         };
 
         loadWorld(jsonPath); 
+
+        return {
+                stop : stop,
+                play : play,
+                stepForward : stepForward,
+                stepBackward : stepBackward, 
+                toggleDebug : toggleDebug,
+                toggleSkins: toggleSkins
+            }
 
     }; 
 

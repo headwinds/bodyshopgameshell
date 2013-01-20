@@ -1,0 +1,105 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>R.U.B.E Box2D editor - iforce2d</title>
+        
+        <script type="text/javascript" src="scripts/jquery-1.8.2.min.js"></script>
+
+        <script type="text/javascript" src="scripts/libs/box2dWeb/box2dweb.js"></script>
+        <script type="text/javascript" src="scripts/loadrube.js"></script>
+        <script type="text/javascript" src="scripts/testbed.js"></script>
+        <script type="text/javascript" src="scripts/shark.js"></script>  
+        
+        <link rel="stylesheet" type="text/css" href="css/rube-style.css">
+        
+    </head>
+           
+        
+    <div id="wrap">
+        <div id="main" class="rube_mainheader">
+          <div class="contained-content">
+              <div style="height:100px">
+              <div class="rube_logo_header">
+                <a href="https://www.iforce2d.net/rube/"><img src="scripts/rube_logo.png"></a>
+              </div>
+              <div id="poweredbydiv">
+                  <span class="reallyuseful">Really Useful Box2D Editor</span>
+                  <span class="poweredby">iforce2d</span>
+              </div>
+              </div>
+          </div>
+            
+            <!--<div id="divider">
+                <div id="divider-tag">
+                    <h1>R.U.B.E</h1>
+                    <h2 class="title">Box2D editor</h2>
+                </div>
+            </div>-->
+                          
+          <div class="contained-content">
+            <div class="inner-contained-content">
+        
+        
+                    <!--<br>
+                    Back to <a href="/rube">main page</a><br>-->
+                    <br>
+                    <div style="text-align:center">
+
+                        <div style="margin:auto;width:640px;padding:2px;border:1px solid #888;text-align:left">            
+                            <!--
+                                If you change the size of the canvas, you'll also need to change 
+                                the value of 'viewCenterPixel' in testbed.js
+                            -->
+                            <canvas id="canvas" width="640" height="480" tabindex="1"></canvas>
+                            <p style="font-weight:bold; text-align:center; font-size:16px; color:#CCC">CONTROL AND CHANGE THE DEMO USING THESE CONTROLS</p>
+                            <div style="width:636px;padding:2px;background-color:#ddd">
+                            <div style="text-align:center">
+                                Select test: <select id="testSelection" onchange="changeTest();">
+                                    <option value="shark">Shark&#33;</option>
+                                </select>Use j/k to drive the vehicles.<br>
+                                <div style="height:6px"></div>
+                                <div id="sceneinfo" style="width:500px;margin:auto;background-color:#eee;text-align:left">Scene info: 74 bodies, 426 fixtures, 74 joints</div>
+                                <div id="testcomments" style="width:500px;margin:auto;background-color:#eee;text-align:left">About: Created in R.U.B.E editor. Try dragging the minute hand to the current time.<br>Very useful info at http://www.abbeyclock.com/escapement.html</div>
+                                <br>
+                                <button id="reloadButton" onclick="resetScene();">Reset</button>
+                                <button id="pauseButton" onclick="pause();">Pause</button>
+                                <button id="stepButton" onclick="step();">Single step</button>
+                                (Keyboard: R, P, S)<br>
+                                Zoom
+                                <button id="zoomInButton" onclick="zoomIn();">+</button>
+                                <button id="zoomOutButton" onclick="zoomOut();">-</button>
+                                (Keyboard: X, Z)<br>
+                                Hold down Shift while moving the mouse to pan (Keyboard: arrow keys)<br>
+                                You need to click on the canvas before using the keyboard.<br>
+                            </div>
+                            <br>
+                                
+                            Debug draw flags:<br>
+                            <input id="drawShapesCheck" type="checkbox" onclick="updateWorldFromDebugDrawCheckboxes();">Shapes<br>
+                            <input id="drawJointsCheck" type="checkbox" onclick="updateWorldFromDebugDrawCheckboxes();">Joints<br>
+                            <input id="drawAABBsCheck" type="checkbox" onclick="updateWorldFromDebugDrawCheckboxes();">AABBs<br>
+                            <input id="drawTransformsCheck" type="checkbox" onclick="updateWorldFromDebugDrawCheckboxes();">Transforms<br>
+                            <br>
+                            
+                            <input id="showStatsCheck" type="checkbox" onclick="updateContinuousRefreshStatus();">Show stats<br>
+                            <span id="feedbackSpan"></span>
+                            <br>
+                            </div>
+                        </div>        
+                    </div>
+    
+    
+                </div>
+            </div>
+        </div>
+        
+        <br><br>
+        </div>
+        <div id="footer" class="rube_mainfooter">
+            <div class="contained-content" style="text-align:center">
+                have @ it
+            </div>
+        </div>
+    
+    
+
+
+</body></html>

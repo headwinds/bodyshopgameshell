@@ -12,10 +12,10 @@ define([
     el: $("#page"),
     initialize: function(){
       
-      var demosCollection = new DemosCollection();
+      //var demosCollection = new DemosCollection();
 
-      this.collection = demosCollection;
-      this.collection.bind("add", this.bindAddHandler);
+      //this.collection = demosCollection;
+      //this.collection.bind("add", this.bindAddHandler);
       //this.collection = demosCollection.add( demoModel );
     },
 
@@ -26,11 +26,14 @@ define([
     render: function(){
        console.log("DemosView / render");
       
+      /*
       var data = {
         demos: this.collection.models,
         _: _
       };
-      var compiledTemplate = _.template( demosTemplate, data );
+      */
+      
+      var compiledTemplate = _.template( demosTemplate );
       $("#page").html( compiledTemplate );
       
     }

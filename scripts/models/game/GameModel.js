@@ -7,9 +7,9 @@ define([
 	var GameModel = Backbone.Model.extend({
 
 		defaults: {
-			gameID: "rube",
+			gameID: "ministirith",
 			bDemo: true,
-			jsonPath: "./scripts/demos/rube/json/image_test-min.json",
+			jsonPath: "./scripts/demos/ministirith/json/minisTirithScene.json",
 			date_created: new Date(),
 			date_updated: new Date(),
 			template: "desktop",

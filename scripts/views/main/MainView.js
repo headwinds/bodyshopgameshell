@@ -25,9 +25,11 @@ define([
       var mainModel = new MainModel(options);
 
       this.model = mainModel; 
-      this.model.bind('languageChange', this.onLanguageReadyHandler, this);
+      this.model.bind('change:content', this.onLanguageReadyHandler, this);
       this.model.bind('change', this.onModelChangeHandler, this);
       this.options = options; 
+
+      this.render();
 
     },
     
@@ -39,6 +41,12 @@ define([
 
       // nav 
       var navView = new NavView(options);
+
+      // main 
+      var content = that.model.get('content').toJSON();
+   
+      var compiledTemplate = _.template( mainTemplate, content );
+      that.$el.html(compiledTemplate);
 
       // footer 
       var footerView = new FooterView(options);

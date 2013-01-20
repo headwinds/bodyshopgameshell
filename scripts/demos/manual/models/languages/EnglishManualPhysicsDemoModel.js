@@ -6,7 +6,8 @@ define([
 	var EnglishManualPhysicsDemoModel = Backbone.Model.extend({
 
 		defaults:  {
-			langCode : 'en',
+			langCode : "en",
+			instructions : "<p>CONTROLS: PRESS SPACE TO LAUNCH THE CANNONBALL <br> LEFT RIGHT ARROW KEYS TO DRIVE </p>",
 			demo : {
 				title: "Manual Physics Demo",
 				description: "a demo about how to put together box2D bodies manually",

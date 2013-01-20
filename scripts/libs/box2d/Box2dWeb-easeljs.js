@@ -17,8 +17,7 @@
 */
 
 /*
-Alteration: I've augmented the b2DebugDraw draw methods to work with Easel.js
-author: www.headwinds.net 
+Alteration: I've augmented the b2DebugDraw draw methods to work with Easel.js | www.headwinds.net 
 */
 
 
@@ -292,7 +291,7 @@ if (typeof(Box2D.Dynamics.Joints) === "undefined") Box2D.Dynamics.Joints = {};
 
    function b2Mat22() {
       b2Mat22.b2Mat22.apply(this, arguments);
-      if (this.constructor === b2Mat22) this.b2Mat22.apply(this, arguments);
+      if (this.constructor === b2Mat22) this.b2Mat22.apply(this, arguments); // no arguments usually provided on construction
    };
    Box2D.Common.Math.b2Mat22 = b2Mat22;
 
@@ -332,7 +331,7 @@ if (typeof(Box2D.Dynamics.Joints) === "undefined") Box2D.Dynamics.Joints = {};
 
    function b2Body() {
       b2Body.b2Body.apply(this, arguments);
-      if (this.constructor === b2Body) this.b2Body.apply(this, arguments);
+      if (this.constructor === b2Body) this.b2Body.apply(this, arguments); 
    };
    Box2D.Dynamics.b2Body = b2Body;
 
@@ -3754,7 +3753,7 @@ Box2D.postDefs = [];
       return mat;
    }
    b2Mat22.prototype.Set = function (angle) {
-      if (angle === undefined) angle = 0;
+      if (angle === undefined || String(angle) === "NaN") angle = 0;
       var c = Math.cos(angle);
       var s = Math.sin(angle);
       this.col1.x = c;
@@ -3963,9 +3962,12 @@ Box2D.postDefs = [];
       return u;
    }
    b2Math.MulX = function (T, v) {
+     
       var a = b2Math.MulMV(T.R, v);
+
       a.x += T.position.x;
       a.y += T.position.y;
+      
       return a;
    }
    b2Math.MulXT = function (T, v) {
@@ -4129,12 +4131,17 @@ Box2D.postDefs = [];
       }
    }
    b2Transform.b2Transform = function () {
-      this.position = new b2Vec2;
+      this.position = new b2Vec2(); // originally no () ?! 
       this.R = new b2Mat22();
    };
    b2Transform.prototype.b2Transform = function (pos, r) {
-      if (pos === undefined) pos = null;
-      if (r === undefined) r = null;
+      
+      if (pos === undefined ) { 
+         
+         pos = new b2Vec2();
+      }
+      if (r === undefined) r = 0; // angle
+
       if (pos) {
          this.position.SetV(pos);
          this.R.SetM(r);
@@ -4157,8 +4164,11 @@ Box2D.postDefs = [];
    }
    b2Vec2.b2Vec2 = function () {};
    b2Vec2.prototype.b2Vec2 = function (x_, y_) {
-      if (x_ === undefined) x_ = 0;
-      if (y_ === undefined) y_ = 0;
+
+      if (x_ === undefined || String(x_) === "NaN") x_ = 0;
+   
+      if (y_ === undefined || String(y_) === "NaN") y_ = 0;
+
       this.x = x_;
       this.y = y_;
    }
@@ -4173,6 +4183,12 @@ Box2D.postDefs = [];
       this.y = y_;
    }
    b2Vec2.prototype.SetV = function (v) {
+
+      if (v === undefined ) v = {x: 0, y:0};
+
+      if (v.x === undefined || String(v.x) === "NaN" ) v.x = 0;
+      if (v.y === undefined || String(v.y) === "NaN") v.y = 0;
+
       this.x = v.x;
       this.y = v.y;
    }
@@ -4417,6 +4433,7 @@ Box2D.postDefs = [];
       this.m_linearVelocity = new b2Vec2();
       this.m_force = new b2Vec2();
    };
+
    b2Body.prototype.connectEdges = function (s1, s2, angle1) {
       if (angle1 === undefined) angle1 = 0;
       var angle2 = Math.atan2(s2.GetDirectionVector().y, s2.GetDirectionVector().x);
@@ -4431,7 +4448,8 @@ Box2D.postDefs = [];
       s1.SetNextEdge(s2, core, cornerDir, convex);
       s2.SetPrevEdge(s1, core, cornerDir, convex);
       return angle2;
-   }
+   };
+
    b2Body.prototype.CreateFixture = function (def) {
       if (this.m_world.IsLocked() == true) {
          return null;
@@ -4499,7 +4517,9 @@ Box2D.postDefs = [];
    }
    b2Body.prototype.SetPositionAndAngle = function (position, angle) {
       if (angle === undefined) angle = 0;
+
       var f;
+      
       if (this.m_world.IsLocked() == true) {
          return;
       }
@@ -4932,7 +4952,8 @@ Box2D.postDefs = [];
    b2Body.prototype.GetWorld = function () {
       return this.m_world;
    }
-   b2Body.prototype.b2Body = function (bd, world) {
+   b2Body.prototype.b2Body = function (bd, world, bodyName) {
+
       this.m_flags = 0;
       if (bd.bullet) {
          this.m_flags |= b2Body.e_bulletFlag;
@@ -4950,7 +4971,16 @@ Box2D.postDefs = [];
          this.m_flags |= b2Body.e_activeFlag;
       }
       this.m_world = world;
-      this.m_xf.position.SetV(bd.position);
+
+      var posX = bd.position.x;
+      var posY = bd.position.y;
+      var vec = {x: posX, y: posY};
+
+      this.m_xf.position.SetV(vec);
+
+      this.m_xf.position.x = posX;
+      this.m_xf.position.y = posY;
+
       this.m_xf.R.Set(bd.angle);
       this.m_sweep.localCenter.SetZero();
       this.m_sweep.t0 = 1.0;
@@ -5733,7 +5763,6 @@ Box2D.postDefs = [];
       this.m_contactManager.m_contactListener = listener;
    }
    b2World.prototype.SetDebugDraw = function (debugDraw) {
-      //console.log(debugDraw, "Box2D / SetDebugDraw")
       this.m_debugDraw = debugDraw;
    }
    b2World.prototype.SetBroadPhase = function (broadPhase) {
@@ -5751,18 +5780,23 @@ Box2D.postDefs = [];
    b2World.prototype.GetProxyCount = function () {
       return this.m_contactManager.m_broadPhase.GetProxyCount();
    }
-   b2World.prototype.CreateBody = function (def) {
+   b2World.prototype.CreateBody = function (def, bodyName ) {
       if (this.IsLocked() == true) {
          return null;
       }
-      var b = new b2Body(def, this);
+
+      var b = new b2Body(def, this, bodyName); // not sure why but the position vector disappears as we pass in bodyDef ?!
+
       b.m_prev = null;
       b.m_next = this.m_bodyList;
+
       if (this.m_bodyList) {
          this.m_bodyList.m_prev = b;
       }
+
       this.m_bodyList = b;
       ++this.m_bodyCount;
+
       return b;
    }
    b2World.prototype.DestroyBody = function (b) {
@@ -6020,8 +6054,10 @@ Box2D.postDefs = [];
          for (b = this.m_bodyList;
          b; b = b.m_next) {
             xf = b.m_xf;
+
             for (f = b.GetFixtureList();
             f; f = f.m_next) {
+
                s = f.GetShape();
                if (b.IsActive() == false) {
                   color.Set(0.5, 0.5, 0.3);
@@ -6029,10 +6065,15 @@ Box2D.postDefs = [];
                }
                else if (b.GetType() == b2Body.b2_staticBody) {
                   color.Set(0.5, 0.9, 0.5);
-                  this.DrawShape(s, xf, color);
+
+                  var fixtureName = f.name; 
+
+                  this.DrawShape(s, xf, color, fixtureName);
+
                }
                else if (b.GetType() == b2Body.b2_kinematicBody) {
                   color.Set(0.5, 0.5, 0.9);
+
                   this.DrawShape(s, xf, color);
                }
                else if (b.IsAwake() == false) {
@@ -6104,7 +6145,16 @@ Box2D.postDefs = [];
       var broadPhase = __this.m_contactManager.m_broadPhase;
 
       function WorldQueryWrapper(proxy) {
-         return callback(broadPhase.GetUserData(proxy));
+
+         console.log();
+
+         var typeTest = String(typeof proxy);
+
+         if ( typeTest === "function") {
+               return callback(broadPhase.GetUserData(proxy));
+         } else {
+            console.log( proxy, "Box2D WorldQueryWrapper ERROR expecting function and got " + typeTest);
+         }
       };
       broadPhase.Query(WorldQueryWrapper, aabb);
    }
@@ -6521,7 +6571,8 @@ Box2D.postDefs = [];
          if (b2 != this.m_groundBody) this.m_debugDraw.DrawSegment(x2, p2, color);
       }
    }
-   b2World.prototype.DrawShape = function (shape, xf, color) {
+   b2World.prototype.DrawShape = function (shape, xf, color, fixtureName) {
+
       switch (shape.m_type) {
       case b2Shape.e_circleShape:
          {
@@ -6539,11 +6590,15 @@ Box2D.postDefs = [];
             var vertexCount = parseInt(poly.GetVertexCount());
             var localVertices = poly.GetVertices();
             var vertices = new Vector(vertexCount);
+            
             for (i = 0;
             i < vertexCount; ++i) {
-               vertices[i] = b2Math.MulX(xf, localVertices[i]);
+               
+               var  vertice = b2Math.MulX(xf, localVertices[i])
+               vertices[i] = vertice;
             }
-            this.m_debugDraw.DrawSolidPolygon(vertices, vertexCount, color);
+
+            this.m_debugDraw.DrawSolidPolygon(vertices, vertexCount, color, fixtureName, xf);
          }
          break;
       case b2Shape.e_edgeShape:
@@ -10840,10 +10895,6 @@ Box2D.postDefs = [];
       var s = this.m_ctx;
       var drawScale = this.m_drawScale;
 
-      //console.log(s, "Box2dweb-easeljs DrawPolygon");
-      
-      //if ( s.beginPath == "defined" ) s.beginStroke();
-      //else s.beginPath(); 
       s.setStrokeStyle(this.m_stroke_thickness);
       s.beginStroke(createjs.Graphics.getRGB(this.m_stroke_rgb.r,this.m_stroke_rgb.g,this.m_stroke_rgb.b, this.m_alpha_color));
       s.moveTo(vertices[0].x * drawScale, vertices[0].y * drawScale);
@@ -10856,12 +10907,9 @@ Box2D.postDefs = [];
 
    };
 
-   b2DebugDraw.prototype.DrawSolidPolygon = function (vertices, vertexCount, color) {
+   b2DebugDraw.prototype.DrawSolidPolygon = function (vertices, vertexCount, color, fixtureName, xf) {
       if (!vertexCount) return;
-
       var s = this.m_ctx; 
-
-      //console.log(s, "Box2dweb-easeljs DrawSolidPolygon");
 
       var drawScale = this.m_drawScale;
       s.setStrokeStyle(this.m_stroke_thickness);

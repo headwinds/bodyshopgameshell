@@ -16,7 +16,7 @@ define([
       'game': 'showNewGame',
       'demos': 'showDemos',
       'about': 'showAbout',
-      'newgame': 'showNewGame',
+      'newgame?:params': 'showNewGame',
 
       // Default
       '*actions': 'defaultAction'
@@ -28,7 +28,7 @@ define([
     var vent = _.extend({}, Backbone.Events);
     var app_router = new MainRouter;
 
-    console.log(app_router, "MainRouter / initialize");
+    console.log("MainRouter / initialize");
 
     ///////////////////////////////////////////////////////// TOP NAV
 
@@ -61,17 +61,28 @@ define([
 
       var that = this;
        
-      var options = {vent:vent};
+      var options = {vent:vent, langCode: "en"};
       var mainView = new MainView(options);
+
       
     };
 
     ///////////////////////////////////////////////////////// PLAY DEMO
   
-    app_router.on('route:showNewGame', function () {
-     console.log("MainRouter / showNewGame / window width: " + $(window).width() );
-   
-      var gameModel = new GameModel({template:"desktop", gameID: "rube", bDemo: true});
+    app_router.on('route:showNewGame', function (params) {
+     
+      var gameID;
+
+      if (params !== undefined ) gameID = params.split("=")[1];
+      else gameID = 'manual';
+
+      console.log(gameID, "MainRouter / showNewGame / window width: " + $(window).width() );
+    
+      var gameModel = new GameModel({ template:"desktop", 
+                                      gameID: gameID,
+                                      jsonPath: "./scripts/demos/" + gameID + "/json/" + gameID + ".json", 
+                                      bDemo: true});
+    
       var options = {vent:vent, model:gameModel};
       var gameView = new GameView(options);
 

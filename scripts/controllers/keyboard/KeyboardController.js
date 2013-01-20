@@ -58,14 +58,17 @@ define([
 					var code = (event.keyCode ? event.keyCode : event.which);
 
 			    	this._pressed[code] = true;
-			    	console.log("is down: " + code);
-
 			    	var keyName = this.getKey(code);
 
 			    	$(window).trigger("customKeydown", keyName );
 				},
 
 				onKeyup: function(event) {
+
+					var code = (event.keyCode ? event.keyCode : event.which);
+					var keyName = this.getKey(code);
+					$(window).trigger("customKeyup", keyName );
+
 					delete this._pressed[event.keyCode];
 				}
 			};
@@ -81,11 +84,17 @@ define([
 			var bind = function( event, callback ) {
 				
 				$(window).bind("customKeydown", function(event, keyName) {
-					console.log(keyName, "KeyboardController ");
-
+					
 					keyName = typeof keyName !== 'defined' ? keyName : "no key pressed";
 
-					callback(event, keyName); 
+					callback(event, keyName + "_PRESSED"); 
+				});
+
+				$(window).bind("customKeyup", function(event, keyName) {
+					
+					keyName = typeof keyName !== 'defined' ? keyName : "no key pressed";
+
+					callback(event, keyName + "_RELEASED"); 
 				});
 
 			};

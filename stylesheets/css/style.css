@@ -1,4 +1,6 @@
-@import url("http://fonts.googleapis.com/css?family=Quicksand");
+@import url(http://fonts.googleapis.com/css?family=Merienda:700);
+
+@import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300);
 body {
   width: 100%;
   *zoom: 1;
@@ -11,6 +13,8 @@ body:after {
 body:after {
   clear: both;
 }
+/*@import url("http://fonts.googleapis.com/css?family=Quicksand");*/
+/*@import url(http://fonts.googleapis.com/css?family=Julius+Sans+One);*/
 .common {
   display: block;
   position: relative;
@@ -19,8 +23,33 @@ body:after {
   top: 0;
   left: 0;
 }
+.common-a {
+  text-decoration: none;
+  color: #000;
+  display: block;
+  position: relative;
+  padding: 0px;
+  margin: 0px;
+  text-align: left;
+  background: #FFF;
+  height: 20px;
+  width: 250px;
+  pointer-events: auto;
+}
+.common-a-hover {
+  background: #FFF;
+  text-align: left;
+  height: 20px;
+  width: 250px;
+}
+.common-a-visited {
+  background: #FFF;
+  height: 20px;
+  width: 250px;
+  text-align: left;
+}
 body {
-  font-family: 'Georgia';
+  font-family: 'Open Sans Condensed';
   background-color: #faf9f0;
   color: #444;
   text-align: center;
@@ -32,7 +61,7 @@ body {
   left: 0;
 }
 header {
-  font-family: 'Quicksand';
+  font-family: 'Merienda';
   padding: 50px 10px;
   color: #fff;
   font-size: 25px;
@@ -41,7 +70,18 @@ header {
   border-bottom: 1px solid #df1806;
   text-shadow: 0px -1px 0px #df1806;
 }
-.common {
+h4 {
+  font-family: 'Merienda';
+  font-size: 18px;
+  font-weight: bold;
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+}
+p {
   display: block;
   position: relative;
   margin: 0;
@@ -51,6 +91,27 @@ header {
 }
 ul {
   list-style-type: none;
+}
+.sprite-a {
+  color: #333;
+  font-size: 16px;
+  display: block;
+  position: relative;
+  padding: 0px;
+  padding-top: 10px;
+  margin: 0px;
+  text-align: center;
+  background: url("../../imgs/ui/uiSpriteSheet.png") no-repeat -13px -23px;
+  width: 163px;
+  height: 30px;
+  text-decoration: none;
+}
+.sprite-a-hover {
+  background: url("../../imgs/ui/uiSpriteSheet.png") no-repeat -13px -64px;
+  color: #adadad;
+}
+.sprite-a-visited {
+  background: url("../../imgs/ui/uiSpriteSheet.png") no-repeat -13px -23px;
 }
 a {
   color: #333;
@@ -64,6 +125,7 @@ a {
   background: url("../../imgs/ui/uiSpriteSheet.png") no-repeat -13px -23px;
   width: 163px;
   height: 30px;
+  text-decoration: none;
 }
 a:hover {
   background: url("../../imgs/ui/uiSpriteSheet.png") no-repeat -13px -64px;
@@ -77,6 +139,9 @@ a:visited {
   width: 900px;
   overflow: hidden;
   text-align: left;
+  background-color: #FFF;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 #container #nav {
   display: block;
@@ -89,11 +154,11 @@ a:visited {
   height: 50px;
 }
 #container #nav h2 {
-  font-family: 'Quicksand';
+  font-family: 'Open Sans Condensed';
   font-size: 18px;
 }
 #container #nav p {
-  font-family: 'Quicksand';
+  font-family: 'Open Sans Condensed';
   margin-bottom: 20px;
   line-height: 16px;
 }
@@ -101,8 +166,9 @@ a:visited {
   display: block;
   position: relative;
   float: left;
-  width: 163;
-  height: 37;
+  width: 160px;
+  height: 36px;
+  margin-left: 20px;
 }
 #container #page {
   display: block;
@@ -136,7 +202,7 @@ a:visited {
   z-index: 99;
 }
 #container #page #challenge a {
-  text-decoration: underline;
+  text-decoration: none;
   color: #000;
   display: block;
   position: relative;
@@ -159,6 +225,43 @@ a:visited {
   height: 20px;
   width: 250px;
   text-align: left;
+}
+#container #page #demos ul {
+  list-style-type: none;
+}
+#container #page #demos ul li {
+  display: block;
+  position: relative;
+  width: 300px;
+  overflow: hidden;
+}
+#container #page #demos a {
+  text-decoration: none;
+  color: #000;
+  display: block;
+  position: relative;
+  padding: 0px;
+  margin: 0px;
+  text-align: left;
+  background: #FFF;
+  height: 20px;
+  width: 250px;
+  pointer-events: auto;
+  height: 100%;
+}
+#container #page #demos a:hover {
+  background: #FFF;
+  text-align: left;
+  height: 20px;
+  width: 250px;
+  height: 100%;
+}
+#container #page #demos a:visited {
+  background: #FFF;
+  height: 20px;
+  width: 250px;
+  text-align: left;
+  height: 100%;
 }
 #container #footer {
   display: block;

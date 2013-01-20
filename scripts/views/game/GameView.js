@@ -5,7 +5,16 @@ define([
 	'controllers/game/GameViewController',
 	'demos/manual/controllers/ManualDemoViewController',
 	'demos/rube/controllers/RubeDemoViewController',
-	], function($,_,Backbone, GameViewController, ManualDemoViewController, RubeDemoViewController) {
+	'demos/ministirith/controllers/MinisTirithDemoViewController',
+	'models/languages/EnglishModel'
+	], function($,
+				_,
+				Backbone, 
+				GameViewController, 
+				ManualDemoViewController, 
+				RubeDemoViewController,
+				MinisTirithDemoViewController,
+				EnglishModel) {
 
 	var GameView = Backbone.View.extend({
 
@@ -15,9 +24,6 @@ define([
 		initialize: function(options){
 			this.collection = options.collection;
 			this.model = options.model; 
-
-			//var createjs = //$(window).createjs;
-			//console.log(this.createjs, "GameView / initialize / easel");
 
 			this.loadTemplate( this.model.get('template') ); 
 		},
@@ -36,21 +42,25 @@ define([
 				case "rube" :
 				that.controller = new RubeDemoViewController( that.model );
 				break;
+				case "ministirith" :
+				that.controller = new MinisTirithDemoViewController( that.model );
+				break;
 			};
 
 			that.setupListeners(); 
-
 		},
 
 		loadTemplate: function( templateStr ) {
 			console.log("GameView / loadTemplate / templateStr: " + templateStr)
 
 			var that = this;
+
+			var lang = new EnglishModel().get('game');
 			
 			switch(templateStr) {
 				case "mobile":
 					require(['text!templates/game/mobileTemplate.html'], function(mobileTemplate) {
-						var mobileData = {};
+						var mobileData = {data: lang};
 						var mobileCompiledTemplate = _.template( mobileTemplate, mobileData );
 						$("#page").html( mobileCompiledTemplate );
 
@@ -59,7 +69,7 @@ define([
 				break;
 				default: 
 					require(['text!templates/game/desktopTemplate.html'], function(desktopTemplate) {
-						var desktopData = {};
+						var desktopData = {data: lang};
 						var desktopCompiledTemplate = _.template( desktopTemplate, desktopData );
 						$("#page").html( desktopCompiledTemplate );
 

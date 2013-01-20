@@ -118,9 +118,13 @@ define( ["jquery",
         var e_pairBit = 0x0008;
         var e_centerOfMassBit = 0x0010;
 
+        var debugDraw; 
+
         var PTM = 32;
 
         var SCALE = PTM, STEP = 20, TIMESTEP = 1/STEP;
+
+        var originTransform;
 
         var world = null;
         var lastTimestamp = Date.now();
@@ -142,6 +146,12 @@ define( ["jquery",
         var showStats = false;        
         var mouseDown = false;
         var shiftDown = false;
+
+        var moveFlags = true; 
+
+        var MOVE_LEFT =     0x01;
+        var MOVE_RIGHT =    0x02;
+
         var originTransform;
         var mousePosPixel = {
             x: 0,
@@ -169,17 +179,8 @@ define( ["jquery",
           createWorld(); 
 
           wheelBodies = getNamedBodies(world, "truckwheel");
-    
-            if ( world.images ) {
-                for (var i = 0; i < world.images.length; i++) {
-                    var imageObj = new Image();
-                    imageObj.src = world.images[i].file;
-                    world.images[i].imageObj = imageObj;
-                }
-            }
-            
-  
-            resettingScene = false;
+
+          resettingScene = false;
         }
 
         var myRound = function(val,places) {
@@ -224,6 +225,18 @@ define( ["jquery",
             world = new b2World( new b2Vec2(0.0, -9.8), true );
             //world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8) /* gravity */, true /* allowSleep */);
 
+            originTransform = new b2Transform();
+            viewAABB = new b2AABB();
+
+            var VisibleFixturesQueryCallback = function() {
+                this.m_fixtures = [];
+            }
+            VisibleFixturesQueryCallback.prototype.ReportFixture = function(fixture) {
+                this.m_fixtures.push(fixture);
+                return true;
+            };
+            visibleFixturesQueryCallback = new VisibleFixturesQueryCallback();
+
             addDebug(); 
           
             //mouseJointGroundBody = world.CreateBody( new b2BodyDef() );
@@ -231,17 +244,24 @@ define( ["jquery",
         };
 
         var addDebug = function() {
-            var debugDraw = new b2DebugDraw();
+            debugDraw = new b2DebugDraw();
         
             debugDraw.SetSprite(cameraWorldContainerDebugBG); 
             debugDraw.SetRGBByHexStrokeColor("#CFB52B");
             debugDraw.SetRGBByHexFillColor("#8C7853");
             debugDraw.SetAlphaColor(0.8);
             debugDraw.SetStrokeThickness(2);
-            debugDraw.SetDrawScale(SCALE);
+            
+            //debugDraw.SetDrawScale(SCALE);
+
+            debugDraw.SetDrawScale(1.0);
+            debugDraw.SetXFormScale(0.25);
+
             debugDraw.SetFillAlpha(0.7);
             debugDraw.SetLineThickness(1.0);
             debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
+
+
             
             world.SetDebugDraw(debugDraw);
         };
@@ -269,7 +289,7 @@ define( ["jquery",
         var resetScene = function() {
             resettingScene = true;
             createWorld();
-            draw();
+            //draw(); // where is my draw method?!?!?!?
         }
         
         //Object.prototype.hasOwnProperty = function(property) {
@@ -496,6 +516,7 @@ define( ["jquery",
         };
 
         var loadImageFromRUBE = function(imageJso, world, loadedBodies) {
+
             var image = makeClone(imageJso);
             
             if ( image.hasOwnProperty('body') && image.body >= 0 )
@@ -509,10 +530,30 @@ define( ["jquery",
             return image;
         }
 
+         var loadBitmaps = function() {
+    
+            if ( world.images ) {
+                for (var i = 0; i < world.images.length; i++) {
+
+                  var imgPath = world.images[i].file;
+                  var bitmap = new createjs.Bitmap(imgPath);
+
+                  //var imageObj = new Image();
+                  //imageObj.src = world.images[i].file;
+                  //world.images[i].imageObj = imageObj;
+                  
+                  world.images[i].bitmap = bitmap;
+
+                  cameraWorldSkinsContainer.addChild(bitmap); // needs to get update with the body position each draw
+                }
+
+            }
+        }
+
         //load the scene into an already existing world variable
         var loadSceneIntoWorld = function(worldJso) {
             
-          console.log(world, "RubePhysicsController loadSceneIntoWorld");
+          //console.log(world, "RubePhysicsController loadSceneIntoWorld");
 
             var success = true;
 
@@ -557,6 +598,8 @@ define( ["jquery",
             }
 
             bodies = loadedBodies;
+
+            loadBitmaps();
             
             return success;
         }
@@ -603,9 +646,247 @@ define( ["jquery",
             return joints;
         };
 
+        var updateSkins = function() {
+
+           if ( world.images ) {
+                for (var i = 0; i < world.images.length; i++) {
+                    var bitmap = world.images[i].bitmap;
+                    //context.save();
+                        if ( world.images[i].body ) {
+                            //body position in world
+
+                            var body = world.images[i].body;
+
+                            var bodyPos = body.GetPosition();
+                            var bodyAngle = body.GetAngle();
+                            
+                            //context.translate(bodyPos.x, -bodyPos.y);
+                            //context.rotate(-world.images[i].body.GetAngle());
+                            
+                            //image position in body
+                            
+                            var imageLocalCenter = world.images[i].center;
+
+                            if ( bitmap !== undefined) {
+                              
+                              bitmap.x = -(imageLocalCenter.x * PTM);
+                              bitmap.y = imageLocalCenter.y * PTM;
+                              bitmap.rotation = bodyAngle;
+                              //imageObj.rotation = bodyPos.GetAngle();
+
+                              //console.log( bitmap, "RubePhysicsController / updateSkins " )
+
+
+                            }
+
+
+                            //if (body.name === "truckwheel" )  console.log( body, "RubePhysicsController / updateSkins " )
+                           
+
+                            //context.translate(imageLocalCenter.x, -imageLocalCenter.y);
+                            //context.rotate(-world.images[i].angle);
+                        }
+
+                        //var ratio = 1 / imageObj.height;
+                        //ratio *= world.images[i].scale;
+                        
+                        //context.scale(ratio, ratio);
+                        //context.translate(-imageObj.width / 2, -imageObj.height / 2);
+                        //context.drawImage(imageObj, 0, 0);
+                    //context.restore();
+                }
+            }
+        }
+
+        var draw = function() {
+
+          //console.log("draw");
+          
+          //black background
+          context.fillStyle = 'rgb(0,0,0)';
+          context.fillRect( 0, 0, canvas.width, canvas.height );
+
+          canvasOffset.x = canvas.width/2;
+          canvasOffset.y = canvas.height/2;
+          
+          context.save();   
+          context.translate(canvasOffset.x, canvasOffset.y);
+          context.scale(1,-1);
+          context.scale(PTM,PTM);
+          context.lineWidth /= PTM;
+              
+              //draw images
+          context.save();
+          context.scale(1,-1);
+          
+          if ( world.images ) {
+                for (var i = 0; i < world.images.length; i++) {
+                    var bitmap = world.images[i].bitmap;
+                    context.save();
+                       
+                        if ( world.images[i].body ) {
+                            //body position in world
+                            var bodyPos = world.images[i].body.GetPosition();
+                            context.translate(bodyPos.x, -bodyPos.y);
+                            context.rotate(-world.images[i].body.GetAngle());
+                            
+                            //image position in body
+                            var imageLocalCenter = world.images[i].center;
+                            context.translate(imageLocalCenter.x, -imageLocalCenter.y);
+                            context.rotate(-world.images[i].angle);
+                        }
+                        
+                        var ratio = 1 / bitmap.height;
+                        ratio *= world.images[i].scale;
+                        context.scale(ratio, ratio);
+                        context.translate(-bitmap.width / 2, -bitmap.height / 2);
+                        
+                        //context.drawImage(bitmap, 0, 0);
+
+                    context.restore();
+                }
+            }
+            
+            context.restore();
+              
+            debugDraw.DrawTransform(originTransform);
+              
+            var flags = debugDraw.GetFlags();
+            debugDraw.SetFlags(flags & ~e_shapeBit);
+            world.DrawDebugData();
+            debugDraw.SetFlags(flags);
+                    
+            if (( flags & e_shapeBit ) != 0) {
+                //query the world for visible fixtures
+                var currentViewCenterWorld = getWorldPointFromPixelPoint( viewCenterPixel );
+                var viewHalfwidth = 0.5 * canvas.width / PTM;
+                var viewHalfheight = 0.5 * canvas.height / PTM;
+
+                viewAABB.lowerBound.Set(currentViewCenterWorld.x - viewHalfwidth, currentViewCenterWorld.y - viewHalfheight);
+                viewAABB.upperBound.Set(currentViewCenterWorld.x + viewHalfwidth, currentViewCenterWorld.y + viewHalfheight);
+                
+                visibleFixturesQueryCallback.m_fixtures = [];
+                world.QueryAABB(visibleFixturesQueryCallback, viewAABB);
+                
+                var f, b, xf, s;
+                var color = new b2Color(0, 0, 0);            
+                var circleFixtures = [];
+                var polygonFixtures = [];
+                var staticPolygonFixtures = [];
+                var kinematicPolygonFixtures = [];
+                var dynamicPolygonFixtures = [];
+                for (var i = 0; i < visibleFixturesQueryCallback.m_fixtures.length; i++) {
+                    f = visibleFixturesQueryCallback.m_fixtures[i];
+                    s = f.GetShape();
+                    if ( s.GetType() == b2Shape.e_circleShape ) {
+                        circleFixtures.push(f);
+                    }
+                    else if ( s.GetType() == b2Shape.e_polygonShape ) {
+                        polygonFixtures.push(f);
+                    }
+                }
+                for (var i = 0; i < circleFixtures.length; i++) {
+                    f = circleFixtures[i];
+                    s = f.GetShape();
+                    b = f.GetBody();
+                    xf = b.GetTransform();
+                    setColorFromBodyType(color, b);
+                    world.DrawShape(s, xf, color);
+                }
+                for (var i = 0; i < polygonFixtures.length; i++) {
+                    f = polygonFixtures[i];
+                    b = f.GetBody();
+                    if (b.GetType() == b2_staticBody) 
+                        staticPolygonFixtures.push(f);
+                    else if (b.GetType() == b2_kinematicBody) 
+                        kinematicPolygonFixtures.push(f);
+                    else 
+                        dynamicPolygonFixtures.push(f);
+                }
+                context.strokeStyle = "rgb(128,230,128)";
+                context.beginPath();//draw all static polygons as one path
+                for (var i = 0; i < staticPolygonFixtures.length; i++) {
+                    f = staticPolygonFixtures[i];
+                    s = f.GetShape();
+                    b = f.GetBody();
+                    xf = b.GetTransform();
+                    //world.DrawShape(s, xf, color);
+                    drawLinePolygon(s, xf);
+                }
+                context.closePath();
+                context.stroke();
+                
+                context.strokeStyle = "rgb(128,128,230)";
+                context.beginPath();//draw all kinematic polygons as one path
+                for (var i = 0; i < kinematicPolygonFixtures.length; i++) {
+                    f = kinematicPolygonFixtures[i];
+                    s = f.GetShape();
+                    b = f.GetBody();
+                    xf = b.GetTransform();
+                    //world.DrawShape(s, xf, color);
+                    drawLinePolygon(s, xf);
+                }
+                context.closePath();
+                context.stroke();
+                
+                context.strokeStyle = "rgb(230,178,178)";
+                context.beginPath();//draw all dynamic polygons as one path
+                for (var i = 0; i < dynamicPolygonFixtures.length; i++) {
+                    f = dynamicPolygonFixtures[i];
+                    s = f.GetShape();
+                    b = f.GetBody();
+                    xf = b.GetTransform();
+                    //world.DrawShape(s, xf, color);
+                    drawLinePolygon(s, xf);
+                }
+                context.closePath();
+                context.stroke();
+            }
+            
+            if ( mouseJoint != null ) {
+                //mouse joint is not drawn with regular joints in debug draw
+                var p1 = mouseJoint.GetAnchorB();
+                var p2 = mouseJoint.GetTarget();
+                context.strokeStyle = 'rgb(204,204,204)';
+                context.beginPath();
+                context.moveTo(p1.x,p1.y);
+                context.lineTo(p2.x,p2.y);
+                context.stroke();
+            }
+              
+          context.restore();
+        }
+
+
         var update = function() {
 
-            //console.log("RubePhysicsController / update");
+          console.log("RubePhysicsController / update / PTM: " + PTM);
+
+      
+          canvasOffset.x = canvas.width/2;
+          canvasOffset.y = canvas.height/2;
+
+          context.translate(canvasOffset.x, canvasOffset.y); 
+          //context.scale(1,1);
+          context.scale(PTM,PTM);
+          //context.lineWidth /= PTM;
+          context.scale(1,-1);  // I'm not sure why/how this works by setting the scale 3 times?! but it does...
+
+
+          
+          /*
+          cameraWorldContainer.x = canvas.width/2;
+          cameraWorldContainer.y = canvas.height/2;
+
+          cameraWorldContainer.x = canvasOffset.x; 
+          cameraWorldContainer.y = canvasOffset.y;
+          //cameraWorldContainer.scaleX = 1;
+          //cameraWorldContainer.scaleY =-1;
+          cameraWorldContainer.scaleX = PTM;
+          cameraWorldContainer.scaleY = PTM;
+          //cameraWorldContainer.scaleX = 1;
+          //cameraWorldContainer.scaleY =-1;
+          */
 
             var now = Date.now();
             var dt = now - lastTimestamp;
@@ -621,28 +902,36 @@ define( ["jquery",
                 }
                 bodiesToRemove = [];
 
-                // update active actors
-                for(var i=0, l=actors.length; i<l; i++) {
-                    actors[i].update();
-                }
+                // update active actors - aren't used in this demo
+                //for(var i=0, l=actors.length; i<l; i++) {
+                //    actors[i].update();
+                // }
                 
+
                 
                 //var cameraFocusPoint = things[0].getCameraFocus();
-                // cameraWorldContainer.x = cameraFocusPoint.x; 
+                //cameraWorldContainer.x = cameraFocusPoint.x; 
                 //cameraWorldContainer.y = cameraFocusPoint.y; 
                 
                 world.Step(TIMESTEP, 10, 10);
-                updateMotorSpeed();
+                //updateMotorSpeed();
+
+
+
+                //updateSkins();
 
                 fixedTimestepAccumulator -= STEP;
                 world.ClearForces();
-                
-                world.DrawDebugData(); // will now clear any debug drawings before attempting to draw again 
-                
-                if(bodies.length > 30) {
-                    bodiesToRemove.push(bodies[0]);
-                    bodies.splice(0,1);
-                }
+
+                //debugDraw.DrawTransform(originTransform);
+                //world.DrawDebugData(); // will now clear any debug drawings before attempting to draw again 
+                draw();
+
+                // why am I limiting the bodies here?!
+                //if(bodies.length > 30) {
+                 //   bodiesToRemove.push(bodies[0]);
+                 //   bodies.splice(0,1);
+                //}
 
             }
         };
@@ -658,21 +947,43 @@ define( ["jquery",
                 desiredSpeed = -maxSpeed;
             for (i = 0; i < wheelBodies.length; i++)
                 wheelBodies[i].SetAngularVelocity(desiredSpeed);
+
+              console.log("RubePhysicsController updateMotorSpeed");
         };
+
+        var startDriving = function( direction ){
+          
+          if ( direction === "LEFT" ) moveFlags |= MOVE_LEFT;
+          else moveFlags |= MOVE_RIGHT;   
+             
+           updateMotorSpeed();
+        }
+
+        var stopDriving = function( direction ){
+          
+          if ( direction === "LEFT" ) moveFlags &= ~MOVE_LEFT;
+          else moveFlags &= ~MOVE_RIGHT;  
+             
+           updateMotorSpeed();
+        } 
 
         var trigger = function(event, keyName) {
 
-          console.log("PhysicsController / trigger"); 
+          console.log("RubePhysicsController / trigger: " + keyName ); 
 
           switch( keyName ) {
 
             case "SPACE" :
               
               break;
-            case "LEFT" :
-            case "RIGHT" :
-              
-              break;    
+            case "LEFT_PRESSED" :
+            case "RIGHT_PRESSED" :
+              startDriving(keyName);
+              break;  
+            case "LEFT_RELEASED" :
+            case "RIGHT_RELEASED" :
+              stopDriving(keyName);
+              break;        
            }
         };
 
@@ -681,7 +992,9 @@ define( ["jquery",
             update: update,
             trigger: trigger,
             setup: setup,
-            loadSceneIntoWorld: loadSceneIntoWorld
+            loadSceneIntoWorld: loadSceneIntoWorld,
+            startDriving: startDriving,
+            stopDriving: stopDriving
         }
 
     };

@@ -6,7 +6,15 @@ define([
 	var DemoModel = Backbone.Model.extend({
 
 		defaults: {
-			demoInfo: {},
+			title: 'minis tirith',
+			description: '',
+			success: '',
+			fail: '',
+			sentiment:'good',
+			timeBreakdown:'1 week - 2hrs a day',
+			hours: '14',
+			awesome: 0,
+			thumbPath: 'demos/ministirith/ministirith.png',
 			date_created: new Date(),
 			date_updated: new Date(),
 			template: "desktop",

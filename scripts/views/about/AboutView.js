@@ -14,7 +14,7 @@ define([
     },
 
     render: function(){
-       console.log("MissionsView / render");
+       console.log("AboutView / render");
       
       var about = {title: "title here", description: "description here"};
 

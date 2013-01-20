@@ -490,7 +490,6 @@ define(["controllers/physics/actors/ActorsController",
 			
 			buildCatapultBody();
 			buildCatapultArm();
-			//buildCatapultLauncher();
 			buildCatapultMotor();
 
 			var frontWheelX = 470;

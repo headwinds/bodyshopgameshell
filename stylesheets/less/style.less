@@ -12,7 +12,10 @@ body:after {
   clear: both;
 }
 
-@import url("http://fonts.googleapis.com/css?family=Quicksand");
+/*@import url("http://fonts.googleapis.com/css?family=Quicksand");*/
+/*@import url(http://fonts.googleapis.com/css?family=Julius+Sans+One);*/
+@import url(http://fonts.googleapis.com/css?family=Merienda:700);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300);
 
 .common {
   display: block;
@@ -23,16 +26,44 @@ body:after {
   left: 0;
 }
 
+.common-a {
+  text-decoration: none;
+  color: #000;
+  display: block;
+  position: relative;
+  padding: 0px;
+  margin: 0px;
+  text-align: left; 
+  background: #FFF; 
+  height: 20px;
+  width: 250px;
+  pointer-events: auto;
+}
+
+.common-a-hover {
+  background: #FFF; 
+  text-align: left; 
+  height: 20px;
+  width: 250px;
+}
+
+.common-a-visited {
+  background: #FFF; 
+  height: 20px;
+  width: 250px;
+  text-align: left; 
+}
+
 body {
-  font-family: 'Georgia';
+  font-family: 'Open Sans Condensed';
   background-color: #faf9f0;
   color: #444;
   text-align: center;
-  .common
+  .common;
 }
 
 header {
-  font-family: 'Quicksand';
+  font-family: 'Merienda';
   padding: 50px 10px;
   color: #fff;
   font-size: 25px;
@@ -42,20 +73,24 @@ header {
   text-shadow: 0px -1px 0px #df1806;
 }
 
-.common {
-  display: block;
-  position: relative;
-  margin: 0;
-  padding: 0;
-  top: 0;
-  left: 0;
+h4 {
+  font-family: 'Merienda';
+  font-size: 18px;
+  font-weight: bold;
+  .common;
 }
+
+p {
+  .common;
+}
+
 
 ul {
   list-style-type: none;
 }
 
-a {
+
+.sprite-a {
   color: #333;
   font-size: 16px;
   display: block;
@@ -67,16 +102,29 @@ a {
   background: url("../../imgs/ui/uiSpriteSheet.png") no-repeat -13px -23px;
   width: 163px;
   height: 30px;
+  text-decoration: none;
 }
 
-a:hover {
+.sprite-a-hover {
   background: url("../../imgs/ui/uiSpriteSheet.png") no-repeat -13px -64px;
   color: #adadad;
 }
 
-a:visited {
+.sprite-a-visited {
   background: url("../../imgs/ui/uiSpriteSheet.png") no-repeat -13px -23px;
 }
+
+a {
+  .sprite-a;
+}
+
+a:hover {
+  .sprite-a-hover;
+};
+
+a:visited {
+  .sprite-a-visited;
+};
 
 
 #container { 
@@ -84,6 +132,9 @@ a:visited {
   width: 900px;
   overflow: hidden;
   text-align: left;
+  background-color: #FFF;
+  padding-left: 20px;
+  padding-right: 20px;
 
   #nav {
     .common;
@@ -91,12 +142,12 @@ a:visited {
     height: 50px;
 
     h2 {
-      font-family: 'Quicksand';
+      font-family: 'Open Sans Condensed';
       font-size: 18px;
     }
     
     p {
-      font-family: 'Quicksand';
+      font-family: 'Open Sans Condensed';
       margin-bottom: 20px;
       line-height: 16px;
     }
@@ -105,8 +156,10 @@ a:visited {
       display: block;
       position: relative;
       float: left;
-      width: 163;
-      height: 37;
+      width: 160px;
+      height: 36px;
+      margin-left: 20px;
+
     }
   }
 
@@ -138,31 +191,45 @@ a:visited {
       z-index: 99;
 
       a {
-        text-decoration: underline;
-        color: #000;
-        display: block;
-        position: relative;
-        padding: 0px;
-        margin: 0px;
-        text-align: left; 
-        background: #FFF; 
-        height: 20px;
-        width: 250px;
-        pointer-events: auto;
+        .common-a; 
       }
 
       a:hover {
-        background: #FFF; 
-        text-align: left; 
-        height: 20px;
-        width: 250px;
+       .common-a-hover; 
       };
 
       a:visited {
-        background: #FFF; 
-        height: 20px;
-        width: 250px;
-        text-align: left; 
+        .common-a-visited; 
+      };
+
+    }
+
+    #demos {
+
+      ul {
+        list-style-type: none;
+
+        li {
+          display: block;
+          position: relative;
+          width:300px;
+          overflow: hidden;
+        }
+      }
+
+      a {
+        .common-a; 
+        height: 100%;
+      }
+
+      a:hover {
+       .common-a-hover; 
+       height: 100%;
+      };
+
+      a:visited {
+        .common-a-visited; 
+        height: 100%;
       };
 
     }

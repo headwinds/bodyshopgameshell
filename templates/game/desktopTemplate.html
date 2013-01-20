@@ -1,46 +1,35 @@
 
 <canvas id="gameCanvas" class="canvas-display" width=700 height=500 style="background:#000"></canvas>
+<div id="instructions">
+	<p><%= data.instructions %></p>
+</div>
 <div class="game-controls">
 	<div class="control">
-		<p><a href="#" id="play">PLAY</a>
+		<p><a href="#" id="play"><%= data.labels.play %></a>
 	</div>
 	<div class="control">
-		<p><a href="#" id="stop">STOP</a>
+		<p><a href="#" id="stop"><%= data.labels.stop %></a>
 	</div>
 	<div class="control">
-		<p><a href="#" id="step-forward">STEP FORWARD</a>
+		<p><a href="#" id="step-forward"><%= data.labels.stepForward %></a>
 	</div>
 	<div class="control">
-		<p><a href="#" id="step-backward">STEP BACKWARD?</a>
+		<p><a href="#" id="step-backward"><%= data.labels.stepBackward %></a>
 	</div>
 	<div class="control">
-		<p><a href="#" id="toggle-debug">TOGGLE DEBUG</a>
+		<p><a href="#" id="toggle-debug"><%= data.labels.toggleDebug %></a>
 	</div>
 	<div class="control">
-		<p><a href="#" id="toggle-skins">TOGGLE SKINS</a>
+		<p><a href="#" id="toggle-skins"><%= data.labels.toggleSkins %></a>
 	</div>
 	<div class="control">
-		<p><a href="#" id="pan-left">PAN LEFT</a>
+		<p><a href="#" id="pan-left"><%= data.labels.panLeft %></a>
 	</div>
 	<div class="control">
-		<p><a href="#" id="pan-right">PAN RIGHT</a>
+		<p><a href="#" id="pan-right"><%= data.labels.panRight %></a>
 	</div>
 </div>
 <div id="challenge">
-	<p>
-	Like the indie hit Braid or Brett Victor&apos;s <a href="http://www.youtube.com/watch?v=PUv66718DII" target="_blank">Inventing on Principle talk</a> the ability to control time is a cool game mechanic; something that many of us wish we could do in real life. 
-	</p>
-	<p>
-	Unfortunately, I haven't been able to discover if Box2D supports reverse time control yet. While you can step forward, it doesn't appear that you can step backwards to review past movements and collisions. 
-	</p>
-	<p>
-	In theory, I believe one control rewind time by keeping track of all the states of a previous step. For instance, you save 10 steps, you should be able to step back 10 times. 
-	</p>
-	<p>
-	If you know how to do this, please fork this project and take a crack at it! 
-	</p>
-
-	<p>
-		<a href="#" id="close-challenge">close</a>
-	</p>
+	<p><%= data.challenge %></p>
+	<p><a href="#" id="close-challenge"><%= data.close %></a></p>
 </div>
