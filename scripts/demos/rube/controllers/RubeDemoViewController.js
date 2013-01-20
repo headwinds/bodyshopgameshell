@@ -66,12 +66,12 @@ define([
 
         var cameraWorldContainerDebugBG = new createjs.Container();
         cameraWorldContainerDebugBG.name = "cameraWorldContainerDebugBG";
-        //cameraWorldContainerDebugBG.x = 390;
-        //cameraWorldContainerDebugBG.y = 250;
+        cameraWorldContainerDebugBG.x = 390;
+        cameraWorldContainerDebugBG.y = 250;
         //cameraWorldContainerDebugBG.scaleX = 0.80;
         //cameraWorldContainerDebugBG.scaleY = 0.80;
 
-        //cameraWorldContainerDebugBG.scaleY = -1; // flip both skins and debug containers because the R.U.B.E. has the reverse coordinates
+        cameraWorldContainerDebugBG.scaleY = -1; // flip both skins and debug containers because the R.U.B.E. has the reverse coordinates
         //cameraWorldSkinsContainer.scaleY = -1;
 
         cameraWorldContainerDebugBG.width = landscapeWidth;

@@ -38,10 +38,10 @@ With this editor, you can fairly easily create a scene by dragging and dropping 
 rubeAllDemos.zip <- this zip contains all the original javascript demos by Chris Campbell but I stripped out the social stuff to make it a bit easier to create my own sandbox
 
 ORIGINAL
-[http://www/headwinds.net/lab/rube/rube-javascript-demo/demo.html](http://www/headwinds.net/lab/rube/rube-javascript-demo/demo.html)
+[http://www.headwinds.net/lab/rube/rube-javascript-demo/demo.html](http://www.headwinds.net/lab/rube/rube-javascript-demo/demo.html)
 
 MY SANDBOX 
-[http://www/headwinds.net/lab/rube/happydays/demo.html](http://www/headwinds.net/lab/rube/happydays/demo.html)
+[http://www.headwinds.net/lab/rube/happydays/demo.html](http://www.headwinds.net/lab/rube/happydays/demo.html)
 
 
 ## Contributing Demos

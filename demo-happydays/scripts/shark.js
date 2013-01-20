@@ -26,9 +26,6 @@ shark.prototype.setup = function() {
             tmp.wheelBodies[1] = getNamedBodies(world, "truckwheel-back")[0];
 
             tmp.truckBody[0] =  getNamedBodies(world, "truckshell")[0];
-
-            console.log(tmp.wheelBodies.length);
-
             doAfterLoading();
         } else {
             console.log("Failed to load RUBE scene");

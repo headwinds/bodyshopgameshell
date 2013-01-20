@@ -863,14 +863,14 @@ define( ["jquery",
           console.log("RubePhysicsController / update / PTM: " + PTM);
 
       
-          canvasOffset.x = canvas.width/2;
-          canvasOffset.y = canvas.height/2;
+          //canvasOffset.x = canvas.width/2;
+          //canvasOffset.y = canvas.height/2;
 
-          context.translate(canvasOffset.x, canvasOffset.y); 
+          //context.translate(canvasOffset.x, canvasOffset.y); 
           //context.scale(1,1);
-          context.scale(PTM,PTM);
+          //context.scale(PTM,PTM);
           //context.lineWidth /= PTM;
-          context.scale(1,-1);  // I'm not sure why/how this works by setting the scale 3 times?! but it does...
+          //context.scale(1,-1);  // I'm not sure why/how this works by setting the scale 3 times?! but it does...
 
 
           

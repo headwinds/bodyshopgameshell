@@ -355,6 +355,76 @@ function init() {
     
     viewAABB = new b2AABB();
     visibleFixturesQueryCallback = new VisibleFixturesQueryCallback();
+
+    setupCreateJS();
+}
+
+var gameRunning = true;
+var gameTickCount = 0; 
+var gameTickMax = 3;
+
+var missionOverlayContainer;
+var goalOverlayContainer;
+
+function setupCreateJS() {
+
+    canvasOverlays = document.getElementById("canvasOverlays");
+    contextOverlays = canvasOverlays.getContext( '2d' );
+
+    var stage = new createjs.Stage(canvasOverlays);
+
+    var overlaysContainer = new createjs.Container();
+    overlaysContainer.width = canvasOverlays.width;
+    overlaysContainer.height = canvasOverlays.height; 
+
+    missionOverlayContainer = new createjs.Container();
+    var missionBitmap = new createjs.Bitmap("./images/mission.png");
+
+    missionOverlayContainer.addChild(missionBitmap);
+
+    goalOverlayContainer = new createjs.Container();
+    var goalBitmap = new createjs.Bitmap("./images/goal.png");
+
+    goalOverlayContainer.addChild(goalBitmap);
+    goalOverlayContainer.visible = false; 
+
+    overlaysContainer.addChild(missionOverlayContainer);
+    overlaysContainer.addChild(goalOverlayContainer);
+    stage.addChild(overlaysContainer);
+
+    var update = function() {
+
+        //cameraWorldContainer.x -= 0.25;  
+        //cameraWorldContainer.y += 0.5;  
+
+        //physicsController.update();
+        //fpsFld.text = Math.floor(createjs.Ticker.getMeasuredFPS())+" FPS";
+
+        stage.update();
+    }
+
+    var tick = function() {
+        //console.log("RubeDemoViewController tick");
+        if(gameRunning) {
+            update();
+            //gameTickCount++;
+            //if ( gameTickCount > gameTickMax ) gameRunning = false; 
+        }
+    };
+
+    createjs.Ticker.setFPS(60);
+    createjs.Ticker.useRAF = true; // use Request Animation Frame 
+    createjs.Ticker.addListener( tick );
+
+
+}
+
+function hideOverlay(overlayName) {
+    this[overlayName + "OverlayContainer"].visible = false;  
+}
+
+function showOverlay(overlayName) {
+    this[overlayName + "OverlayContainer"].visible = true;  
 }
 
 function changeTest() {    
@@ -366,7 +436,8 @@ function changeTest() {
 }
 
 function completeMission() {
-    console.log("MISSION COMPLETE!")
+    hideOverlay("mission");
+    showOverlay("goal");
 }
 
 function getContactLister() { 
@@ -458,6 +529,9 @@ function getWorldInfo() {
 var resettingScene = false;
 function resetScene() {
 
+    hideOverlay("goal");
+    showOverlay("mission");
+
     bBearSharkFired = false;
 
     resettingScene = true;
@@ -487,8 +561,6 @@ function doAfterLoading() {
     commentsDiv.innerHTML = "About: "+comments;
     
     resettingScene = false;
-
-    console.log("doAfterLoading");
     
     draw();
 }
@@ -498,7 +570,7 @@ function fireBearShark() {
 
     if(!bBearSharkFired) {
 
-        console.log("fireBearShark");
+        //console.log("fireBearShark");
 
         var bearshark = getNamedBodies(world, "shark")[0];
         var bearSharkCenter = bearshark.GetWorldCenter();
@@ -765,10 +837,6 @@ function pause() {
     updateStats();
 }
 
-//console.log(A.a);
-//console.log(Box2D.Dynamics);
-//console.log(Box2D.Dynamics.b2BodyDef);
-
 var b2CircleShape = Box2D.Collision.Shapes.b2CircleShape,
       b2EdgeChainDef = Box2D.Collision.Shapes.b2EdgeChainDef,
       b2EdgeShape = Box2D.Collision.Shapes.b2EdgeShape,
@@ -884,35 +952,5 @@ window['onload'] = function doOnload() {
 
 //these need to be kept global for closure advanced optimization
 window['currentTest'] = null;
-//window['Box2D'] = Box2D;
 
-/*
-String.prototype.endsWith = function(suffix) {
-    return this.indexOf(suffix, this.length - suffix.length) !== -1;
-};
 
-function ttt(ns, recurse) {
-    if ( typeof recurse === 'undefined' ) recurse = true;
-    var parts = ns.split(".");
-    var base = "window";
-    for (i=0;i<parts.length;i++)
-        base += "['"+parts[i]+"']";
-    //if ( ns.endsWith('prototype') )
-    //    recurse = false;
-    for (var name in eval(ns)) {        
-        console.log(base+"['"+name+"'] = "+ns+"."+name+";");
-        //if ( typeof eval(ns+"."+name) == 'function' ) {
-            if ( recurse )
-                ttt(ns+"."+name+".prototype", true);
-        //}
-    }
-}
-
-//ttt('Box2D.Collision');
-//ttt('Box2D.Collision.Shapes');
-//ttt('Box2D.Common');
-//ttt('Box2D.Common.Math');
-//ttt('Box2D.Dynamics');
-//ttt('Box2D.Dynamics.Contacts');
-//ttt('Box2D.Dynamics.Joints');
-*/
