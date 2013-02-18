@@ -1,21 +1,21 @@
 define(["easel", 
-		"box2d"], function() {
+		"box2deasljs"], function() {
 
 	var ActorsController = function( actors, bodies, world, SCALE ) {
 
-		// Box2d vars
-		var b2Vec2 = Box2D.Common.Math.b2Vec2;
-		var b2BodyDef = Box2D.Dynamics.b2BodyDef;
-		var b2Body = Box2D.Dynamics.b2Body;
-		var b2FixtureDef = Box2D.Dynamics.b2FixtureDef;
-		var b2Fixture = Box2D.Dynamics.b2Fixture;
-		var b2World = Box2D.Dynamics.b2World;
-		var b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape;
-		var b2CircleShape = Box2D.Collision.Shapes.b2CircleShape;
-		var b2DebugDraw = Box2D.Dynamics.b2DebugDraw;
-		var b2MassData = Box2D.Collision.Shapes.b2MassData;
-		var b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef;
-		var b2RevoluteJoint = Box2D.Dynamics.Joints.b2RevoluteJoint;
+		// Box2DEaselJS vars
+		var b2Vec2 = Box2DEaselJS.Common.Math.b2Vec2;
+		var b2BodyDef = Box2DEaselJS.Dynamics.b2BodyDef;
+		var b2Body = Box2DEaselJS.Dynamics.b2Body;
+		var b2FixtureDef = Box2DEaselJS.Dynamics.b2FixtureDef;
+		var b2Fixture = Box2DEaselJS.Dynamics.b2Fixture;
+		var b2World = Box2DEaselJS.Dynamics.b2World;
+		var b2PolygonShape = Box2DEaselJS.Collision.Shapes.b2PolygonShape;
+		var b2CircleShape = Box2DEaselJS.Collision.Shapes.b2CircleShape;
+		var b2DebugDraw = Box2DEaselJS.Dynamics.b2DebugDraw;
+		var b2MassData = Box2DEaselJS.Collision.Shapes.b2MassData;
+		var b2RevoluteJointDef = Box2DEaselJS.Dynamics.Joints.b2RevoluteJointDef;
+		var b2RevoluteJoint = Box2DEaselJS.Dynamics.Joints.b2RevoluteJoint;
 
 		var createSkin = function(imgPath, imgWidth, imgHeight, point, name, bSpriteSheet, animationObj) {
 			//console.log(arguments, "ActorController createSkin / name: " + name);
@@ -85,7 +85,7 @@ define(["easel",
 		var actorObject = function(body, skin, skinOffset) {
 			this.body = body;
 			this.skin = skin;
-			this.update = function() {  // translate box2d positions to pixels
+			this.update = function() {  // translate Box2DEaselJS positions to pixels
 	
 				if ( skinOffset === undefined ) {
 					this.skin.x = this.body.GetWorldCenter().x * SCALE;
@@ -102,7 +102,7 @@ define(["easel",
 
 		var getCollisionObj = function( collisionTeam ) {
 
-			// http://www.aurelienribon.com/blog/2011/07/box2d-tutorial-collision-filtering/
+			// http://www.aurelienribon.com/blog/2011/07/Box2DEaselJS-tutorial-collision-filtering/
 
 			var teamEnvironmentCategoryBits = 0x0004;
 			var teamEnvironmentMaskBits = -1;

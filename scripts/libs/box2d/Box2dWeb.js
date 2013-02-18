@@ -10859,6 +10859,9 @@ Box2D.postDefs = [];
       s.endStroke();
    };
    b2DebugDraw.prototype.DrawTransform = function (xf) {
+
+      console.log(this.m_ctx, "DrawTransform");
+
       var s = this.m_ctx,
          drawScale = this.m_drawScale;
       s.beginStroke();

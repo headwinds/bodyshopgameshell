@@ -1,23 +1,23 @@
 define(["easel", 
-		"box2d",
+		"box2deasljs",
 		"controllers/physics/actors/ActorsController",
 		"controllers/physics/vehicles/CatapultController",
-		"config/config"], function(easel, box2d, ActorsController, CatapultController) {
+		"config/config"], function(easel, Box2DEaselJ, ActorsController, CatapultController) {
 
 	var PhysicsController = function(canvas, context, cameraWorldContainer, cameraWorldSkinsContainer, cameraWorldContainerDebugBG, domainPath) {
 	
-		// Box2d vars
-		var b2Vec2 = Box2D.Common.Math.b2Vec2;
-		var b2BodyDef = Box2D.Dynamics.b2BodyDef;
-		var b2Body = Box2D.Dynamics.b2Body;
-		var b2FixtureDef = Box2D.Dynamics.b2FixtureDef;
-		var b2Fixture = Box2D.Dynamics.b2Fixture;
-		var b2World = Box2D.Dynamics.b2World;
-		var b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape;
-		var b2CircleShape = Box2D.Collision.Shapes.b2CircleShape;
-		var b2DebugDraw = Box2D.Dynamics.b2DebugDraw;
-		var b2MassData = Box2D.Collision.Shapes.b2MassData;
-		var b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef;
+		// Box2DEaselJS vars
+		var b2Vec2 = Box2DEaselJS.Common.Math.b2Vec2;
+		var b2BodyDef = Box2DEaselJS.Dynamics.b2BodyDef;
+		var b2Body = Box2DEaselJS.Dynamics.b2Body;
+		var b2FixtureDef = Box2DEaselJS.Dynamics.b2FixtureDef;
+		var b2Fixture = Box2DEaselJS.Dynamics.b2Fixture;
+		var b2World = Box2DEaselJS.Dynamics.b2World;
+		var b2PolygonShape = Box2DEaselJS.Collision.Shapes.b2PolygonShape;
+		var b2CircleShape = Box2DEaselJS.Collision.Shapes.b2CircleShape;
+		var b2DebugDraw = Box2DEaselJS.Dynamics.b2DebugDraw;
+		var b2MassData = Box2DEaselJS.Collision.Shapes.b2MassData;
+		var b2RevoluteJointDef = Box2DEaselJS.Dynamics.Joints.b2RevoluteJointDef;
 
 		var floor;
 		var floorWidth = 2800; 
@@ -221,7 +221,7 @@ define(["easel",
 			};
 		};
 
-		// box2d world setup and boundaries
+		// Box2DEaselJS world setup and boundaries
 		var setup = function() {
 			
 			world = new b2World(new b2Vec2(0,10), true);
@@ -232,7 +232,7 @@ define(["easel",
 			spawnSimple("floor"); 
 
 			// listen for collisons
-			var contactListener = new Box2D.Dynamics.b2ContactListener; 
+			var contactListener = new Box2DEaselJS.Dynamics.b2ContactListener; 
 			contactListener.BeginContact = function( contact_details ) { 
 				
 			}

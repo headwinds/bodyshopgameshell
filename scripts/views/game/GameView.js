@@ -4,7 +4,8 @@ define([
 	'backbone',
 	'controllers/game/GameViewController',
 	'demos/manual/controllers/ManualDemoViewController',
-	'demos/rube/controllers/RubeDemoViewController',
+	//'demos/rube/controllers/RubeDemoViewController',
+	'demos/rube/controllers/RubeMainController',
 	'demos/ministirith/controllers/MinisTirithDemoViewController',
 	'models/languages/EnglishModel'
 	], function($,
@@ -12,7 +13,8 @@ define([
 				Backbone, 
 				GameViewController, 
 				ManualDemoViewController, 
-				RubeDemoViewController,
+				//RubeDemoViewController,
+				RubeMainController,
 				MinisTirithDemoViewController,
 				EnglishModel) {
 
@@ -40,7 +42,7 @@ define([
 				that.controller = new ManualDemoViewController( that.model );
 				break;
 				case "rube" :
-				that.controller = new RubeDemoViewController( that.model );
+				that.controller = new RubeMainController( that.model );
 				break;
 				case "ministirith" :
 				that.controller = new MinisTirithDemoViewController( that.model );

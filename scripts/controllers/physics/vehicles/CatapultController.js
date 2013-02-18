@@ -1,11 +1,11 @@
 /*
 forked and ported from:
-http://www.emanueleferonato.com/2010/05/04/following-a-body-with-the-camera-in-box2d-the-smart-way/
+http://www.emanueleferonato.com/2010/05/04/following-a-body-with-the-camera-in-Box2DEaselJS-the-smart-way/
 */
 
 define(["controllers/physics/actors/ActorsController",
  		"easel", 
-		"box2d",
+		"box2deasljs",
 		"config/config"], function(ActorsController) {
 
 	var CatapultController = function( 	name, 
@@ -23,19 +23,19 @@ define(["controllers/physics/actors/ActorsController",
 										bFaceRight,
 										domainPath) {
 
-		// Box2d vars
-		var b2Vec2 = Box2D.Common.Math.b2Vec2;
-		var b2BodyDef = Box2D.Dynamics.b2BodyDef;
-		var b2Body = Box2D.Dynamics.b2Body;
-		var b2FixtureDef = Box2D.Dynamics.b2FixtureDef;
-		var b2Fixture = Box2D.Dynamics.b2Fixture;
-		var b2World = Box2D.Dynamics.b2World;
-		var b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape;
-		var b2CircleShape = Box2D.Collision.Shapes.b2CircleShape;
-		var b2DebugDraw = Box2D.Dynamics.b2DebugDraw;
-		var b2MassData = Box2D.Collision.Shapes.b2MassData;
-		var b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef;
-		var b2RevoluteJoint = Box2D.Dynamics.Joints.b2RevoluteJoint;
+		// Box2DEaselJS vars
+		var b2Vec2 = Box2DEaselJS.Common.Math.b2Vec2;
+		var b2BodyDef = Box2DEaselJS.Dynamics.b2BodyDef;
+		var b2Body = Box2DEaselJS.Dynamics.b2Body;
+		var b2FixtureDef = Box2DEaselJS.Dynamics.b2FixtureDef;
+		var b2Fixture = Box2DEaselJS.Dynamics.b2Fixture;
+		var b2World = Box2DEaselJS.Dynamics.b2World;
+		var b2PolygonShape = Box2DEaselJS.Collision.Shapes.b2PolygonShape;
+		var b2CircleShape = Box2DEaselJS.Collision.Shapes.b2CircleShape;
+		var b2DebugDraw = Box2DEaselJS.Dynamics.b2DebugDraw;
+		var b2MassData = Box2DEaselJS.Collision.Shapes.b2MassData;
+		var b2RevoluteJointDef = Box2DEaselJS.Dynamics.Joints.b2RevoluteJointDef;
+		var b2RevoluteJoint = Box2DEaselJS.Dynamics.Joints.b2RevoluteJoint;
 
 		// catapult parts
 		var bodyPartsScope = {};	

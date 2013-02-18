@@ -33,7 +33,7 @@ shark.prototype.setup = function() {
     }
 
     $.ajax({
-      url: "./shark.json",
+      url: "./json/shark.json",
       dataType: 'json',
       success: callback
     });
