@@ -18,6 +18,7 @@ define([
 
         var keyboardController = new KeyboardController();
         var loader; // instance of LoadRubeController
+        var stage;
         var loadRubeController;
         var world = null;
         var mouseJointGroundBody;
@@ -292,7 +293,7 @@ define([
 
         function init() {
 
-            console.log("RubeDemoViewController / init")    
+            //console.log("RubeDemoViewController / init")    
 
             canvas = document.getElementById("gameCanvas");
             context = canvas.getContext( '2d' );
@@ -326,9 +327,6 @@ define([
                 onKeyUp(canvas,evt);
             }, false);
             */
-
-
-        
 
             myDebugDraw = new b2DebugDraw();
             myDebugDraw.SetSprite(document.getElementById("gameCanvas").getContext("2d"));
@@ -369,7 +367,7 @@ define([
             viewAABB = new b2AABB();
             visibleFixturesQueryCallback = new VisibleFixturesQueryCallback();
 
-            //setupCreateJS();
+            setupCreateJS();
         }
 
         var gameRunning = true;
@@ -382,22 +380,22 @@ define([
 
         function setupCreateJS() {
 
-            canvasOverlays = document.getElementById("gameCanvas");
+            canvasOverlays = document.getElementById("gameUICanvas");
             contextOverlays = canvasOverlays.getContext( '2d' );
 
-            var stage = new createjs.Stage(canvasOverlays);
+            stage = new createjs.Stage(canvasOverlays);
 
             var overlaysContainer = new createjs.Container();
             overlaysContainer.width = canvasOverlays.width;
             overlaysContainer.height = canvasOverlays.height; 
 
             missionOverlayContainer = new createjs.Container();
-            var missionBitmap = new createjs.Bitmap("./imgs/demos/rube/mission.png");
+            var missionBitmap = new createjs.Bitmap("./imgs/ui/overlays/mission.png");
 
             missionOverlayContainer.addChild(missionBitmap);
 
             goalOverlayContainer = new createjs.Container();
-            var goalBitmap = new createjs.Bitmap("./imgs/demos/rube/goal.png");
+            var goalBitmap = new createjs.Bitmap("./imgs/ui/overlays/goal.png");
 
             goalOverlayContainer.addChild(goalBitmap);
             goalOverlayContainer.visible = false; 
@@ -405,6 +403,8 @@ define([
             overlaysContainer.addChild(missionOverlayContainer);
             overlaysContainer.addChild(goalOverlayContainer);
             stage.addChild(overlaysContainer);
+
+            console.log(missionOverlayContainer);
 
             var update = function() {
 
@@ -414,7 +414,7 @@ define([
                 //physicsController.update();
                 //fpsFld.text = Math.floor(createjs.Ticker.getMeasuredFPS())+" FPS";
 
-                stage.update();
+               stage.update();
             }
 
             var tick = function() {
@@ -430,15 +430,20 @@ define([
             createjs.Ticker.useRAF = true; // use Request Animation Frame 
             createjs.Ticker.addListener( tick );
 
+           
+
 
         }
 
         function hideOverlay(overlayName) {
-            //this[overlayName + "OverlayContainer"].visible = false;  
+
+            if ( this[overlayName + "OverlayContainer"] !== undefined ) this[overlayName + "OverlayContainer"].visible = false;  
+                    
         }
 
         function showOverlay(overlayName) {
-            //this[overlayName + "OverlayContainer"].visible = true;  
+            if ( this[overlayName + "OverlayContainer"] !== undefined )   this[overlayName + "OverlayContainer"].visible = true;  
+                  
         }
 
         function changeTest() {    
@@ -450,8 +455,8 @@ define([
         }
 
         function completeMission() {
-            //hideOverlay("mission");
-            //showOverlay("goal");
+            hideOverlay("mission");
+            showOverlay("goal");
         }
 
         function getContactListener() { 
@@ -532,12 +537,17 @@ define([
         var resettingScene = false;
         function resetScene() {
 
-            //hideOverlay("goal");
-            //showOverlay("mission");
+            hideOverlay("goal");
+            showOverlay("mission");
+
+            console.log("RubeDemoViewController - RESET -")
+
+            //setViewCenterWorld( {x: -3.4, y: 0.39} );
 
             bBearSharkFired = false;
 
             resettingScene = true;
+            
             createWorld();
             
             draw();
@@ -573,6 +583,8 @@ define([
             console.log(loader, "RubeDemoViewController / doAfterLoading")
             
             truck.setup(world, loader);
+
+             showOverlay("mission");
 
             var onKeyDownHandler = function(event, keyName) {
                 console.log("RubeDemoViewController / onKeyboardHandler /keyName: " + keyName);
@@ -630,8 +642,10 @@ define([
             //console.log("-------------------------------");
             //console.log("RubeDemoViewController / step ");
             
-            //if ( resettingScene )
-              //  return;
+            if ( resettingScene ) {
+                //setViewCenterWorld( {x: -3.4, y: 0.39} );
+                return;
+            }
             
             //if ( window['currentTest'] && window['currentTest']['step'] ) 
               //  window['currentTest']['step']();
@@ -651,6 +665,8 @@ define([
             var futurePos = truck.getFuturePos(); 
             setViewCenterWorld( futurePos );
             //console.log(futurePos);
+
+            stage.update();
 
             draw();
 
