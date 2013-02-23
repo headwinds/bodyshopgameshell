@@ -439,7 +439,8 @@ define([
         }
 
         return {
-            loadSceneFromRUBE : loadSceneFromRUBE
+            loadSceneFromRUBE : loadSceneFromRUBE,
+            getNamedBodies : getNamedBodies
         }
     }
 

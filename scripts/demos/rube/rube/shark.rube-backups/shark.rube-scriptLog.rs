@@ -1,0 +1,511 @@
+//Restarted script log at Sat Feb 23 16:17:53 2013
+getBody(4).select();
+getBody(1).select();
+getBody(2).select();
+getBody(5).select();
+getBody(12).select();
+getBody(6).select();
+getBody(3).select();
+getBody(11).select();
+getBody(7).select();
+getBody(8).select();
+getImage(3).setCenter(-0.00670574,0.00207567);
+getImage(3).setScale(0.940266);
+getBody(4).setPosition(-1.2441,-0.271176);
+{
+	fixture _rube_redoFixture = getFixture(48);
+	_rube_redoFixture.setVertex(0,4.77707e-07,-7.63679e-09);
+}
+getShape(48,0).setRadius(0.470133);
+getImage(12).setCenter(0.47831,-3.21078);
+getImage(12).setScale(14.5323);
+getBody(1).setPosition(27.2368,-13.3843);
+{
+	fixture _rube_redoFixture = getFixture(2);
+	_rube_redoFixture.setVertex(0,0.0742893,0.0244331);
+}
+getShape(2,0).setRadius(1.1796);
+getImage(1).setCenter(3.53302e-05,-1.33455e-07);
+getImage(1).setScale(1.03965);
+getBody(2).setPosition(-4.09855,-0.159121);
+{
+	fixture _rube_redoFixture = getFixture(38);
+	_rube_redoFixture.setVertex(0,-6.91669e-10,1.48851e-08);
+}
+getShape(38,0).setRadius(0.519828);
+getImage(10).setScale(0.571384);
+getBody(5).setPosition(-3.90468,0.982426);
+{
+	fixture _rube_redoFixture = getFixture(49);
+	_rube_redoFixture.setVertex(0,-0.285692,-0.285691);
+	_rube_redoFixture.setVertex(1,0.285691,-0.285692);
+	_rube_redoFixture.setVertex(2,0.285692,0.285693);
+	_rube_redoFixture.setVertex(3,-0.28569,0.285692);
+}
+getImage(8).setCenter(12.9505,0.0431694);
+getImage(8).setScale(18.1654);
+getImage(6).setCenter(0.0734596,0.107823);
+getImage(6).setScale(18.1654);
+getImage(9).setCenter(19.4467,0.0431686);
+getImage(9).setScale(18.1654);
+getImage(11).setCenter(25.9147,0.0431686);
+getImage(11).setScale(18.1654);
+getImage(13).setCenter(32.4392,0.0431686);
+getImage(13).setScale(18.1654);
+getImage(15).setCenter(45.3469,0.0431686);
+getImage(15).setScale(18.1654);
+getImage(14).setCenter(38.9071,0.0431686);
+getImage(14).setScale(18.1654);
+getImage(20).setCenter(6.52242,0.0670874);
+getImage(20).setScale(18.1654);
+getBody(12).setPosition(-9.27953,0.0922016);
+{
+	fixture _rube_redoFixture = getFixture(6);
+	_rube_redoFixture.setVertex(0,-3.22013,-9.21074);
+	_rube_redoFixture.setVertex(1,48.8153,-9.21074);
+	_rube_redoFixture.setVertex(2,48.8153,9.21074);
+	_rube_redoFixture.setVertex(3,-3.22013,9.21074);
+}
+getBody(6).setPosition(26.2085,-6.03541);
+{
+	fixture _rube_redoFixture = getFixture(3);
+	_rube_redoFixture.setVertex(0,-7.00024,-5.06589);
+	_rube_redoFixture.setVertex(1,7.252,-5.06589);
+	_rube_redoFixture.setVertex(2,7.252,-3.02359);
+	_rube_redoFixture.setVertex(3,-7.00024,-3.02359);
+}
+getJoint(1).setLocalAnchorA(1.67835,-0.476627);
+getJoint(2).setLocalAnchorA(-1.13159,-0.953426);
+getImage(19).setCenter(0.0500994,-0.0315981);
+getImage(19).setScale(1.59405);
+getBody(3).setPosition(-2.79033,0.439956);
+{
+	fixture _rube_redoFixture = getFixture(43);
+	_rube_redoFixture.setVertex(0,-2.05571,-0.724663);
+	_rube_redoFixture.setVertex(1,-1.67191,-0.692362);
+	_rube_redoFixture.setVertex(2,-1.67191,-0.58026);
+}
+{
+	fixture _rube_redoFixture = getFixture(41);
+	_rube_redoFixture.setVertex(0,1.77018,0.190707);
+	_rube_redoFixture.setVertex(1,2.05189,-0.00509146);
+	_rube_redoFixture.setVertex(2,2.16777,0.0288738);
+	_rube_redoFixture.setVertex(3,2.18974,0.202694);
+	_rube_redoFixture.setVertex(4,2.15378,0.350543);
+	_rube_redoFixture.setVertex(5,2.06188,0.476413);
+	_rube_redoFixture.setVertex(6,1.64201,0.45334);
+}
+{
+	fixture _rube_redoFixture = getFixture(47);
+	_rube_redoFixture.setVertex(0,-0.807971,-0.377303);
+	_rube_redoFixture.setVertex(1,-0.617298,-0.599323);
+	_rube_redoFixture.setVertex(2,1.07693,-0.329705);
+	_rube_redoFixture.setVertex(3,-0.0796851,0.185447);
+}
+{
+	fixture _rube_redoFixture = getFixture(46);
+	_rube_redoFixture.setVertex(0,-0.0796851,0.185447);
+	_rube_redoFixture.setVertex(1,-1.1475,-0.243958);
+	_rube_redoFixture.setVertex(2,-0.807971,-0.377303);
+}
+{
+	fixture _rube_redoFixture = getFixture(39);
+	_rube_redoFixture.setVertex(0,1.64201,0.45334);
+	_rube_redoFixture.setVertex(1,0.998969,0.36453);
+	_rube_redoFixture.setVertex(2,1.20676,-0.100993);
+	_rube_redoFixture.setVertex(3,1.40056,0.112788);
+}
+{
+	fixture _rube_redoFixture = getFixture(45);
+	_rube_redoFixture.setVertex(0,-0.0796851,0.185447);
+	_rube_redoFixture.setVertex(1,-2.15261,-0.118556);
+	_rube_redoFixture.setVertex(2,-1.4648,-0.350358);
+	_rube_redoFixture.setVertex(3,-1.1475,-0.243958);
+}
+{
+	fixture _rube_redoFixture = getFixture(44);
+	_rube_redoFixture.setVertex(0,-2.15261,-0.118556);
+	_rube_redoFixture.setVertex(1,-2.20961,-0.352257);
+	_rube_redoFixture.setVertex(2,-2.17351,-0.620161);
+	_rube_redoFixture.setVertex(3,-2.05571,-0.724663);
+	_rube_redoFixture.setVertex(4,-1.67191,-0.58026);
+	_rube_redoFixture.setVertex(5,-1.4648,-0.350358);
+}
+{
+	fixture _rube_redoFixture = getFixture(40);
+	_rube_redoFixture.setVertex(0,1.64201,0.45334);
+	_rube_redoFixture.setVertex(1,1.40056,0.112788);
+	_rube_redoFixture.setVertex(2,1.77018,0.190707);
+}
+{
+	fixture _rube_redoFixture = getFixture(42);
+	_rube_redoFixture.setVertex(0,1.07693,-0.329705);
+	_rube_redoFixture.setVertex(1,1.20676,-0.100993);
+	_rube_redoFixture.setVertex(2,0.998969,0.36453);
+	_rube_redoFixture.setVertex(3,0.555418,0.740365);
+	_rube_redoFixture.setVertex(4,0.00899976,0.670212);
+	_rube_redoFixture.setVertex(5,-0.0663834,0.569253);
+	_rube_redoFixture.setVertex(6,-0.0796851,0.185447);
+}
+getBody(11).setPosition(11.8337,-4.39874);
+{
+	fixture _rube_redoFixture = getFixture(59);
+	_rube_redoFixture.setVertex(0,11.9613,4.51386);
+	_rube_redoFixture.setVertex(1,10.3933,4.05375);
+	_rube_redoFixture.setVertex(2,8.48455,3.21096);
+	_rube_redoFixture.setVertex(3,7.77423,2.91941);
+	_rube_redoFixture.setVertex(4,7.27056,2.87932);
+	_rube_redoFixture.setVertex(5,6.78138,2.94649);
+	_rube_redoFixture.setVertex(6,6.36837,3.02077);
+	_rube_redoFixture.setVertex(7,5.90523,2.93311);
+	_rube_redoFixture.setVertex(8,4.22739,2.9502);
+	_rube_redoFixture.setVertex(9,2.36442,2.96083);
+	_rube_redoFixture.setVertex(10,0.764135,2.86898);
+	_rube_redoFixture.setVertex(11,-0.397563,2.55572);
+	_rube_redoFixture.setVertex(12,-0.989754,2.31247);
+	_rube_redoFixture.setVertex(13,-2.12642,1.97334);
+	_rube_redoFixture.setVertex(14,-2.87896,1.97301);
+	_rube_redoFixture.setVertex(15,-3.07427,2.2124);
+	_rube_redoFixture.setVertex(16,-3.52766,2.1928);
+	_rube_redoFixture.setVertex(17,-4.38212,1.91519);
+	_rube_redoFixture.setVertex(18,-4.81795,2.05036);
+	_rube_redoFixture.setVertex(19,-5.01362,2.00731);
+	_rube_redoFixture.setVertex(20,-5.95811,2.10057);
+	_rube_redoFixture.setVertex(21,-6.69612,2.05686);
+	_rube_redoFixture.setVertex(22,-7.38348,2.11216);
+	_rube_redoFixture.setVertex(23,-7.42044,2.46786);
+	_rube_redoFixture.setVertex(24,-8.32006,2.42727);
+	_rube_redoFixture.setVertex(25,-9.08363,2.51677);
+	_rube_redoFixture.setVertex(26,-10.3129,2.91441);
+	_rube_redoFixture.setVertex(27,-11.064,3.31729);
+	_rube_redoFixture.setVertex(28,-11.9283,3.55067);
+	_rube_redoFixture.setVertex(29,-12.9695,3.5776);
+	_rube_redoFixture.setVertex(30,-17.5344,3.46183);
+	_rube_redoFixture.setVertex(31,-18.0122,9.91924);
+	_rube_redoFixture.setVertex(32,-18.9968,9.7768);
+	_rube_redoFixture.setVertex(33,-18.626,3.49611);
+	_rube_redoFixture.setVertex(34,-24.4678,3.517);
+	_rube_redoFixture.setVertex(35,-24.3492,-4.68866);
+	_rube_redoFixture.setVertex(36,11.8528,-4.39584);
+}
+{
+	fixture _rube_redoFixture = getFixture(1);
+	_rube_redoFixture.setVertex(0,10.2533,-13.9359);
+	_rube_redoFixture.setVertex(1,21.3875,-13.9776);
+	_rube_redoFixture.setVertex(2,21.3875,-11.3897);
+	_rube_redoFixture.setVertex(3,18.8901,-9.35178);
+	_rube_redoFixture.setVertex(4,19.1293,-11.3812);
+	_rube_redoFixture.setVertex(5,11.9544,-11.3544);
+	_rube_redoFixture.setVertex(6,12.1338,-9.13931);
+	_rube_redoFixture.setVertex(7,10.2533,-11.348);
+}
+{
+	fixture _rube_redoFixture = getFixture(58);
+	_rube_redoFixture.setVertex(0,17.8301,-4.62391);
+	_rube_redoFixture.setVertex(1,27.4682,-4.58816);
+	_rube_redoFixture.setVertex(2,28.0731,2.26408);
+	_rube_redoFixture.setVertex(3,26.7828,2.22949);
+	_rube_redoFixture.setVertex(4,24.1916,2.19008);
+	_rube_redoFixture.setVertex(5,24.0183,6.99404);
+	_rube_redoFixture.setVertex(6,23.4693,7.14683);
+	_rube_redoFixture.setVertex(7,23.6662,2.15839);
+	_rube_redoFixture.setVertex(8,22.9645,2.17395);
+	_rube_redoFixture.setVertex(9,21.5264,2.4734);
+	_rube_redoFixture.setVertex(10,20.8068,2.83302);
+	_rube_redoFixture.setVertex(11,19.8555,3.37431);
+	_rube_redoFixture.setVertex(12,19.0211,3.80021);
+	_rube_redoFixture.setVertex(13,17.8859,4.01094);
+	_rube_redoFixture.setVertex(14,17.8494,3.16402);
+}
+getBody(7).setPosition(26.4936,0.337012);
+{
+	fixture _rube_redoFixture = getFixture(4);
+	_rube_redoFixture.setVertex(0,-2.52144,-1.36921);
+	_rube_redoFixture.setVertex(1,3.05986,-1.36921);
+	_rube_redoFixture.setVertex(2,3.05986,2.94138);
+	_rube_redoFixture.setVertex(3,-2.52144,2.94138);
+}
+getBody(8).setPosition(34.1569,0.0382043);
+{
+	fixture _rube_redoFixture = getFixture(5);
+	_rube_redoFixture.setVertex(0,-3.20262,-2.21248);
+	_rube_redoFixture.setVertex(1,1.28436,-2.21248);
+	_rube_redoFixture.setVertex(2,1.28436,0.887057);
+	_rube_redoFixture.setVertex(3,-3.20262,0.887057);
+}
+getBody(4).deselect();
+getBody(1).deselect();
+getBody(2).deselect();
+getBody(5).deselect();
+getBody(12).deselect();
+getBody(6).deselect();
+getBody(3).deselect();
+getBody(11).deselect();
+getBody(7).deselect();
+getBody(8).deselect();
+getBody(4).select();
+getBody(1).select();
+getBody(2).select();
+getBody(5).select();
+getBody(12).select();
+getBody(6).select();
+getBody(3).select();
+getBody(11).select();
+getBody(7).select();
+getBody(8).select();
+getBody(4).deselect();
+getBody(1).deselect();
+getBody(2).deselect();
+getBody(5).deselect();
+getBody(12).deselect();
+getBody(6).deselect();
+getBody(3).deselect();
+getBody(11).deselect();
+getBody(7).deselect();
+getBody(8).deselect();
+getBody(4).select();
+getBody(1).select();
+getBody(2).select();
+getBody(5).select();
+getBody(12).select();
+getBody(6).select();
+getBody(3).select();
+getBody(11).select();
+getBody(7).select();
+getBody(8).select();
+getImage(3).setCenter(-0.00788917,0.00244197);
+getImage(3).setScale(1.10621);
+getBody(4).setPosition(-1.46367,-0.319035);
+{
+	fixture _rube_redoFixture = getFixture(48);
+	_rube_redoFixture.setVertex(0,5.98171e-07,-3.18736e-08);
+}
+getShape(48,0).setRadius(0.553104);
+getImage(12).setCenter(0.562725,-3.77744);
+getImage(12).setScale(17.097);
+getBody(1).setPosition(32.0437,-15.7464);
+{
+	fixture _rube_redoFixture = getFixture(2);
+	_rube_redoFixture.setVertex(0,0.0874062,0.0287447);
+}
+getShape(2,0).setRadius(1.38778);
+getImage(1).setCenter(4.1537e-05,-1.58308e-07);
+getImage(1).setScale(1.22314);
+getBody(2).setPosition(-4.82187,-0.187203);
+{
+	fixture _rube_redoFixture = getFixture(38);
+	_rube_redoFixture.setVertex(0,-6.91669e-10,1.48851e-08);
+}
+getShape(38,0).setRadius(0.611569);
+getImage(10).setScale(0.672225);
+getBody(5).setPosition(-4.5938,1.15581);
+{
+	fixture _rube_redoFixture = getFixture(49);
+	_rube_redoFixture.setVertex(0,-0.336112,-0.336111);
+	_rube_redoFixture.setVertex(1,0.336111,-0.336112);
+	_rube_redoFixture.setVertex(2,0.336112,0.336113);
+	_rube_redoFixture.setVertex(3,-0.33611,0.336112);
+}
+getImage(8).setCenter(15.2361,0.0507882);
+getImage(8).setScale(21.3713);
+getImage(6).setCenter(0.0864239,0.126852);
+getImage(6).setScale(21.3713);
+getImage(9).setCenter(22.8788,0.0507872);
+getImage(9).setScale(21.3713);
+getImage(11).setCenter(30.4883,0.0507872);
+getImage(11).setScale(21.3713);
+getImage(13).setCenter(38.1642,0.0507872);
+getImage(13).setScale(21.3713);
+getImage(15).setCenter(53.3499,0.0507872);
+getImage(15).setScale(21.3713);
+getImage(14).setCenter(45.7736,0.0507872);
+getImage(14).setScale(21.3713);
+getImage(20).setCenter(7.67352,0.0789273);
+getImage(20).setScale(21.3713);
+getBody(12).setPosition(-10.9172,0.108474);
+{
+	fixture _rube_redoFixture = getFixture(6);
+	_rube_redoFixture.setVertex(0,-3.78843,-10.8363);
+	_rube_redoFixture.setVertex(1,57.4304,-10.8363);
+	_rube_redoFixture.setVertex(2,57.4304,10.8363);
+	_rube_redoFixture.setVertex(3,-3.78843,10.8363);
+}
+getBody(6).setPosition(30.8339,-7.10056);
+{
+	fixture _rube_redoFixture = getFixture(3);
+	_rube_redoFixture.setVertex(0,-8.23568,-5.95994);
+	_rube_redoFixture.setVertex(1,8.53186,-5.95994);
+	_rube_redoFixture.setVertex(2,8.53186,-3.5572);
+	_rube_redoFixture.setVertex(3,-8.23568,-3.5572);
+}
+getJoint(1).setLocalAnchorA(1.97456,-0.560745);
+getJoint(2).setLocalAnchorA(-1.3313,-1.12169);
+getImage(19).setCenter(0.0589412,-0.0371746);
+getImage(19).setScale(1.87538);
+getBody(3).setPosition(-3.28278,0.517602);
+{
+	fixture _rube_redoFixture = getFixture(43);
+	_rube_redoFixture.setVertex(0,-2.41851,-0.852555);
+	_rube_redoFixture.setVertex(1,-1.96697,-0.814553);
+	_rube_redoFixture.setVertex(2,-1.96697,-0.682667);
+}
+{
+	fixture _rube_redoFixture = getFixture(41);
+	_rube_redoFixture.setVertex(0,2.08258,0.224363);
+	_rube_redoFixture.setVertex(1,2.41401,-0.00599003);
+	_rube_redoFixture.setVertex(2,2.55034,0.0339696);
+	_rube_redoFixture.setVertex(3,2.5762,0.238467);
+	_rube_redoFixture.setVertex(4,2.53389,0.412408);
+	_rube_redoFixture.setVertex(5,2.42576,0.560493);
+	_rube_redoFixture.setVertex(6,1.9318,0.533347);
+}
+{
+	fixture _rube_redoFixture = getFixture(47);
+	_rube_redoFixture.setVertex(0,-0.950566,-0.443891);
+	_rube_redoFixture.setVertex(1,-0.726241,-0.705094);
+	_rube_redoFixture.setVertex(2,1.26699,-0.387893);
+	_rube_redoFixture.setVertex(3,-0.0937483,0.218175);
+}
+{
+	fixture _rube_redoFixture = getFixture(46);
+	_rube_redoFixture.setVertex(0,-0.0937483,0.218175);
+	_rube_redoFixture.setVertex(1,-1.35002,-0.287013);
+	_rube_redoFixture.setVertex(2,-0.950566,-0.443891);
+}
+{
+	fixture _rube_redoFixture = getFixture(39);
+	_rube_redoFixture.setVertex(0,1.9318,0.533347);
+	_rube_redoFixture.setVertex(1,1.17527,0.428864);
+	_rube_redoFixture.setVertex(2,1.41973,-0.118817);
+	_rube_redoFixture.setVertex(3,1.64773,0.132693);
+}
+{
+	fixture _rube_redoFixture = getFixture(45);
+	_rube_redoFixture.setVertex(0,-0.0937483,0.218175);
+	_rube_redoFixture.setVertex(1,-2.53251,-0.139479);
+	_rube_redoFixture.setVertex(2,-1.72332,-0.412191);
+	_rube_redoFixture.setVertex(3,-1.35002,-0.287013);
+}
+{
+	fixture _rube_redoFixture = getFixture(44);
+	_rube_redoFixture.setVertex(0,-2.53251,-0.139479);
+	_rube_redoFixture.setVertex(1,-2.59958,-0.414425);
+	_rube_redoFixture.setVertex(2,-2.5571,-0.72961);
+	_rube_redoFixture.setVertex(3,-2.41851,-0.852555);
+	_rube_redoFixture.setVertex(4,-1.96697,-0.682667);
+	_rube_redoFixture.setVertex(5,-1.72332,-0.412191);
+}
+{
+	fixture _rube_redoFixture = getFixture(40);
+	_rube_redoFixture.setVertex(0,1.9318,0.533347);
+	_rube_redoFixture.setVertex(1,1.64773,0.132693);
+	_rube_redoFixture.setVertex(2,2.08258,0.224363);
+}
+{
+	fixture _rube_redoFixture = getFixture(42);
+	_rube_redoFixture.setVertex(0,1.26699,-0.387893);
+	_rube_redoFixture.setVertex(1,1.41973,-0.118817);
+	_rube_redoFixture.setVertex(2,1.17527,0.428864);
+	_rube_redoFixture.setVertex(3,0.653441,0.871028);
+	_rube_redoFixture.setVertex(4,0.0105878,0.788494);
+	_rube_redoFixture.setVertex(5,-0.078099,0.669717);
+	_rube_redoFixture.setVertex(6,-0.0937483,0.218175);
+}
+getBody(11).setPosition(13.9221,-5.17505);
+{
+	fixture _rube_redoFixture = getFixture(59);
+	_rube_redoFixture.setVertex(0,14.0723,5.31048);
+	_rube_redoFixture.setVertex(1,12.2275,4.76917);
+	_rube_redoFixture.setVertex(2,9.98194,3.77765);
+	_rube_redoFixture.setVertex(3,9.14626,3.43464);
+	_rube_redoFixture.setVertex(4,8.5537,3.38747);
+	_rube_redoFixture.setVertex(5,7.97819,3.46651);
+	_rube_redoFixture.setVertex(6,7.49229,3.55389);
+	_rube_redoFixture.setVertex(7,6.94741,3.45075);
+	_rube_redoFixture.setVertex(8,4.97345,3.47087);
+	_rube_redoFixture.setVertex(9,2.7817,3.48337);
+	_rube_redoFixture.setVertex(10,0.898993,3.37531);
+	_rube_redoFixture.setVertex(11,-0.467727,3.00677);
+	_rube_redoFixture.setVertex(12,-1.16443,2.72058);
+	_rube_redoFixture.setVertex(13,-2.5017,2.3216);
+	_rube_redoFixture.setVertex(14,-3.38705,2.32122);
+	_rube_redoFixture.setVertex(15,-3.61683,2.60285);
+	_rube_redoFixture.setVertex(16,-4.15024,2.57979);
+	_rube_redoFixture.setVertex(17,-5.1555,2.25319);
+	_rube_redoFixture.setVertex(18,-5.66824,2.41222);
+	_rube_redoFixture.setVertex(19,-5.89845,2.36157);
+	_rube_redoFixture.setVertex(20,-7.00963,2.47129);
+	_rube_redoFixture.setVertex(21,-7.87788,2.41987);
+	_rube_redoFixture.setVertex(22,-8.68655,2.48492);
+	_rube_redoFixture.setVertex(23,-8.73004,2.90339);
+	_rube_redoFixture.setVertex(24,-9.78843,2.85565);
+	_rube_redoFixture.setVertex(25,-10.6867,2.96095);
+	_rube_redoFixture.setVertex(26,-12.133,3.42876);
+	_rube_redoFixture.setVertex(27,-13.0166,3.90274);
+	_rube_redoFixture.setVertex(28,-14.0335,4.17731);
+	_rube_redoFixture.setVertex(29,-15.2584,4.20898);
+	_rube_redoFixture.setVertex(30,-20.629,4.07279);
+	_rube_redoFixture.setVertex(31,-21.191,11.6698);
+	_rube_redoFixture.setVertex(32,-22.3494,11.5023);
+	_rube_redoFixture.setVertex(33,-21.9132,4.11311);
+	_rube_redoFixture.setVertex(34,-28.786,4.13769);
+	_rube_redoFixture.setVertex(35,-28.6465,-5.51614);
+	_rube_redoFixture.setVertex(36,13.9446,-5.17163);
+}
+{
+	fixture _rube_redoFixture = getFixture(1);
+	_rube_redoFixture.setVertex(0,12.0628,-16.3954);
+	_rube_redoFixture.setVertex(1,25.162,-16.4445);
+	_rube_redoFixture.setVertex(2,25.162,-13.3998);
+	_rube_redoFixture.setVertex(3,22.2239,-11.0022);
+	_rube_redoFixture.setVertex(4,22.5053,-13.3898);
+	_rube_redoFixture.setVertex(5,14.0642,-13.3582);
+	_rube_redoFixture.setVertex(6,14.2752,-10.7522);
+	_rube_redoFixture.setVertex(7,12.0628,-13.3507);
+}
+{
+	fixture _rube_redoFixture = getFixture(58);
+	_rube_redoFixture.setVertex(0,20.9769,-5.43996);
+	_rube_redoFixture.setVertex(1,32.3159,-5.3979);
+	_rube_redoFixture.setVertex(2,33.0276,2.66365);
+	_rube_redoFixture.setVertex(3,31.5096,2.62296);
+	_rube_redoFixture.setVertex(4,28.461,2.5766);
+	_rube_redoFixture.setVertex(5,28.2571,8.22838);
+	_rube_redoFixture.setVertex(6,27.6112,8.40813);
+	_rube_redoFixture.setVertex(7,27.8429,2.53931);
+	_rube_redoFixture.setVertex(8,27.0173,2.55761);
+	_rube_redoFixture.setVertex(9,25.3255,2.90991);
+	_rube_redoFixture.setVertex(10,24.4789,3.33301);
+	_rube_redoFixture.setVertex(11,23.3597,3.96983);
+	_rube_redoFixture.setVertex(12,22.378,4.47089);
+	_rube_redoFixture.setVertex(13,21.0424,4.71881);
+	_rube_redoFixture.setVertex(14,20.9995,3.72242);
+}
+getBody(7).setPosition(31.1693,0.39649);
+{
+	fixture _rube_redoFixture = getFixture(4);
+	_rube_redoFixture.setVertex(0,-2.96644,-1.61085);
+	_rube_redoFixture.setVertex(1,3.59988,-1.61085);
+	_rube_redoFixture.setVertex(2,3.59988,3.46049);
+	_rube_redoFixture.setVertex(3,-2.96644,3.46049);
+}
+getBody(8).setPosition(40.1851,0.0449467);
+{
+	fixture _rube_redoFixture = getFixture(5);
+	_rube_redoFixture.setVertex(0,-3.76784,-2.60295);
+	_rube_redoFixture.setVertex(1,1.51103,-2.60295);
+	_rube_redoFixture.setVertex(2,1.51103,1.04361);
+	_rube_redoFixture.setVertex(3,-3.76784,1.04361);
+}
+getBody(4).deselect();
+getBody(1).deselect();
+getBody(2).deselect();
+getBody(5).deselect();
+getBody(12).deselect();
+getBody(6).deselect();
+getBody(3).deselect();
+getBody(11).deselect();
+getBody(7).deselect();
+getBody(8).deselect();
+getBody(3).select();
+getBody(3).deselect();

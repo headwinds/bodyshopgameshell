@@ -32,6 +32,8 @@ define([
 				DB_7: 55,
 				DB_8: 56,
 				DB_9: 57,
+				J:74,
+				K:75,
 
 				isDown: function(keyCode) {
 					return this._pressed[keyCode];
@@ -54,6 +56,8 @@ define([
 				},
 
 				onKeydown: function(event) {
+
+					console.log("KeyboardController onKeydown");
 
 					var code = (event.keyCode ? event.keyCode : event.which);
 

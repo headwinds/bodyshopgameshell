@@ -1,8 +1,10 @@
 define([
     "jquery",
     "underscore",
-    "backbone"
-    ], function($, _, Backbone) {
+    "backbone",
+    "demos/rube/controllers/RubeTruckController",
+    "controllers/keyboard/KeyboardController"
+    ], function($, _, Backbone, RubeTruckController, KeyboardController) {
 
     var RubeDemoViewController = function(model) {     
 
@@ -14,6 +16,9 @@ define([
 
         var PTM = 32;
 
+        var keyboardController = new KeyboardController();
+        var loader; // instance of LoadRubeController
+        var loadRubeController;
         var world = null;
         var mouseJointGroundBody;
         var canvas;
@@ -79,12 +84,18 @@ define([
         }
 
         function setViewCenterWorld(b2vecpos, instantaneous) {
+            
             var currentViewCenterWorld = getWorldPointFromPixelPoint( viewCenterPixel );
+            
             var toMoveX = b2vecpos.x - currentViewCenterWorld.x;
             var toMoveY = b2vecpos.y - currentViewCenterWorld.y;
+            
             var fraction = instantaneous ? 1 : 0.25;
+            
             canvasOffset.x -= myRound(fraction * toMoveX * PTM, 0);
             canvasOffset.y += myRound(fraction * toMoveY * PTM, 0);
+
+            //console.log(b2vecpos, "setViewCenterWorld");
         }
 
         function onMouseMove(canvas, evt) {
@@ -126,6 +137,7 @@ define([
             mouseDownQueryCallback.m_fixture = null;
             mouseDownQueryCallback.m_point.Set(mousePosWorld.x, mousePosWorld.y);
             world.QueryAABB(mouseDownQueryCallback, aabb);
+            
             if (mouseDownQueryCallback.m_fixture)
             {
                 var body = mouseDownQueryCallback.m_fixture.GetBody();
@@ -147,18 +159,25 @@ define([
             }
         }
 
-        function onMouseDown(canvas, evt) {            
+        function onMouseDown(canvas, evt) {
+
+            console.log("RubeDemoViewController / onMouseDown");
+
             updateMousePos(canvas, evt);
+            
             if ( !mouseDown )
-                startMouseJoint();
+                //startMouseJoint();
+            
             mouseDown = true;
             updateStats();
         }
 
         function onMouseUp(canvas, evt) {
             mouseDown = false;
+            
             updateMousePos(canvas, evt);
             updateStats();
+            
             if ( mouseJoint != null ) {
                 world.DestroyJoint(mouseJoint);
                 mouseJoint = null;
@@ -171,7 +190,7 @@ define([
 
         function onKeyDown(canvas, evt) {
             
-            //console.log(evt.keyCode);
+            console.log("RubeDemoViewController / evt.keyCode");
             
             if ( evt.keyCode == 80 ) {//p
                 pause();
@@ -272,7 +291,9 @@ define([
         }
 
         function init() {
-            
+
+            console.log("RubeDemoViewController / init")    
+
             canvas = document.getElementById("gameCanvas");
             context = canvas.getContext( '2d' );
             
@@ -295,14 +316,20 @@ define([
                 onMouseOut(canvas,evt);
             }, false);
             
+            /*
             canvas.addEventListener('keydown', function(evt) {
+                console.log("RubeDemoViewController / canvas keydown listener");    
                 onKeyDown(canvas,evt);
             }, false);
             
             canvas.addEventListener('keyup', function(evt) {
                 onKeyUp(canvas,evt);
             }, false);
-            
+            */
+
+
+        
+
             myDebugDraw = new b2DebugDraw();
             myDebugDraw.SetSprite(document.getElementById("gameCanvas").getContext("2d"));
             myDebugDraw.SetDrawScale(1.0);
@@ -317,6 +344,7 @@ define([
                 this.m_fixture = null;
                 this.m_point = new b2Vec2();
             }
+
             MouseDownQueryCallback.prototype.ReportFixture = function(fixture) {
                 if(fixture.GetBody().GetType() == 2) { //dynamic bodies only
                     if ( fixture.TestPoint(this.m_point) ) {
@@ -350,6 +378,7 @@ define([
 
         var missionOverlayContainer;
         var goalOverlayContainer;
+        var truck = new RubeTruckController(this);
 
         function setupCreateJS() {
 
@@ -405,11 +434,11 @@ define([
         }
 
         function hideOverlay(overlayName) {
-            this[overlayName + "OverlayContainer"].visible = false;  
+            //this[overlayName + "OverlayContainer"].visible = false;  
         }
 
         function showOverlay(overlayName) {
-            this[overlayName + "OverlayContainer"].visible = true;  
+            //this[overlayName + "OverlayContainer"].visible = true;  
         }
 
         function changeTest() {    
@@ -421,8 +450,8 @@ define([
         }
 
         function completeMission() {
-            hideOverlay("mission");
-            showOverlay("goal");
+            //hideOverlay("mission");
+            //showOverlay("goal");
         }
 
         function getContactListener() { 
@@ -433,6 +462,8 @@ define([
                 
                 var bodyA = contact.GetFixtureA().GetBody();
                 var bodyB = contact.GetFixtureB().GetBody();
+
+                //console.log(bodyA.name);
 
                 if (bodyA.name === "truckshell" && bodyB.name === "airSensor1") {
                     fireBearShark();
@@ -480,6 +511,8 @@ define([
             world.SetContactListener( getContactListener() );
 
             mouseJointGroundBody = world.CreateBody( new b2BodyDef() );
+
+            
         }
 
         function getWorldInfo() {
@@ -512,8 +545,11 @@ define([
 
         //the RUBE scenes are loaded via jQuery post, so the draw() call above usually
         //does not catch them. Call this at the end of the post function.
-        function doAfterLoading() {
-            
+        function doAfterLoading( loader ) {
+
+            loadRubeController = loader;
+
+            //var that = this;
             if ( world.images ) {
                 for (var i = 0; i < world.images.length; i++) {
                     var imageObj = new Image();
@@ -533,6 +569,38 @@ define([
             commentsDiv.innerHTML = "About: "+comments;
             */
 
+            // hook up the truck
+            console.log(loader, "RubeDemoViewController / doAfterLoading")
+            
+            truck.setup(world, loader);
+
+            var onKeyDownHandler = function(event, keyName) {
+                console.log("RubeDemoViewController / onKeyboardHandler /keyName: " + keyName);
+            
+                if ( keyName == "LEFT_PRESSED") {
+                 truck.startDrivingLeft();   
+                }
+
+                if ( keyName == "RIGHT_PRESSED") {
+                 truck.startDrivingRight(); 
+                }
+            };
+
+            var onKeyUpHandler = function(event, keyName) {
+                console.log("RubeDemoViewController / onKeyboardHandler /keyName: " + keyName);
+            
+                if ( keyName == "LEFT_RELEASED") {
+                 truck.stopDrivingLeft();   
+                }
+
+                if ( keyName == "RIGHT_RELEASED") {
+                 truck.stopDrivingRight(); 
+                }
+            };
+
+            keyboardController.bind("customKeydown", onKeyDownHandler); 
+            keyboardController.bind("customKeyup", onKeyUpHandler); 
+
             resettingScene = false;
             
             draw();
@@ -540,13 +608,14 @@ define([
         }
 
         var bBearSharkFired = false;
+        
         function fireBearShark() {
 
             if(!bBearSharkFired) {
 
-                //console.log("fireBearShark");
+                console.log("fireBearShark");
 
-                var bearshark = getNamedBodies(world, "shark")[0];
+                var bearshark = loadRubeController.getNamedBodies(world, "shark")[0];
                 var bearSharkCenter = bearshark.GetWorldCenter();
 
                 bearshark.ApplyImpulse({ x: bearSharkCenter.x, y: 300 }, bearshark.GetWorldCenter());
@@ -556,31 +625,34 @@ define([
 
         }
 
-
         function step(timestamp) {
+
+            //console.log("-------------------------------");
+            //console.log("RubeDemoViewController / step ");
             
-            if ( resettingScene )
-                return;
+            //if ( resettingScene )
+              //  return;
             
-            if ( window['currentTest'] && window['currentTest']['step'] ) 
-                window['currentTest']['step']();
+            //if ( window['currentTest'] && window['currentTest']['step'] ) 
+              //  window['currentTest']['step']();
             
-            if ( ! showStats ) {
-                world.Step(1/60, 10, 6);
-                draw();
+            //if ( ! showStats ) {
+              //  world.Step(1/60, 10, 6);
+                //draw();
                 //logBodyPositions();
-                return;
-            }
+                //return;
+            //}
             
             var current = Date.now();
             world.Step(1/60, 10, 6);
             var frametime = (Date.now() - current);
             frameTime60 = frameTime60 * (59/60) + frametime * (1/60);
             
-            // check collisions and sensors for truck proximity against bear shark
+            var futurePos = truck.getFuturePos(); 
+            setViewCenterWorld( futurePos );
+            //console.log(futurePos);
 
             draw();
-
 
             statusUpdateCounter++;
             if ( statusUpdateCounter > 20 ) {
@@ -620,7 +692,8 @@ define([
 
         function draw() {
 
-            console.log("RubeDemoViewController / draw");
+            //console.log("RubeDemoViewController / draw");
+            //truck.step();
             
             //black background
             context.fillStyle = 'rgb(0,0,0)';
@@ -777,9 +850,13 @@ define([
         }
 
         function updateStats() {
+            
             if ( ! showStats )
                 return;
+            
             var currentViewCenterWorld = getWorldPointFromPixelPoint( viewCenterPixel );
+            
+            /*
             var fbSpan = document.getElementById('feedbackSpan');
             fbSpan.innerHTML =
                 "Status: "+(run?'running':'paused') +
@@ -790,6 +867,7 @@ define([
                 //"<br>Canvas offset: "+myRound(canvasOffset.x,0)+", "+myRound(canvasOffset.y,0) +
                 "<br>Mouse pos (pixel): "+mousePosPixel.x+", "+mousePosPixel.y +
                 "<br>Mouse pos (world): "+myRound(mousePosWorld.x,3)+", "+myRound(mousePosWorld.y,3);
+            */
         }
 
         window.requestAnimFrame = (function(){
@@ -932,11 +1010,17 @@ define([
         //these need to be kept global for closure advanced optimization
         window['currentTest'] = null;
 
+        function getb2Vec2(x, y){
+            return new b2Vec2(x, y); 
+        }
+
         return {
             getWorld : getWorld,
             init : init,
             resetScene : resetScene,
-            doAfterLoading : doAfterLoading
+            doAfterLoading : doAfterLoading,
+            onKeyDown: onKeyDown,
+            getb2Vec2 : getb2Vec2
         }
     }
 

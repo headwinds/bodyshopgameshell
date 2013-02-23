@@ -27,14 +27,7 @@
               </div>
               </div>
           </div>
-            
-            <!--<div id="divider">
-                <div id="divider-tag">
-                    <h1>R.U.B.E</h1>
-                    <h2 class="title">Box2D editor</h2>
-                </div>
-            </div>-->
-                          
+ 
           <div class="contained-content">
             <div class="inner-contained-content">
         
@@ -52,43 +45,49 @@
                             <div style="display: block; position: absolute; width: 640; height:480; z-index:2; pointer-events:none">
                                 <canvas id="canvasOverlays" width="640" height="480" tabindex="1"></canvas>
                             </div>
-                            <div style="display: block; position: absolute; width: 640; height:480; z-index:1">
+                            <div style="display: block; position: absolute; width: 640px; height:480px; z-index:1">
                                 <canvas id="canvas" width="640" height="480" tabindex="1"></canvas>
                             </div>    
-                            
-                            <p style="font-weight:bold; text-align:center; font-size:16px; color:#CCC">CONTROL AND CHANGE THE DEMO USING THESE CONTROLS</p>
-                            <div style="width:636px;padding:2px;background-color:#ddd">
-                            <div style="text-align:center">
-                                Select test: <select id="testSelection" onchange="changeTest();">
-                                    <option value="shark">Shark&#33;</option>
-                                </select>Use j/k to drive the vehicles.<br>
-                                <div style="height:6px"></div>
-                                <div id="sceneinfo" style="width:500px;margin:auto;background-color:#eee;text-align:left">Scene info: 74 bodies, 426 fixtures, 74 joints</div>
-                                <div id="testcomments" style="width:500px;margin:auto;background-color:#eee;text-align:left">About: Created in R.U.B.E editor. Try dragging the minute hand to the current time.<br>Very useful info at http://www.abbeyclock.com/escapement.html</div>
-                                <br>
-                                <button id="reloadButton" onclick="resetScene();">Reset</button>
-                                <button id="pauseButton" onclick="pause();">Pause</button>
-                                <button id="stepButton" onclick="step();">Single step</button>
-                                (Keyboard: R, P, S)<br>
-                                Zoom
-                                <button id="zoomInButton" onclick="zoomIn();">+</button>
-                                <button id="zoomOutButton" onclick="zoomOut();">-</button>
-                                (Keyboard: X, Z)<br>
-                                Hold down Shift while moving the mouse to pan (Keyboard: arrow keys)<br>
-                                You need to click on the canvas before using the keyboard.<br>
+                            <div style="width:640px; height: 160px; padding:2px;background-color:#ddd;position: absolute;display: block;z-index: 100;top: 600px;">
+                                <div style="text-align:center">
+                                    Select test: <select id="testSelection" onchange="changeTest();">
+                                        <option value="shark">Shark!</option>
+                                    </select>Use j/k to drive the vehicles.<br>
+                                    <div style="height:6px"></div>
+                                    <div id="sceneinfo" style="width:500px;margin:auto;background-color:#eee;text-align:left">Scene info: 12 bodies, 44 fixtures, 4 joints</div>
+                                    <div id="testcomments" style="width:500px;margin:auto;background-color:#eee;text-align:left">About: Testing loading and rendering of image coordinates. Try turning off the 'Shapes' checkbox below to hide the fixture lines.</div>
+                                    <br>
+                                    <button id="reloadButton" onclick="resetScene();">Reset</button>
+                                    <button id="pauseButton" onclick="pause();">Pause</button>
+                                    <button id="stepButton" onclick="step();">Single step</button>
+                                    (Keyboard: R, P, S)<br>
+                                    Zoom
+                                    <button id="zoomInButton" onclick="zoomIn();">+</button>
+                                    <button id="zoomOutButton" onclick="zoomOut();">-</button>
+                                    (Keyboard: X, Z)<br>
+                                    Hold down Shift while moving the mouse to pan (Keyboard: arrow keys)<br>
+                                    You need to click on the canvas before using the keyboard.<br>
+                                </div>
                             </div>
-                            <br>
-                                
-                            Debug draw flags:<br>
-                            <input id="drawShapesCheck" type="checkbox" onclick="updateWorldFromDebugDrawCheckboxes();">Shapes<br>
-                            <input id="drawJointsCheck" type="checkbox" onclick="updateWorldFromDebugDrawCheckboxes();">Joints<br>
-                            <input id="drawAABBsCheck" type="checkbox" onclick="updateWorldFromDebugDrawCheckboxes();">AABBs<br>
-                            <input id="drawTransformsCheck" type="checkbox" onclick="updateWorldFromDebugDrawCheckboxes();">Transforms<br>
-                            <br>
-                            
-                            <input id="showStatsCheck" type="checkbox" onclick="updateContinuousRefreshStatus();">Show stats<br>
-                            <span id="feedbackSpan"></span>
-                            <br>
+                                <div style="text-align:center">
+                                    Select test: <select id="testSelection" onchange="changeTest();">
+                                        <option value="shark">Shark&#33;</option>
+                                    </select>Use j/k to drive the vehicles.<br>
+                                    <div style="height:6px"></div>
+                                    <div id="sceneinfo" style="width:500px;margin:auto;background-color:#eee;text-align:left">Scene info: 74 bodies, 426 fixtures, 74 joints</div>
+                                    <div id="testcomments" style="width:500px;margin:auto;background-color:#eee;text-align:left">About: Created in R.U.B.E editor. Try dragging the minute hand to the current time.<br>Very useful info at http://www.abbeyclock.com/escapement.html</div>
+                                    <br>
+                                    <button id="reloadButton" onclick="resetScene();">Reset</button>
+                                    <button id="pauseButton" onclick="pause();">Pause</button>
+                                    <button id="stepButton" onclick="step();">Single step</button>
+                                    (Keyboard: R, P, S)<br>
+                                    Zoom
+                                    <button id="zoomInButton" onclick="zoomIn();">+</button>
+                                    <button id="zoomOutButton" onclick="zoomOut();">-</button>
+                                    (Keyboard: X, Z)<br>
+                                    Hold down Shift while moving the mouse to pan (Keyboard: arrow keys)<br>
+                                    You need to click on the canvas before using the keyboard.<br>
+                                </div>
                             </div>
                         </div>        
                     </div>
@@ -97,16 +96,4 @@
                 </div>
             </div>
         </div>
-        
-        <br><br>
-        </div>
-        <div id="footer" class="rube_mainfooter">
-            <div class="contained-content" style="text-align:center">
-                have @ it
-            </div>
-        </div>
-    
-    
-
-
 </body></html>

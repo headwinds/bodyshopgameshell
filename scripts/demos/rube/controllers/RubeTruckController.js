@@ -4,30 +4,31 @@ define([
     "backbone"
     ], function($, _, Backbone) {
 
-    var RubeSharkController = function( demoController ) {   
+    var RubeTruckController = function( demoController ) {   
 
         var MOVE_LEFT =     0x01;
         var MOVE_RIGHT =    0x02;
 
         var controller = demoController;
+        var myTruck; 
 
-        var Shark = function() {
+        var Truck = function() {
             //constructor
             this.wheelBodies = [];
             this.truckBody = []; 
             this.moveFlags = 0;
         }
 
-        Shark.prototype.setNiceViewCenter = function() {
+        Truck.prototype.setNiceViewCenter = function() {
             //called once when the user changes to this test from another test
             PTM = 18.43;
             controller.setViewCenterWorld( new b2Vec2( -0.665, 3.318), true );
         }
 
-        Shark.prototype.setup = function(world, loader ) {
+        Truck.prototype.setup = function(world, loader ) {
             //set up the Box2D scene here - the world is already created
 
-             console.log("######## RubeSharkController / shark.setup ############");
+             console.log(loader, "######## RubeTruckController / Truck.setup ############");
 
              var that = this;
             
@@ -56,7 +57,7 @@ define([
             }
 
             $.ajax({
-              url: "json/shark.json",
+              url: "json/Truck.json",
               dataType: 'json',
               success: callback
             });
@@ -65,22 +66,23 @@ define([
 
         }
 
-        Shark.prototype.step = function() {
+        Truck.prototype.getFuturePos = function() {
             //move camera to follow
+
             if ( this.truckBody[0] ) {
                 var pos = this.truckBody[0].GetPosition();
                 var vel = this.truckBody[0].GetLinearVelocity();
-                var futurePos = new b2Vec2( pos.x + 0.05 * vel.x, pos.y + 0.05 * vel.y );
-                controller.setViewCenterWorld( futurePos );
-            }
+                
+                //var futurePos = controller.getb2Vec2( pos.x + 0.05 * vel.x, pos.y + 0.05 * vel.y );
+                var futurePos = new Box2D.Common.Math.b2Vec2( pos.x + 0.05 * vel.x, pos.y + 0.05 * vel.y );
 
-            //this function will be called at the beginning of every time step
-            this.updateMotorSpeed();
+                this.updateMotorSpeed();
+
+                return futurePos;
+            }
         }
 
-        Shark.prototype.updateMotorSpeed = function() {
-            
-            console.log(this.wheelBodies, " Shark / updateMotorSpeed ");
+        Truck.prototype.updateMotorSpeed = function() {
 
             if ( this.wheelBodies.length < 1 )
                 return;
@@ -95,9 +97,9 @@ define([
                 this.wheelBodies[i].SetAngularVelocity(desiredSpeed);
         }
 
-        Shark.prototype.onKeyDown = function(canvas, evt) {
+        Truck.prototype.onKeyDown = function(canvas, evt) {
             
-            console.log(evt.keyCode );
+            console.log("RubeTruckController / evt.keyCode ");
 
             if ( evt.keyCode == 74 ) {//j
                 this.moveFlags |= MOVE_LEFT;
@@ -124,7 +126,33 @@ define([
             */
         }
 
-        Shark.prototype.onKeyUp = function(canvas, evt) {    
+        Truck.prototype.startDrivingLeft = function()
+        {
+            this.moveFlags |= MOVE_LEFT;
+            this.updateMotorSpeed();
+        } 
+
+        Truck.prototype.startDrivingRight = function()
+        {
+            this.moveFlags |= MOVE_RIGHT;
+            this.updateMotorSpeed();
+        } 
+
+        Truck.prototype.stopDrivingLeft = function()
+        {
+            this.moveFlags &= ~MOVE_LEFT;
+            this.updateMotorSpeed();
+        } 
+
+        Truck.prototype.stopDrivingRight = function()
+        {
+            this.moveFlags &= ~MOVE_RIGHT;
+            this.updateMotorSpeed();
+        } 
+
+
+        Truck.prototype.onKeyUp = function(canvas, evt) {    
+            
             if ( evt.keyCode == 74 ) {//j
                 this.moveFlags &= ~MOVE_LEFT;
                 this.updateMotorSpeed();
@@ -135,18 +163,43 @@ define([
             }
         }
 
-         function setup(world, loader ) {
-            var myShark = new Shark(); 
-            myShark.setup(world, loader);
+        function setup(world, loader ) {
+            myTruck = new Truck(); 
+            myTruck.setup(world, loader);
         }
 
+        function getFuturePos() {
+            
+            if ( myTruck !==  undefined) return myTruck.getFuturePos();
+        }
+
+        function startDrivingLeft() {
+            myTruck.startDrivingLeft();
+        }
+
+        function startDrivingRight() {
+            myTruck.startDrivingRight();
+        }
+
+        function stopDrivingLeft() {
+            myTruck.stopDrivingLeft();
+        }   
+
+        function stopDrivingRight() {
+            myTruck.stopDrivingRight();
+        }
 
         return {
-            setup : setup 
+            setup : setup,
+            getFuturePos : getFuturePos,
+            startDrivingLeft : startDrivingLeft,
+            startDrivingRight : startDrivingRight,
+            stopDrivingLeft : stopDrivingLeft,
+            stopDrivingRight : stopDrivingRight
         }
     }
 
-    return RubeSharkController;
+    return RubeTruckController;
 
 });
 
