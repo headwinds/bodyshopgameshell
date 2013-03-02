@@ -6,7 +6,7 @@ define([
 
 		var KeyboardController = function() { 
 
-			console.log("KeyboardController / listening...")
+			//console.log("KeyboardController / listening...")
 
 			var Key = {
 				_pressed: {},
@@ -57,7 +57,7 @@ define([
 
 				onKeydown: function(event) {
 
-					console.log("KeyboardController onKeydown");
+					////console.log("KeyboardController onKeydown");
 
 					var code = (event.keyCode ? event.keyCode : event.which);
 

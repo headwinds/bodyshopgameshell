@@ -115,7 +115,7 @@ define([
         function loadBodyFromRUBE(bodyJso, world) {
 
             if ( ! bodyJso.hasOwnProperty('type') ) {
-                console.log("Body does not have a 'type' property");
+                ////console.log("Body does not have a 'type' property");
                 return null;
             }    
             
@@ -153,7 +153,7 @@ define([
         }
 
         function loadFixtureFromRUBE(body, fixtureJso) {    
-            //console.log(fixtureJso);
+            ////console.log(fixtureJso);
             var fd = new b2FixtureDef();
             if (fixtureJso.hasOwnProperty('friction'))
                 fd.friction = fixtureJso.friction;
@@ -203,7 +203,7 @@ define([
                 }
             }
             else {
-                console.log("Could not find shape type for fixture");
+                //console.log("Could not find shape type for fixture");
             }
         }
 
@@ -226,15 +226,15 @@ define([
         function loadJointFromRUBE(jointJso, world, loadedBodies)
         {
             if ( ! jointJso.hasOwnProperty('type') ) {
-                console.log("Joint does not have a 'type' property");
+                //console.log("Joint does not have a 'type' property");
                 return null;
             }    
             if ( jointJso.bodyA >= loadedBodies.length ) {
-                console.log("Index for bodyA is invalid: " + jointJso.bodyA );
+                //console.log("Index for bodyA is invalid: " + jointJso.bodyA );
                 return null;
             }    
             if ( jointJso.bodyB >= loadedBodies.length ) {
-                console.log("Index for bodyB is invalid: " + jointJso.bodyB );
+                //console.log("Index for bodyB is invalid: " + jointJso.bodyB );
                 return null;
             }
             
@@ -312,8 +312,8 @@ define([
                 joint = world.CreateJoint(jd);
             }
             else {
-                console.log("Unsupported joint type: " + jointJso.type);
-                console.log(jointJso);
+                //console.log("Unsupported joint type: " + jointJso.type);
+                //console.log(jointJso);
             }
             if ( joint && jointJso.name )
                 joint.name = jointJso.name;
@@ -415,6 +415,9 @@ define([
                 if ( b.name == name )
                     bodies.push(b);
             }
+
+            //console.log(bodies, "LoadRubeController / getNamedBodies")
+
             return bodies;
         }
 

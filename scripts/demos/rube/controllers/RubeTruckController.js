@@ -4,12 +4,12 @@ define([
     "backbone"
     ], function($, _, Backbone) {
 
-    var RubeTruckController = function( demoController ) {   
+    var RubeTruckController = function() {   
 
         var MOVE_LEFT =     0x01;
         var MOVE_RIGHT =    0x02;
 
-        var controller = demoController;
+        //var controller = demoController;
         var myTruck; 
 
         var Truck = function() {
@@ -19,16 +19,26 @@ define([
             this.moveFlags = 0;
         }
 
-        Truck.prototype.setNiceViewCenter = function() {
-            //called once when the user changes to this test from another test
-            PTM = 18.43;
-            controller.setViewCenterWorld( new b2Vec2( -0.665, 3.318), true );
+        Truck.prototype.setNiceViewCenter = function(world, loader) {
+
+            var that = this;
+            var startPos = {x: -3.4, y: 0.39};
+
+            // dispatch the event...
+            var resetPos = new Box2D.Common.Math.b2Vec2( startPos.x, startPos.y );
+            var bReset = true;
+
+            var payload = {resetPos: resetPos, bReset: bReset};
+
+            var truckBody = loader.getNamedBodies(world, "truckshell")[0];
+
+            truckBody.SetPosition(startPos);
+
+            $(window).trigger("resetTruck", payload );
         }
 
         Truck.prototype.setup = function(world, loader ) {
             //set up the Box2D scene here - the world is already created
-
-             console.log(loader, "######## RubeTruckController / Truck.setup ############");
 
              var that = this;
             
@@ -37,33 +47,7 @@ define([
 
             that.truckBody[0] =  loader.getNamedBodies(world, "truckshell")[0];
 
-             /*
-             var tmp = this;
-            
-             var callback = function(jso) {
-               
-                if ( loadSceneFromRUBE( jso ) ) {
-                    console.log("RUBE scene loaded successfully.");
-                    
-                    tmp.wheelBodies[0] = getNamedBodies(world, "truckwheel-front")[0];
-                    tmp.wheelBodies[1] = getNamedBodies(world, "truckwheel-back")[0];
-
-                    tmp.truckBody[0] =  getNamedBodies(world, "truckshell")[0];
-                    doAfterLoading();
-                } else {
-                    console.log("Failed to load RUBE scene");
-                }
-
-            }
-
-            $.ajax({
-              url: "json/Truck.json",
-              dataType: 'json',
-              success: callback
-            });
-
-            */
-
+            myTruck.setNiceViewCenter(world, loader);
         }
 
         Truck.prototype.getFuturePos = function() {
@@ -97,34 +81,6 @@ define([
                 this.wheelBodies[i].SetAngularVelocity(desiredSpeed);
         }
 
-        Truck.prototype.onKeyDown = function(canvas, evt) {
-            
-            console.log("RubeTruckController / evt.keyCode ");
-
-            if ( evt.keyCode == 74 ) {//j
-                this.moveFlags |= MOVE_LEFT;
-                this.updateMotorSpeed();
-
-            }
-            else if ( evt.keyCode == 75 ) {//k
-                this.moveFlags |= MOVE_RIGHT;
-                this.updateMotorSpeed();
-
-            }
-
-            /* why does the browser move?!
-            if ( evt.keyCode == 37 ) {// RIGHT
-                this.moveFlags |= MOVE_LEFT;
-                this.updateMotorSpeed();
-
-            }
-            else if ( evt.keyCode == 39 ) {//LEFT
-                this.moveFlags |= MOVE_RIGHT;
-                this.updateMotorSpeed();
-
-            }
-            */
-        }
 
         Truck.prototype.startDrivingLeft = function()
         {
@@ -189,13 +145,23 @@ define([
             myTruck.stopDrivingRight();
         }
 
+        var bind = function( event, callback ) {
+                
+            $(window).bind("resetTruck", function(event, payload) {
+                
+                callback(event, payload);
+            });
+
+        };
+
         return {
             setup : setup,
             getFuturePos : getFuturePos,
             startDrivingLeft : startDrivingLeft,
             startDrivingRight : startDrivingRight,
             stopDrivingLeft : stopDrivingLeft,
-            stopDrivingRight : stopDrivingRight
+            stopDrivingRight : stopDrivingRight,
+            bind: bind
         }
     }
 

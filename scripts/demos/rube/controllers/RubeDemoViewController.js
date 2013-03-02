@@ -3,7 +3,8 @@ define([
     "underscore",
     "backbone",
     "demos/rube/controllers/RubeTruckController",
-    "controllers/keyboard/KeyboardController"
+    "controllers/keyboard/KeyboardController",
+    "tween"
     ], function($, _, Backbone, RubeTruckController, KeyboardController) {
 
     var RubeDemoViewController = function(model) {     
@@ -28,13 +29,22 @@ define([
         var mouseDownQueryCallback;
         var visibleFixturesQueryCallback;
         var mouseJoint = null;        
-        var run = true;
+        //var gameRunning = true;
         var frameTime60 = 0;
         var statusUpdateCounter = 0;
         var showStats = false;        
         var mouseDown = false;
         var shiftDown = false;
         var originTransform;
+
+        var gameRunning = true;
+        var gameTickCount = 0; 
+        var gameTickMax = 3;
+
+        var missionOverlayContainer;
+        var goalOverlayContainer;
+        var truck = new RubeTruckController(this);
+
         var mousePosPixel = {
             x: 0,
             y: 0
@@ -56,6 +66,27 @@ define([
             y:240
         };
         var viewAABB;
+
+        function onJsonLoadedHandler( jso ) {
+               
+            if ( loader.loadSceneFromRUBE( jso, world ) ) {
+                //console.log("RUBE scene loaded successfully.");
+          
+               doAfterLoading(loader);
+
+            } else {
+                //console.log("Failed to load RUBE scene");
+            }
+
+        }
+
+        function loadJSON() {
+            $.ajax({
+              url: "scripts/demos/rube/json/shark.json",
+              dataType: 'json',
+              success: onJsonLoadedHandler
+            });
+        }
 
         function getWorld() {
             return world; 
@@ -87,6 +118,9 @@ define([
         function setViewCenterWorld(b2vecpos, instantaneous) {
             
             var currentViewCenterWorld = getWorldPointFromPixelPoint( viewCenterPixel );
+
+            ////console.log(b2vecpos, "setViewCenterWorld b2vecpos");
+            ////console.log(currentViewCenterWorld, "setViewCenterWorld currentViewCenterWorld");
             
             var toMoveX = b2vecpos.x - currentViewCenterWorld.x;
             var toMoveY = b2vecpos.y - currentViewCenterWorld.y;
@@ -96,7 +130,7 @@ define([
             canvasOffset.x -= myRound(fraction * toMoveX * PTM, 0);
             canvasOffset.y += myRound(fraction * toMoveY * PTM, 0);
 
-            //console.log(b2vecpos, "setViewCenterWorld");
+            ////console.log(b2vecpos, "setViewCenterWorld");
         }
 
         function onMouseMove(canvas, evt) {
@@ -143,11 +177,12 @@ define([
             {
                 var body = mouseDownQueryCallback.m_fixture.GetBody();
                 
-            /*selectedBody = null;
-            world.QueryAABB(getBodyCB, aabb);    
-            if (selectedBody)    
-            {
+                /*selectedBody = null;
+                world.QueryAABB(getBodyCB, aabb);    
+                if (selectedBody)    
+                {
                 var body = selectedBody;*/
+
                 var md = new b2MouseJointDef();
                 md.bodyA = mouseJointGroundBody;
                 md.bodyB = body;
@@ -162,7 +197,7 @@ define([
 
         function onMouseDown(canvas, evt) {
 
-            console.log("RubeDemoViewController / onMouseDown");
+            //console.log("RubeDemoViewController / onMouseDown");
 
             updateMousePos(canvas, evt);
             
@@ -189,55 +224,7 @@ define([
             onMouseUp(canvas,evt);
         }
 
-        function onKeyDown(canvas, evt) {
-            
-            console.log("RubeDemoViewController / evt.keyCode");
-            
-            if ( evt.keyCode == 80 ) {//p
-                pause();
-            }
-            else if ( evt.keyCode == 82 ) {//r
-                resetScene();
-            }
-            else if ( evt.keyCode == 83 ) {//s
-                step();
-            }
-            else if ( evt.keyCode == 88 ) {//x
-                zoomIn();
-            }
-            else if ( evt.keyCode == 90 ) {//z
-                zoomOut();
-            }
-            else if ( evt.keyCode == 37 ) {//left
-                canvasOffset.x += 32;
-            }
-            else if ( evt.keyCode == 39 ) {//right
-                canvasOffset.x -= 32;
-            }
-            else if ( evt.keyCode == 38 ) {//up
-                canvasOffset.y += 32;
-            }
-            else if ( evt.keyCode == 40 ) {//down
-                canvasOffset.y -= 32;
-            }
-            else if ( evt.keyCode == 16 ) {//shift
-                shiftDown = true;
-            }
-            
-            if ( window['currentTest'] && window['currentTest']['onKeyDown'] )
-                window['currentTest']['onKeyDown'](canvas, evt);
-            
-            draw();
-        }
-
-        function onKeyUp(canvas, evt) {
-            if ( evt.keyCode == 16 ) {//shift
-                shiftDown = false;
-            }
-            
-            if ( window['currentTest'] && window['currentTest']['onKeyUp'] )
-                window['currentTest']['onKeyUp'](canvas, evt);
-        }
+        // All key events are handled by the KeyboardController
 
         function zoomIn() {
             var currentViewCenterWorld = getWorldPointFromPixelPoint( viewCenterPixel );
@@ -291,9 +278,208 @@ define([
                 updateStats();
         }
 
-        function init() {
+        function init(loaderRubeController) {
 
-            //console.log("RubeDemoViewController / init")    
+            loader = loaderRubeController;
+
+            // 1. create the world
+            createWorld();
+
+            // 2. load the json and wait for it to complete
+            loadJSON();
+
+            // 3. setup the createjs
+            setupCreateJS();
+        }
+
+        
+
+        function setupCreateJS() {
+
+            canvasOverlays = document.getElementById("gameUICanvas");
+            contextOverlays = canvasOverlays.getContext( '2d' );
+
+            stage = new createjs.Stage(canvasOverlays);
+
+            var overlaysContainer = new createjs.Container();
+            overlaysContainer.width = canvasOverlays.width;
+            overlaysContainer.height = canvasOverlays.height; 
+
+            missionOverlayContainer = new createjs.Container();
+            var missionBitmap = new createjs.Bitmap("./imgs/ui/overlays/mission.png");
+            
+            missionOverlayContainer.alpha = 0;
+            missionOverlayContainer.visible = false;
+
+            missionOverlayContainer.addChild(missionBitmap);
+
+            goalOverlayContainer = new createjs.Container();
+            var goalBitmap = new createjs.Bitmap("./imgs/ui/overlays/goal.png");
+
+            goalOverlayContainer.addChild(goalBitmap);
+            goalOverlayContainer.visible = false; 
+
+            goalOverlayContainer.alpha = 0;
+            goalOverlayContainer.visible = false;
+
+            overlaysContainer.addChild(missionOverlayContainer);
+            overlaysContainer.addChild(goalOverlayContainer);
+            stage.addChild(overlaysContainer);
+
+            //console.log(missionOverlayContainer);
+
+            var update = function() {
+
+                //cameraWorldContainer.x -= 0.25;  
+                //cameraWorldContainer.y += 0.5;  
+
+                //physicsController.update();
+                //fpsFld.text = Math.floor(createjs.Ticker.getMeasuredFPS())+" FPS";
+
+               stage.update();
+            }
+
+            var tick = function() {
+                ////console.log("RubeDemoViewController tick");
+                if(gameRunning) {
+                    update();
+                    //gameTickCount++;
+                    //if ( gameTickCount > gameTickMax ) gameRunning = false; 
+                }
+            };
+
+            createjs.Ticker.setFPS(60);
+            createjs.Ticker.useRAF = true; // use Request Animation Frame 
+            createjs.Ticker.addListener( tick );
+
+        }
+
+        function hideOverlay(overlayName) {
+
+             var overlay; 
+
+            switch(overlayName) {
+                case "mission" :
+                overlay = missionOverlayContainer;
+                break;
+                case "goal" :
+                overlay = goalOverlayContainer;
+                break; 
+             }
+
+            if ( overlay !== undefined ) {
+
+                var endY = -400;
+
+                function onComplete(){
+                    overlay.visible = false;
+                }
+
+               createjs.Tween.get(overlay).to({x:0,y:endY,rotation:0,alpha:0},1000,createjs.Ease.backOut).call(onComplete);
+
+            } 
+                    
+        }
+
+        function showOverlay(overlayName) {
+
+            var overlay; 
+
+            switch(overlayName) {
+                case "mission" :
+                overlay = missionOverlayContainer;
+                break;
+                case "goal" :
+                overlay = goalOverlayContainer;
+                break; 
+             }
+
+            
+            if ( overlay !== undefined )   {
+
+                overlay.y = -400 //-(overlay.height); height isn't defined yet - need to sort that out
+                overlay.alpha = 0;
+                overlay.visible = true;  
+
+                //console.log(overlay, "showOverlay about to tween: " + overlay.height );
+                  
+                createjs.Tween.get(overlay).to({x:0,y:0,rotation:0,alpha:1},2000,createjs.Ease.backOut);
+            } else {
+                //console.log(overlay, "problem! overlayName: " + overlayName);
+            }
+
+        }
+
+        function changeTest() {    
+            resetScene();
+            if ( window['currentTest'] && window['currentTest']['setNiceViewCenter'] )
+                window['currentTest']['setNiceViewCenter']();
+            updateDebugDrawCheckboxesFromWorld();
+            draw();
+        }
+
+        function completeMission() {
+            hideOverlay("mission");
+            showOverlay("goal");
+        }
+
+        function getContactListener() { 
+
+            var listener = new b2ContactListener;
+
+            listener.BeginContact = function(contact) {
+                
+                var bodyA = contact.GetFixtureA().GetBody();
+                var bodyB = contact.GetFixtureB().GetBody();
+
+                ////console.log(bodyA.name);
+
+                if (bodyA.name === "truckshell" && bodyB.name === "airSensor1") {
+                    fireBearShark();
+                }
+
+                if (bodyA.name === "truckshell" && bodyB.name === "waterSensor1") {
+                    resetScene();
+                }
+
+                if (bodyA.name === "crate" && bodyB.name === "goal") {
+                    completeMission();
+                }
+            }
+
+            listener.EndContact = function(contact) {
+                // //console.log(contact.GetFixtureA().GetBody().GetUserData());
+            }
+
+            listener.PostSolve = function(contact, impulse) {
+                if (contact.GetFixtureA().GetBody().GetUserData() == 'ball' || contact.GetFixtureB().GetBody().GetUserData() == 'ball') {
+                    var impulse = impulse.normalImpulses[0];
+                    if (impulse < 0.2) return; //threshold ignore small impacts
+                    world.ball.impulse = impulse > 0.6 ? 0.5 : impulse;
+                    //console.log(world.ball.impulse);
+                }
+            }
+
+            listener.PreSolve = function(contact, oldManifold) {
+                // PreSolve
+            }
+
+            return listener;
+        }
+
+        function createWorld() {
+            
+            if ( world != null ) 
+                //Box2D.destroy(world);
+                world = null;
+                
+            world = new b2World( new b2Vec2(0.0, -10.0) );
+            //world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8) /* gravity */, true /* allowSleep */);
+            world.SetDebugDraw(myDebugDraw);
+            
+            world.SetContactListener( getContactListener() );
+
+            mouseJointGroundBody = world.CreateBody( new b2BodyDef() );
 
             canvas = document.getElementById("gameCanvas");
             context = canvas.getContext( '2d' );
@@ -317,17 +503,6 @@ define([
                 onMouseOut(canvas,evt);
             }, false);
             
-            /*
-            canvas.addEventListener('keydown', function(evt) {
-                console.log("RubeDemoViewController / canvas keydown listener");    
-                onKeyDown(canvas,evt);
-            }, false);
-            
-            canvas.addEventListener('keyup', function(evt) {
-                onKeyUp(canvas,evt);
-            }, false);
-            */
-
             myDebugDraw = new b2DebugDraw();
             myDebugDraw.SetSprite(document.getElementById("gameCanvas").getContext("2d"));
             myDebugDraw.SetDrawScale(1.0);
@@ -355,7 +530,6 @@ define([
             
             mouseDownQueryCallback = new MouseDownQueryCallback();
               
-            
             var VisibleFixturesQueryCallback = function() {
                 this.m_fixtures = [];
             }
@@ -366,156 +540,6 @@ define([
             
             viewAABB = new b2AABB();
             visibleFixturesQueryCallback = new VisibleFixturesQueryCallback();
-
-            setupCreateJS();
-        }
-
-        var gameRunning = true;
-        var gameTickCount = 0; 
-        var gameTickMax = 3;
-
-        var missionOverlayContainer;
-        var goalOverlayContainer;
-        var truck = new RubeTruckController(this);
-
-        function setupCreateJS() {
-
-            canvasOverlays = document.getElementById("gameUICanvas");
-            contextOverlays = canvasOverlays.getContext( '2d' );
-
-            stage = new createjs.Stage(canvasOverlays);
-
-            var overlaysContainer = new createjs.Container();
-            overlaysContainer.width = canvasOverlays.width;
-            overlaysContainer.height = canvasOverlays.height; 
-
-            missionOverlayContainer = new createjs.Container();
-            var missionBitmap = new createjs.Bitmap("./imgs/ui/overlays/mission.png");
-
-            missionOverlayContainer.addChild(missionBitmap);
-
-            goalOverlayContainer = new createjs.Container();
-            var goalBitmap = new createjs.Bitmap("./imgs/ui/overlays/goal.png");
-
-            goalOverlayContainer.addChild(goalBitmap);
-            goalOverlayContainer.visible = false; 
-
-            overlaysContainer.addChild(missionOverlayContainer);
-            overlaysContainer.addChild(goalOverlayContainer);
-            stage.addChild(overlaysContainer);
-
-            console.log(missionOverlayContainer);
-
-            var update = function() {
-
-                //cameraWorldContainer.x -= 0.25;  
-                //cameraWorldContainer.y += 0.5;  
-
-                //physicsController.update();
-                //fpsFld.text = Math.floor(createjs.Ticker.getMeasuredFPS())+" FPS";
-
-               stage.update();
-            }
-
-            var tick = function() {
-                //console.log("RubeDemoViewController tick");
-                if(gameRunning) {
-                    update();
-                    //gameTickCount++;
-                    //if ( gameTickCount > gameTickMax ) gameRunning = false; 
-                }
-            };
-
-            createjs.Ticker.setFPS(60);
-            createjs.Ticker.useRAF = true; // use Request Animation Frame 
-            createjs.Ticker.addListener( tick );
-
-           
-
-
-        }
-
-        function hideOverlay(overlayName) {
-
-            if ( this[overlayName + "OverlayContainer"] !== undefined ) this[overlayName + "OverlayContainer"].visible = false;  
-                    
-        }
-
-        function showOverlay(overlayName) {
-            if ( this[overlayName + "OverlayContainer"] !== undefined )   this[overlayName + "OverlayContainer"].visible = true;  
-                  
-        }
-
-        function changeTest() {    
-            resetScene();
-            if ( window['currentTest'] && window['currentTest']['setNiceViewCenter'] )
-                window['currentTest']['setNiceViewCenter']();
-            updateDebugDrawCheckboxesFromWorld();
-            draw();
-        }
-
-        function completeMission() {
-            hideOverlay("mission");
-            showOverlay("goal");
-        }
-
-        function getContactListener() { 
-
-            var listener = new b2ContactListener;
-
-            listener.BeginContact = function(contact) {
-                
-                var bodyA = contact.GetFixtureA().GetBody();
-                var bodyB = contact.GetFixtureB().GetBody();
-
-                //console.log(bodyA.name);
-
-                if (bodyA.name === "truckshell" && bodyB.name === "airSensor1") {
-                    fireBearShark();
-                }
-
-                if (bodyA.name === "truckshell" && bodyB.name === "waterSensor1") {
-                    resetScene();
-                }
-
-                if (bodyA.name === "crate" && bodyB.name === "goal") {
-                    completeMission();
-                }
-            }
-
-            listener.EndContact = function(contact) {
-                // console.log(contact.GetFixtureA().GetBody().GetUserData());
-            }
-
-            listener.PostSolve = function(contact, impulse) {
-                if (contact.GetFixtureA().GetBody().GetUserData() == 'ball' || contact.GetFixtureB().GetBody().GetUserData() == 'ball') {
-                    var impulse = impulse.normalImpulses[0];
-                    if (impulse < 0.2) return; //threshold ignore small impacts
-                    world.ball.impulse = impulse > 0.6 ? 0.5 : impulse;
-                    console.log(world.ball.impulse);
-                }
-            }
-
-            listener.PreSolve = function(contact, oldManifold) {
-                // PreSolve
-            }
-
-            return listener;
-        }
-
-        function createWorld() {
-            
-            if ( world != null ) 
-                //Box2D.destroy(world);
-                world = null;
-                
-            world = new b2World( new b2Vec2(0.0, -10.0) );
-            //world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8) /* gravity */, true /* allowSleep */);
-            world.SetDebugDraw(myDebugDraw);
-            
-            world.SetContactListener( getContactListener() );
-
-            mouseJointGroundBody = world.CreateBody( new b2BodyDef() );
 
             
         }
@@ -537,20 +561,25 @@ define([
         var resettingScene = false;
         function resetScene() {
 
+            gameRunning = false;
+            resettingScene = true;
+
             hideOverlay("goal");
             showOverlay("mission");
 
-            console.log("RubeDemoViewController - RESET -")
-
-            //setViewCenterWorld( {x: -3.4, y: 0.39} );
+            //console.log("RubeDemoViewController - RESET -")
 
             bBearSharkFired = false;
+ 
+            //createWorld();
+            //setupWorld(); need to wait for doAfterLoading
+            //if ( loadRubeController !== undefined ) setupWorld();
 
-            resettingScene = true;
-            
+            // 1. create the world
             createWorld();
-            
-            draw();
+
+            // 2. load the json and wait for it to complete
+            loadJSON();
         }
 
         //the RUBE scenes are loaded via jQuery post, so the draw() call above usually
@@ -558,6 +587,10 @@ define([
         function doAfterLoading( loader ) {
 
             loadRubeController = loader;
+            setupWorld();
+        }
+
+        function setupWorld() {
 
             //var that = this;
             if ( world.images ) {
@@ -568,26 +601,29 @@ define([
                 }
             }
             
-            /*
-            var sceneInfoDiv = document.getElementById('sceneinfo');
-            sceneInfoDiv.innerHTML = "Scene info: "+getWorldInfo();;
-            
-            var comments = "";
-            if ( window['currentTest']['getComments'] )
-                comments = window['currentTest']['getComments']();
-            var commentsDiv = document.getElementById('testcomments');
-            commentsDiv.innerHTML = "About: "+comments;
-            */
-
             // hook up the truck
-            console.log(loader, "RubeDemoViewController / doAfterLoading")
-            
-            truck.setup(world, loader);
 
-             showOverlay("mission");
+            var that = this; // this is the Window and I want this controller... 
+
+            //truck = null;
+
+            truck = new RubeTruckController();
+            truck.setup(world, loadRubeController);
+
+            var onTruckResetHandler = function(event, payload) {
+                //console.log(payload, "RubeDemoViewController / onTruckResetHandler / payload");
+
+                setViewCenterWorld( payload.resetPos, payload.bReset );
+            
+            };
+
+            truck.bind("resetTruck", onTruckResetHandler); 
+
+            showOverlay("mission");
 
             var onKeyDownHandler = function(event, keyName) {
-                console.log("RubeDemoViewController / onKeyboardHandler /keyName: " + keyName);
+                
+                //console.log("RubeDemoViewController / onKeyboardHandler /keyName: " + missionOverlayContainer.visible);
             
                 if ( keyName == "LEFT_PRESSED") {
                  truck.startDrivingLeft();   
@@ -596,10 +632,12 @@ define([
                 if ( keyName == "RIGHT_PRESSED") {
                  truck.startDrivingRight(); 
                 }
+
+                if ( missionOverlayContainer.visible ) hideOverlay("mission");
             };
 
             var onKeyUpHandler = function(event, keyName) {
-                console.log("RubeDemoViewController / onKeyboardHandler /keyName: " + keyName);
+                //console.log("RubeDemoViewController / onKeyboardHandler /keyName: " + keyName);
             
                 if ( keyName == "LEFT_RELEASED") {
                  truck.stopDrivingLeft();   
@@ -614,6 +652,7 @@ define([
             keyboardController.bind("customKeyup", onKeyUpHandler); 
 
             resettingScene = false;
+            gameRunning = true;
             
             draw();
             animate();
@@ -625,7 +664,7 @@ define([
 
             if(!bBearSharkFired) {
 
-                console.log("fireBearShark");
+                //console.log("fireBearShark");
 
                 var bearshark = loadRubeController.getNamedBodies(world, "shark")[0];
                 var bearSharkCenter = bearshark.GetWorldCenter();
@@ -639,23 +678,17 @@ define([
 
         function step(timestamp) {
 
-            //console.log("-------------------------------");
-            //console.log("RubeDemoViewController / step ");
+            ////console.log("-------------------------------");
+            ////console.log("RubeDemoViewController / step ");
             
             if ( resettingScene ) {
                 //setViewCenterWorld( {x: -3.4, y: 0.39} );
+                //console.log("-------------------------------");
+                //console.log("RubeDemoViewController / step / reseting world first  ");
+                setupWorld();
                 return;
             }
-            
-            //if ( window['currentTest'] && window['currentTest']['step'] ) 
-              //  window['currentTest']['step']();
-            
-            //if ( ! showStats ) {
-              //  world.Step(1/60, 10, 6);
-                //draw();
-                //logBodyPositions();
-                //return;
-            //}
+ 
             
             var current = Date.now();
             world.Step(1/60, 10, 6);
@@ -664,7 +697,7 @@ define([
             
             var futurePos = truck.getFuturePos(); 
             setViewCenterWorld( futurePos );
-            //console.log(futurePos);
+            ////console.log(futurePos);
 
             stage.update();
 
@@ -708,7 +741,7 @@ define([
 
         function draw() {
 
-            //console.log("RubeDemoViewController / draw");
+            ////console.log("RubeDemoViewController / draw");
             //truck.step();
             
             //black background
@@ -730,7 +763,7 @@ define([
                         var imageObj = world.images[i].imageObj;
                         context.save();
 
-                        //console.log(imageObj);
+                        ////console.log(imageObj);
 
                         if ( world.images[i].body ) {
                             //body position in world
@@ -875,7 +908,7 @@ define([
             /*
             var fbSpan = document.getElementById('feedbackSpan');
             fbSpan.innerHTML =
-                "Status: "+(run?'running':'paused') +
+                "Status: "+(gameRunning?'running':'paused') +
                 "<br>Physics step time (average of last 60 steps): "+myRound(frameTime60,2)+"ms" +
                 //"<br>Mouse down: "+mouseDown +
                 "<br>PTM: "+myRound(PTM,2) +
@@ -898,14 +931,14 @@ define([
         })();
 
         function animate() {
-            if ( run )
+            if ( gameRunning )
                 requestAnimFrame( animate );
             step();
         }
 
         function pause() {
-            run = !run;
-            if (run)
+            gameRunning = !gameRunning;
+            if (gameRunning)
                 animate();
             updateStats();
         }
@@ -1008,20 +1041,7 @@ define([
               b2FrictionJoint = Box2D.Dynamics.Joints.b2FrictionJoint,
               b2FrictionJointDef = Box2D.Dynamics.Joints.b2FrictionJointDef;
 
-        window['onload'] = function doOnload() {   
-            /*
-            using(Box2D.Common, "b2.+");
-            using(Box2D.Common.Math, "b2.+");
-            using(Box2D.Collision, "b2.+");
-            using(Box2D.Collision.Shapes, "b2.+");
-            using(Box2D.Dynamics, "b2.+");
-            using(Box2D.Dynamics.Joints, "b2.+");
-            using(Box2D.Dynamics.b2Body, "b2.+");//b2_dynamicBody etc
-            */
-            //init();
-            //changeTest();
-            //animate();
-        }
+       
 
         //these need to be kept global for closure advanced optimization
         window['currentTest'] = null;
@@ -1035,8 +1055,8 @@ define([
             init : init,
             resetScene : resetScene,
             doAfterLoading : doAfterLoading,
-            onKeyDown: onKeyDown,
-            getb2Vec2 : getb2Vec2
+            getb2Vec2 : getb2Vec2,
+            setViewCenterWorld : setViewCenterWorld
         }
     }
 
