@@ -20,6 +20,18 @@ define([
 
 	var GameView = Backbone.View.extend({
 
+		events: {
+			"click #play" 				: "onPlayClickHandler",
+			"click #stop" 				: "onStopClickHandler",
+			"click #step-forward" 		: "onStepForwardClickHandler",
+			"click #step-backward" 		: "onStepBackwardClickHandler",
+			"click #toggle-debug" 		: "onToggleDebugClickHandler",
+			"click #toggle-skins" 		: "onToggleSkinsClickHandler",
+			"click #close-challenge" 	: "onCloseChallengeClickHandler",
+			"click #pan-left" 			: "onPanLeftClickHandler",
+			"click #pan-right" 			: "onPanRightClickHandler"
+		},
+
 		controller: {},
 		el: $("#page"),
 	
@@ -28,6 +40,10 @@ define([
 			this.model = options.model; 
 
 			this.loadTemplate( this.model.get('template') ); 
+
+			// need to hook up to tweenjs later
+			$("#pan-left").hide();
+			$("#pan-right").hide();
 		},
 
 		render: function() {
@@ -48,8 +64,6 @@ define([
 				that.controller = new MinisTirithDemoViewController( that.model );
 				break;
 			};
-
-			that.setupListeners(); 
 		},
 
 		loadTemplate: function( templateStr ) {
@@ -82,90 +96,79 @@ define([
 
 		},
 
-		setupListeners: function() {
+		onPlayClickHandler: function(e) {
+			e.preventDefault();
+			e.stopPropagation(); 
 
 			var that = this;
+			that.controller.play(); 
+		},
 
-			$("#play").bind("click", function(e) {
-				e.preventDefault();
-				e.stopPropagation(); 
+		onStopClickHandler: function(e) {
+			e.preventDefault();
+			e.stopPropagation(); 
 
-				that.controller.play(); 
+			var that = this;
+			that.controller.stop(); 
+		},
 
-			});
+		onStepForwardClickHandler: function(e) {
+			e.preventDefault();
+			e.stopPropagation(); 
 
-			$("#stop").bind("click", function(e) {
-				e.preventDefault();
-				e.stopPropagation(); 
+			var that = this;
+			that.controller.stepForward(); 
+		},
 
-				that.controller.stop(); 
-				
-			});
+		onStepBackwardClickHandler: function(e) {
+			e.preventDefault();
+			e.stopPropagation(); 
 
-			$("#step-forward").bind("click", function(e) {
-				e.preventDefault();
-				e.stopPropagation(); 
-				
-				that.controller.stepForward(); 
-			});
+			var that = this;
+			
+			var cssObj = { left : '200px', opacity: 1}
+			$("#challenge").animate(cssObj, "slow");
+		},
 
-			$("#step-backward").bind("click", function(e) {
-				e.preventDefault();
-				e.stopPropagation(); 
+		onToggleDebugClickHandler: function(e) {
+			e.preventDefault();
+			e.stopPropagation(); 
 
-				//that.controller.stepBackward(); 
+			var that = this;
+			that.controller.toggleDebug(); 
+		},
 
-				var cssObj = { left : '200px', opacity: 1}
+		onToggleSkinsClickHandler: function(e) {
+			e.preventDefault();
+			e.stopPropagation(); 
 
-				$("#challenge").animate(cssObj, "slow");
-				
-			});
+			var that = this;
+			that.controller.toggleSkins(); 
+		},
 
-			$("#toggle-debug").bind("click", function(e) {
-				e.preventDefault();
-				e.stopPropagation(); 
+		onCloseChallengeClickHandler: function(e) {
+			e.preventDefault();
+			e.stopPropagation(); 
 
-				that.controller.toggleDebug(); 
-				
-			});
+			var that = this;
+			var cssObj = { left : '700px', opacity: 0}
+			$("#challenge").animate(cssObj, "fast");
+		},
 
-			$("#toggle-skins").bind("click", function(e) {
-				e.preventDefault();
-				e.stopPropagation(); 
+		onPanLeftClickHandler: function(e) {
+			e.preventDefault();
+			e.stopPropagation(); 
 
-				that.controller.toggleSkins(); 
-				
-			});
+			var that = this;
+			that.controller.pan("left"); 
+		},
 
-			$("#close-challenge").bind("click", function(e) {
-				e.preventDefault();
-				e.stopPropagation(); 
+		onPanRightClickHandler: function(e) {
+			e.preventDefault();
+			e.stopPropagation(); 
 
-				var cssObj = { left : '700px', opacity: 0}
-
-				$("#challenge").animate(cssObj, "fast");
-				
-			});
-
-			$("#pan-left").bind("click", function(e) {
-				e.preventDefault();
-				e.stopPropagation(); 
-
-				that.controller.pan("left");
-				
-			});
-
-			$("#pan-right").bind("click", function(e) {
-				e.preventDefault();
-				e.stopPropagation(); 
-
-				that.controller.pan("right");
-				
-			});
-
-			// need to hook up to tweenjs later
-			$("#pan-left").hide();
-			$("#pan-right").hide();
+			var that = this;
+			that.controller.pan("right"); 
 		}
 	
 	});

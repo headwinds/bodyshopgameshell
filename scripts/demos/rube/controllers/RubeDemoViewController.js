@@ -3,9 +3,10 @@ define([
     "underscore",
     "backbone",
     "demos/rube/controllers/RubeTruckController",
+    "demos/rube/controllers/RubeBikeController",
     "controllers/keyboard/KeyboardController",
     "tween"
-    ], function($, _, Backbone, RubeTruckController, KeyboardController) {
+    ], function($, _, Backbone, RubeTruckController, RubeBikeController, KeyboardController) {
 
     var RubeDemoViewController = function(model) {     
 
@@ -43,7 +44,8 @@ define([
 
         var missionOverlayContainer;
         var goalOverlayContainer;
-        var truck = new RubeTruckController(this);
+
+        var bike = new RubeBikeController(this);
 
         var mousePosPixel = {
             x: 0,
@@ -119,8 +121,8 @@ define([
             
             var currentViewCenterWorld = getWorldPointFromPixelPoint( viewCenterPixel );
 
-            ////console.log(b2vecpos, "setViewCenterWorld b2vecpos");
-            ////console.log(currentViewCenterWorld, "setViewCenterWorld currentViewCenterWorld");
+            //console.log(b2vecpos, "setViewCenterWorld b2vecpos");
+            //console.log(currentViewCenterWorld, "setViewCenterWorld currentViewCenterWorld");
             
             var toMoveX = b2vecpos.x - currentViewCenterWorld.x;
             var toMoveY = b2vecpos.y - currentViewCenterWorld.y;
@@ -326,14 +328,10 @@ define([
             overlaysContainer.addChild(goalOverlayContainer);
             stage.addChild(overlaysContainer);
 
-            //console.log(missionOverlayContainer);
+
 
             var update = function() {
 
-                //cameraWorldContainer.x -= 0.25;  
-                //cameraWorldContainer.y += 0.5;  
-
-                //physicsController.update();
                 //fpsFld.text = Math.floor(createjs.Ticker.getMeasuredFPS())+" FPS";
 
                stage.update();
@@ -423,6 +421,8 @@ define([
             showOverlay("goal");
         }
 
+        // COLLISION DETECTION
+
         function getContactListener() { 
 
             var listener = new b2ContactListener;
@@ -434,11 +434,11 @@ define([
 
                 ////console.log(bodyA.name);
 
-                if (bodyA.name === "truckshell" && bodyB.name === "airSensor1") {
+                if (bodyA.name === "bikechassis" && bodyB.name === "airSensor1") {
                     fireBearShark();
                 }
 
-                if (bodyA.name === "truckshell" && bodyB.name === "waterSensor1") {
+                if (bodyA.name === "bikechassis" && bodyB.name === "waterSensor1") {
                     resetScene();
                 }
 
@@ -567,14 +567,8 @@ define([
             hideOverlay("goal");
             showOverlay("mission");
 
-            //console.log("RubeDemoViewController - RESET -")
-
             bBearSharkFired = false;
  
-            //createWorld();
-            //setupWorld(); need to wait for doAfterLoading
-            //if ( loadRubeController !== undefined ) setupWorld();
-
             // 1. create the world
             createWorld();
 
@@ -601,55 +595,54 @@ define([
                 }
             }
             
-            // hook up the truck
+            // hook up the bike
 
             var that = this; // this is the Window and I want this controller... 
 
-            //truck = null;
+            bike = new RubeBikeController();
+            bike.setup(world, loadRubeController);
 
-            truck = new RubeTruckController();
-            truck.setup(world, loadRubeController);
-
-            var onTruckResetHandler = function(event, payload) {
+            var onBikeResetHandler = function(event, payload) {
                 //console.log(payload, "RubeDemoViewController / onTruckResetHandler / payload");
 
                 setViewCenterWorld( payload.resetPos, payload.bReset );
             
             };
 
-            truck.bind("resetTruck", onTruckResetHandler); 
+            bike.vent.bind("resetTruck", onBikeResetHandler); 
+
 
             showOverlay("mission");
 
-            var onKeyDownHandler = function(event, keyName) {
+            var onKeyDownHandler = function(keyName) {
                 
-                //console.log("RubeDemoViewController / onKeyboardHandler /keyName: " + missionOverlayContainer.visible);
+                //console.log("RubeDemoViewController / onKeyDownHandler /keyName: " + keyName);
             
                 if ( keyName == "LEFT_PRESSED") {
-                 truck.startDrivingLeft();   
+                 bike.startDrivingLeft();  
                 }
 
                 if ( keyName == "RIGHT_PRESSED") {
-                 truck.startDrivingRight(); 
+                 bike.startDrivingRight(); 
                 }
 
                 if ( missionOverlayContainer.visible ) hideOverlay("mission");
             };
 
-            var onKeyUpHandler = function(event, keyName) {
-                //console.log("RubeDemoViewController / onKeyboardHandler /keyName: " + keyName);
+            var onKeyUpHandler = function(keyName) {
+                console.log("RubeDemoViewController / onKeyUpHandler /keyName: " + keyName);
             
                 if ( keyName == "LEFT_RELEASED") {
-                 truck.stopDrivingLeft();   
+                  bike.stopDrivingLeft();   
                 }
 
                 if ( keyName == "RIGHT_RELEASED") {
-                 truck.stopDrivingRight(); 
+                 bike.stopDrivingRight(); 
                 }
             };
 
-            keyboardController.bind("customKeydown", onKeyDownHandler); 
-            keyboardController.bind("customKeyup", onKeyUpHandler); 
+            keyboardController.vent.bind("customKeydown", onKeyDownHandler); 
+            keyboardController.vent.bind("customKeyup", onKeyUpHandler); 
 
             resettingScene = false;
             gameRunning = true;
@@ -695,7 +688,8 @@ define([
             var frametime = (Date.now() - current);
             frameTime60 = frameTime60 * (59/60) + frametime * (1/60);
             
-            var futurePos = truck.getFuturePos(); 
+            //var futurePos = truck.getFuturePos(); 
+            var futurePos = bike.getFuturePos(); 
             setViewCenterWorld( futurePos );
             ////console.log(futurePos);
 

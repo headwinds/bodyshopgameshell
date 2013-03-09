@@ -9,7 +9,6 @@ define([
   
   var DemosView = Backbone.View.extend({
     
-    el: $("#page"),
     initialize: function(){
       
       //var demosCollection = new DemosCollection();
@@ -17,6 +16,9 @@ define([
       //this.collection = demosCollection;
       //this.collection.bind("add", this.bindAddHandler);
       //this.collection = demosCollection.add( demoModel );
+
+      this.el = $("#page");
+
     },
 
     bindAddHandler: function( model ){
@@ -24,6 +26,7 @@ define([
     },
 
     render: function(){
+      var that = this; 
        console.log("DemosView / render");
       
       /*
@@ -34,7 +37,7 @@ define([
       */
       
       var compiledTemplate = _.template( demosTemplate );
-      $("#page").html( compiledTemplate );
+      that.el.html( compiledTemplate );
       
     }
   });

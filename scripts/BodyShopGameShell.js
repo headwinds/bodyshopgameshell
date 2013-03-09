@@ -4,7 +4,10 @@ define([
   'backbone',
   'router' 
 ], function($, _, Backbone, MainRouter){
-  var initialize = function(){    
+  var initialize = function(){   
+
+    var vent = _.extend({}, Backbone.Events);
+
     MainRouter.initialize();
   }
 

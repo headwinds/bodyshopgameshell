@@ -85,8 +85,8 @@ define([
 
 			var keyboardController = new KeyboardController();
 
-			var onKeyboardHandler = function(event, keyName) {
-				console.log("ManualPhysicsDemoController / onKeyboardHandler /keyName: " + keyName);
+			var onKeyboardHandler = function(keyName) {
+				console.log(event, "ManualPhysicsDemoController / onKeyboardHandler /keyName: " + keyName);
 				physicsController.trigger(event, keyName);
 
 				if ( keyName == "LEFT") {
@@ -94,7 +94,7 @@ define([
 				}
 			};
 
-			keyboardController.bind("customKeydown", onKeyboardHandler)
+			keyboardController.vent.bind("customKeydown", onKeyboardHandler)
 
 			stage.mouseEventsEnabled = true;
 			stage.autoClear = false;

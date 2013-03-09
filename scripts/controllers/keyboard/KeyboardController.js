@@ -2,11 +2,11 @@ define([
 	"jquery",
 	"underscore",
 	"backbone"
-	], function($, _, Backbone) {
+	], function($, _, Backbone ) {
 
 		var KeyboardController = function() { 
 
-			//console.log("KeyboardController / listening...")
+			var vent = _.extend({}, Backbone.Events);
 
 			var Key = {
 				_pressed: {},
@@ -57,21 +57,24 @@ define([
 
 				onKeydown: function(event) {
 
-					////console.log("KeyboardController onKeydown");
+					//console.log("KeyboardController onKeydown");
 
 					var code = (event.keyCode ? event.keyCode : event.which);
 
 			    	this._pressed[code] = true;
 			    	var keyName = this.getKey(code);
 
-			    	$(window).trigger("customKeydown", keyName );
+			    	vent.trigger("customKeydown", keyName + "_PRESSED");
 				},
 
 				onKeyup: function(event) {
 
+					//console.log("KeyboardController onKeyup");
+
 					var code = (event.keyCode ? event.keyCode : event.which);
 					var keyName = this.getKey(code);
-					$(window).trigger("customKeyup", keyName );
+					
+					vent.trigger("customKeyup", keyName + "_RELEASED" );
 
 					delete this._pressed[event.keyCode];
 				}
@@ -85,26 +88,8 @@ define([
 				Key.onKeyup(event);
 			});
 
-			var bind = function( event, callback ) {
-				
-				$(window).bind("customKeydown", function(event, keyName) {
-					
-					keyName = typeof keyName !== 'defined' ? keyName : "no key pressed";
-
-					callback(event, keyName + "_PRESSED"); 
-				});
-
-				$(window).bind("customKeyup", function(event, keyName) {
-					
-					keyName = typeof keyName !== 'defined' ? keyName : "no key pressed";
-
-					callback(event, keyName + "_RELEASED"); 
-				});
-
-			};
-
 			return {
-				bind: bind
+				vent : vent
 			}
 
 

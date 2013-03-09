@@ -385,6 +385,8 @@ define(["easel",
 
 			console.log("PhysicsController / trigger"); 
 
+			keyName = keyName.split("_")[0];
+
 			switch( keyName ) {
 
 				case "SPACE" :

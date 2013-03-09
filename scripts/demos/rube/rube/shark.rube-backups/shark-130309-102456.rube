@@ -83,7 +83,7 @@
           
           {
             "density" : 0.07999999821186066,
-            "friction" : 0.8000000119209290,
+            "friction" : 0.4000000059604645,
             "id" : 28,
             "name" : "fixbikewheelfront",
             "restitution" : 0.4000000059604645,
@@ -128,7 +128,7 @@
           
           {
             "density" : 1,
-            "friction" : 0.8000000119209290,
+            "friction" : 0.6000000238418579,
             "id" : 16,
             "name" : "fixture10",
             "shapes" : 
@@ -147,7 +147,7 @@
           
           {
             "density" : 1,
-            "friction" : 0.8000000119209290,
+            "friction" : 0.6000000238418579,
             "id" : 26,
             "name" : "fixture10",
             "shapes" : 
@@ -166,7 +166,7 @@
           
           {
             "density" : 1,
-            "friction" : 0.8000000119209290,
+            "friction" : 0.6000000238418579,
             "id" : 17,
             "name" : "fixture10",
             "shapes" : 
@@ -185,7 +185,7 @@
           
           {
             "density" : 1,
-            "friction" : 0.8000000119209290,
+            "friction" : 0.6000000238418579,
             "id" : 20,
             "name" : "fixture10",
             "shapes" : 
@@ -204,7 +204,7 @@
           
           {
             "density" : 1,
-            "friction" : 0.8000000119209290,
+            "friction" : 0.6000000238418579,
             "id" : 21,
             "name" : "fixture10",
             "shapes" : 
@@ -223,7 +223,7 @@
           
           {
             "density" : 1,
-            "friction" : 0.8000000119209290,
+            "friction" : 0.6000000238418579,
             "id" : 25,
             "name" : "fixture10",
             "shapes" : 
@@ -242,7 +242,7 @@
           
           {
             "density" : 1,
-            "friction" : 0.8000000119209290,
+            "friction" : 0.6000000238418579,
             "id" : 23,
             "name" : "fixture10",
             "shapes" : 
@@ -261,7 +261,7 @@
           
           {
             "density" : 1,
-            "friction" : 0.8000000119209290,
+            "friction" : 0.6000000238418579,
             "id" : 15,
             "name" : "fixture10",
             "shapes" : 
@@ -280,7 +280,7 @@
           
           {
             "density" : 1,
-            "friction" : 0.8000000119209290,
+            "friction" : 0.6000000238418579,
             "id" : 18,
             "name" : "fixture10",
             "shapes" : 
@@ -299,7 +299,7 @@
           
           {
             "density" : 1,
-            "friction" : 0.8000000119209290,
+            "friction" : 0.6000000238418579,
             "id" : 27,
             "name" : "fixture10",
             "shapes" : 
@@ -318,7 +318,7 @@
           
           {
             "density" : 1,
-            "friction" : 0.8000000119209290,
+            "friction" : 0.6000000238418579,
             "id" : 24,
             "name" : "fixture10",
             "shapes" : 
@@ -337,7 +337,7 @@
           
           {
             "density" : 0.1000000014901161,
-            "friction" : 0.8000000119209290,
+            "friction" : 0.6000000238418579,
             "id" : 22,
             "name" : "fixbikewheelrear",
             "restitution" : 0.4000000059604645,
@@ -358,7 +358,7 @@
           
           {
             "density" : 1,
-            "friction" : 0.8000000119209290,
+            "friction" : 0.6000000238418579,
             "id" : 19,
             "name" : "fixture10",
             "shapes" : 
@@ -805,8 +805,8 @@
         "name" : "crate",
         "position" : 
         {
-          "x" : -3.881049156188965,
-          "y" : 1.070176124572754
+          "x" : -3.834541082382202,
+          "y" : 0.3659100532531738
         },
         "type" : "dynamic"
       },
