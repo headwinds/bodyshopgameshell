@@ -1,0 +1,88 @@
+//Started script log at Tue May 21 14:21:55 2013
+
+getBody(5).select();
+getBody(5).deselect();
+getFixture(49).delete();
+getImage(10).delete();
+getBody(5).delete();
+getBody(19).select();
+getBody(19).deselect();
+getFixture(37).delete();
+getImage(18).delete();
+getBody(19).delete();
+getBody(18).select();
+getBody(18).deselect();
+getBody(18).delete();
+getBody(21).select();
+getBody(21).deselect();
+getBody(21).delete();
+getBody(4).select();
+getBody(4).deselect();
+getBody(4).delete();
+getBody(17).select();
+getBody(17).deselect();
+getBody(17).delete();
+getBody(2).select();
+getBody(2).deselect();
+getBody(2).select();
+getBody(3).select();
+getBody(3).deselect();
+getBody(2).deselect();
+getBody(2).select();
+getBody(2).setPosition(-4.35191,0.807201);
+getBody(2).deselect();
+getBody(2).select();
+getBody(2).setPosition(-4.20215,1.14);
+getBody(2).setPosition(-4.10231,1.23984);
+getBody(2).deselect();
+getBody(3).select();
+getBody(3).deselect();
+getBody(2).select();
+getImage(21).select();
+getImage(21).setFile('/Users/headwinds_studio/Projects/code/javascript/box2D/createjs-box2DWeb-requirejs-backbone-bodyshopgameshell/app/imgs/creatures/biker/fonz/fonz-full.png');
+getImage(21).setCenter(-2.51347,0.814275);
+getImage(21).setScale(1.63505);
+getImage(7).select();
+getImage(20).select();
+getImage(7).deselect();
+getImage(21).deselect();
+getImage(20).deselect();
+getImage(21).select();
+getImage(21).setCenter(0.0490911,0.0155544);
+setCursor(-4.12323, 1.20691);
+getImage(21).setCenter(0.121871,0.0659636);
+getImage(21).setScale(3.33486);
+getImage(21).setCenter(0.205071,-0.399957);
+getImage(21).setCenter(0.20975,-0.409083);
+getImage(21).setScale(3.41095);
+getBody(2).setPosition(-4.10183,1.24059);
+{
+	fixture _rube_redoFixture = getFixture(30);
+	_rube_redoFixture.setVertex(0,0.327344,-0.485253);
+	_rube_redoFixture.setVertex(1,-0.311191,-0.495683);
+	_rube_redoFixture.setVertex(2,-0.327574,0.507295);
+	_rube_redoFixture.setVertex(3,0.310669,0.535632);
+}
+getImage(21).setCenter(0.859468,-1.67625);
+getImage(21).setScale(13.9766);
+getBody(2).setPosition(-4.10184,1.24059);
+{
+	fixture _rube_redoFixture = getFixture(30);
+	_rube_redoFixture.setVertex(0,1.34132,-1.98837);
+	_rube_redoFixture.setVertex(1,-1.27513,-2.0311);
+	_rube_redoFixture.setVertex(2,-1.34226,2.07868);
+	_rube_redoFixture.setVertex(3,1.27299,2.1948);
+}
+getImage(21).setCenter(0.276585,-0.539434);
+getImage(21).setScale(4.49782);
+{
+	fixture _rube_redoFixture = getFixture(30);
+	_rube_redoFixture.setVertex(0,0.43165,-0.639875);
+	_rube_redoFixture.setVertex(1,-0.410349,-0.653629);
+	_rube_redoFixture.setVertex(2,-0.431953,0.66894);
+	_rube_redoFixture.setVertex(3,0.409661,0.706308);
+}
+getImage(21).setScale(3.41025);
+getImage(21).setCenter(0.160105,-0.373033);
+getImage(21).setRenderOrder(22);
+getImage(21).setRenderOrder(30);
