@@ -1,7 +1,14 @@
 <div id="demos">
 	<ul>
-		<li><a href="#/newgame?gameID=manual"> <img src="imgs/demos/manual/manual.png" width="300" /> </a> </li>
-		<li><a href="#/newgame?gameID=rube"> <img src="imgs/demos/rube/rube.png" width="300"  /> </a> </li>	
-		<!--<li><a href="#/newgame?gameID=ministirith"> <img src="imgs/demos/ministirith/ministirith.png" width="300" /> </a</li>-->
+	<% _.each(demos, function(demoModel){ %>
+		<li>
+			<a href="<%= demoModel.get('demoPath') %>"> <img src="<%= demoModel.get('thumbPath') %>" width="300" /><a>
+ 			<div class="note">
+				<p> <%= demoModel.get('title') %> </p>				
+				<p> <%= demoModel.get('description') %> </p>
+				<p> <%= demoModel.get('author') %> </p>
+			</div> 
+		</li> 
+  	<% }); %>
 	</ul>
 <div>

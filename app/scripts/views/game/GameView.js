@@ -29,7 +29,8 @@ define([
 			"click #toggle-skins" 		: "onToggleSkinsClickHandler",
 			"click #close-challenge" 	: "onCloseChallengeClickHandler",
 			"click #pan-left" 			: "onPanLeftClickHandler",
-			"click #pan-right" 			: "onPanRightClickHandler"
+			"click #pan-right" 			: "onPanRightClickHandler",
+			"click #challenge-close"	: "onCloseChallengeClickHandler"
 		},
 
 		controller: {},

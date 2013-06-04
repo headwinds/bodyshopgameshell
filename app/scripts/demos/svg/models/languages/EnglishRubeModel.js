@@ -7,9 +7,9 @@ define([
 
 		defaults:  {
 			langCode : "en",
-			instructions : "<p>CONTROLS: LEFT RIGHT ARROW KEYS TO DRIVE THE BIKE</p>",
+			instructions : "<p>CONTROLS: LEFT RIGHT ARROW KEYS TO DRIVE THE BLIMP</p>",
 			demo : {
-				title: "R.U.B.E. Physics Demo",
+				title: "SVG Animation and Physics Demo",
 				description: "a demo about how to display box2D bodies within EaselJS that were created within the R.U.B.E. physics editor",
 				hacker: "brandon flowers",
 				site: "http://www.headwinds.net"

@@ -12,7 +12,7 @@ define([], function(){
         env_dev: '',
         env_staging: '',
         env_prod: '',
-        img_path_prod: 'http://www.headwinds.net/lab/bodyshopgameshell/',
+        img_path_prod: 'http://www.headwinds.net/lab/bodyshopgameshell/app/',
         img_path_dev: '../',
         fb_id:'',
         actorSettings: {

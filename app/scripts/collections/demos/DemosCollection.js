@@ -10,13 +10,8 @@ define([
 
 		initialize:function() {
 
-			var demo0 = new DemoModel(); 
-			var demo1 = new DemoModel();
-			var demo2 = new DemoModel();
-			
 		}
-
 	});
 
-	return new DemosCollection;
+	return DemosCollection;
 });

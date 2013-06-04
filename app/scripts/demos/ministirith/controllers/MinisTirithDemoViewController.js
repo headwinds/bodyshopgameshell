@@ -41,7 +41,6 @@ define([
         var cameraWorldContainer = new createjs.Container();
         cameraWorldContainer.width = landscapeWidth; // width of the background 
         cameraWorldContainer.height = screenHeight;
-
        
         var imgPath = config.actorSettings["manualBG"].imgPath;
         console.log("MinisTirithDemoViewController / load imgPath: " + imgPath) 
@@ -165,8 +164,8 @@ define([
             };
         };
 
-        keyboardController.bind("customKeydown", onKeyboardDownHandler);
-        keyboardController.bind("customKeyup", onKeyboardUpHandler);
+        keyboardController.vent.bind("customKeydown", onKeyboardDownHandler);
+        keyboardController.vent.bind("customKeyup", onKeyboardUpHandler);
 
         stage.mouseEventsEnabled = true;
         stage.autoClear = false;
