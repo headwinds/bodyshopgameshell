@@ -1,0 +1,167 @@
+
+
+div {
+  display: block;
+  position: relative;
+  margin: 0px;
+  padding: 0px;
+  top: 0px;
+  left: 0px;
+}
+
+%abstractContainer {
+  display: block;
+  position: relative;
+  margin: 0px;
+  padding: 0px;
+  top: 0px;
+  left: 0px;
+}
+
+/* @extend %abstractContainer */;
+a {
+  text-decoration: none;
+  font-family: $fontBody;
+  color: $gold;
+  display: block;
+  position: relative;
+  padding: 0px;
+  margin: 0px;
+  text-align: left; 
+  background: #FFF; 
+  height: 100%;
+  width: 250px;
+  pointer-events: auto;
+  overflow: hidden;
+}
+
+a:hover {
+
+}
+
+a:visited {
+
+}
+
+
+h1 {
+  font-family: $fontTitle;
+  font-size: 200%;
+}
+
+h2 {
+  font-family: $fontTitle;
+  font-size: 175%;
+}
+
+h3 {
+  font-family: $fontTitle;
+  font-size: 150%;
+}
+
+h4 {
+  font-family: $fontTitle;
+  font-size: 125%;
+}
+
+p {
+  font-family: $fontBody;
+  font-size: 100%;
+}
+
+
+ul {
+  list-style-type: none;
+}
+
+
+#container { 
+  margin: 0 auto;
+  width: 100%;
+  min-width: 900px;
+  overflow: hidden;
+  text-align: left;
+  background-color: $bgColor;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  #nav {
+    width: 100%;
+    height: 50px;
+  
+    li {
+      display: inline-block;
+      position: relative;
+      width: 160px;
+      height: 36px;
+      margin-left: 20px;
+    }
+
+  }
+
+  #page {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+
+    .mainContainer {
+      
+
+      .titleContainer {
+        
+
+      }
+
+      .descriptionContainer {
+        
+
+      }
+
+    }
+
+    .game-controls {
+      display: block;
+      position: absolute;
+      margin: 0;
+      padding: 0;
+      top: 0px;
+      left: 700px;
+    }
+
+    #challenge {
+      display: block;
+      position: absolute;
+      margin: 0;
+      padding: 20px;
+      top: 0px;
+      left: 700px;
+      width: 450px;
+      height: 400px;
+      z-index: 3;
+      opacity: 0;
+      background: #FFF; 
+      pointer-events: none;
+      z-index: 99;
+    }
+
+    #demos {
+
+      ul {
+        list-style-type: none;
+
+        li {
+          display: block;
+          position: relative;
+          width:300px;
+          overflow: hidden;
+        }
+      }
+
+    }
+
+  }
+
+  #footer {
+    
+  }
+}

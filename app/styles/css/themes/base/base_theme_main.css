@@ -1,0 +1,130 @@
+@import url(http://fonts.googleapis.com/css?family=Copse|Oxygen:300);
+/* line 3, ../../../scss/themes/base/_base_blocks.scss */
+div {
+  display: block;
+  position: relative;
+  margin: 0px;
+  padding: 0px;
+  top: 0px;
+  left: 0px;
+}
+
+/* @extend %abstractContainer */
+/* line 22, ../../../scss/themes/base/_base_blocks.scss */
+a {
+  text-decoration: none;
+  font-family: "Oxygen", sans-serif;
+  color: #cfb52b;
+  display: block;
+  position: relative;
+  padding: 0px;
+  margin: 0px;
+  text-align: left;
+  background: #FFF;
+  height: 100%;
+  width: 250px;
+  pointer-events: auto;
+  overflow: hidden;
+}
+
+/* line 47, ../../../scss/themes/base/_base_blocks.scss */
+h1 {
+  font-family: "Copse", serif;
+  font-size: 200%;
+}
+
+/* line 52, ../../../scss/themes/base/_base_blocks.scss */
+h2 {
+  font-family: "Copse", serif;
+  font-size: 175%;
+}
+
+/* line 57, ../../../scss/themes/base/_base_blocks.scss */
+h3 {
+  font-family: "Copse", serif;
+  font-size: 150%;
+}
+
+/* line 62, ../../../scss/themes/base/_base_blocks.scss */
+h4 {
+  font-family: "Copse", serif;
+  font-size: 125%;
+}
+
+/* line 67, ../../../scss/themes/base/_base_blocks.scss */
+p {
+  font-family: "Oxygen", sans-serif;
+  font-size: 100%;
+}
+
+/* line 73, ../../../scss/themes/base/_base_blocks.scss */
+ul {
+  list-style-type: none;
+}
+
+/* line 78, ../../../scss/themes/base/_base_blocks.scss */
+#container {
+  margin: 0 auto;
+  width: 100%;
+  min-width: 900px;
+  overflow: hidden;
+  text-align: left;
+  background-color: white;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+/* line 88, ../../../scss/themes/base/_base_blocks.scss */
+#container #nav {
+  width: 100%;
+  height: 50px;
+}
+/* line 92, ../../../scss/themes/base/_base_blocks.scss */
+#container #nav li {
+  display: inline-block;
+  position: relative;
+  width: 160px;
+  height: 36px;
+  margin-left: 20px;
+}
+/* line 102, ../../../scss/themes/base/_base_blocks.scss */
+#container #page {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+/* line 122, ../../../scss/themes/base/_base_blocks.scss */
+#container #page .game-controls {
+  display: block;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  top: 0px;
+  left: 700px;
+}
+/* line 131, ../../../scss/themes/base/_base_blocks.scss */
+#container #page #challenge {
+  display: block;
+  position: absolute;
+  margin: 0;
+  padding: 20px;
+  top: 0px;
+  left: 700px;
+  width: 450px;
+  height: 400px;
+  z-index: 3;
+  opacity: 0;
+  background: #FFF;
+  pointer-events: none;
+  z-index: 99;
+}
+/* line 149, ../../../scss/themes/base/_base_blocks.scss */
+#container #page #demos ul {
+  list-style-type: none;
+}
+/* line 152, ../../../scss/themes/base/_base_blocks.scss */
+#container #page #demos ul li {
+  display: block;
+  position: relative;
+  width: 300px;
+  overflow: hidden;
+}

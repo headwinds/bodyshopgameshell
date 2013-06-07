@@ -32,8 +32,8 @@ module.exports = function( grunt ) {
       dist: {
         // http://compass-style.org/help/tutorials/configuration-reference/#configuration-properties
         options: {
-          css_dir: 'temp/styles',
-          sass_dir: 'app/styles',
+          css_dir: 'app/styles/css/themes/base',
+          sass_dir: 'app/styles/scss/themes/base',
           images_dir: 'app/images',
           javascripts_dir: 'temp/scripts',
           force: true
@@ -59,14 +59,14 @@ module.exports = function( grunt ) {
       },
       compass: {
         files: [
-          'app/styles/**/*.{scss,sass}'
+          'app/styles/scss/themes/**/*.{scss,sass}'
         ],
         tasks: 'compass reload'
       },
       reload: {
         files: [
           'app/*.html',
-          'app/styles/**/*.css',
+          'app/styles/themes/**/*.css',
           'app/scripts/**/*.js',
           'app/images/**/*'
         ],
@@ -124,14 +124,14 @@ module.exports = function( grunt ) {
 
     // concat css/**/*.css files, inline @import, output a single minified css
     css: {
-      'styles/main.css': ['styles/**/*.css']
+      'styles/themes/base/base_theme_main.css': ['styles/themes/**/*.css']
     },
 
     // renames JS/CSS to prepend a hash of their contents for easier
     // versioning
     rev: {
       js: 'scripts/**/*.js',
-      css: 'styles/**/*.css',
+      css: 'styles/themes/**/*.css',
       img: 'images/**'
     },
 

@@ -2,7 +2,7 @@
 	<ul>
 	<% _.each(demos, function(demoModel){ %>
 		<li>
-			<a href="<%= demoModel.get('demoPath') %>"> <img src="<%= demoModel.get('thumbPath') %>" width="300" /><a>
+			<a href="<%= demoModel.get('demoPath') %>"> <img src="<%= demoModel.get('thumbPath') %>" width="300"  /><a>
  			<div class="note">
 				<p> <%= demoModel.get('title') %> </p>				
 				<p> <%= demoModel.get('description') %> </p>
